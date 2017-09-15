@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>个人目标申报</title>
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../../css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/style2.css">
+</head>
+<body>
+<div class="p50 mt30">
+    <form class="form-horizontal" action="">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label pull-right">工作月</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label pull-right">本月目标</label>
+            </div>
+            <div class="col-sm-9">
+                <table class="foodke" id="foodke">
+                    <thead>
+                    <tr>
+                        <th>发展代理商数量</th>
+                        <th>发展食堂数量</th>
+                        <th>订单金额（￥）</th>
+                    </tr>
+                    </thead>
+                    <tbody id="sctbody">
+                    <tr>
+                        <td class="pr" >
+                            <input class="materialName" value="" name="" datatype="n" nullmsg="请输入发展代理商数量" errormsg="请输入大于0的数字" sucmsg=" ">
+                        </td>
+                        <td class="pr" >
+                            <input class="materialAmount" value="" name="" datatype="n" nullmsg="请输入发展食堂数量" errormsg="请输入大于0的数字" sucmsg=" ">
+                        </td>
+                        <td class="pr" >
+                            <input class="materialAmount" value="" name=""  datatype="nplus" nullmsg="请输入订单金额" errormsg="金额为大于0的数字，小数点后最多保留两位。" sucmsg=" ">
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-5 col-sm-offset-2">
+                <div class="Validform_checktip pull-left ml15"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <a class="btn btn-warning" id="change-next" href="javascript:void(0);">确定</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../../js/jQuery/jquery-1.11.1.min.js"></script>
+<script src="../../js/bootstrap/bootstrap.min.js"></script>
+<script src="../../js/DatePicker/WdatePicker.js"></script>
+<script src="../../js/ValidForm/Validform_v5.3.2.js"></script>
+<script src="../../js/layer/layer.js"></script>
+<script type="text/javascript">
+
+    /* 表单验证 */
+    var validForm=$('.form-horizontal').Validform({
+        btnSubmit:"#change-next",
+        tiptype:2,
+        datatype:{},
+        showAllError:true,
+        postonce:true,
+        ajaxPost:true,
+
+        callback:function(data){
+
+        }
+    });
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

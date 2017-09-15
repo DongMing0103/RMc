@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>团队成员</title>
+    <link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+            <h2><a href="../../index.html">筷子说CRM</a></h2>
+            <h3>团队成员</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+		    <div class="form-box">
+		        <form class="form-inline" id="form">
+		            <div class="form-group">
+		                <label class="control-label">岗位职务</label>
+		                <select class="form-control">
+		                    <option value="">请选择</option>
+		                    <option value="">商务一部</option>
+		                    <option value="">商务二部</option>
+		                </select>
+		            </div>
+		            <div class="form-group">
+		                <select class="form-control">
+		                    <option value="">请选择搜索条件</option>
+		                    <option value="">业务员姓名</option>
+		                    <option value="">业务员编号</option>
+		                </select>
+		                <input class="form-control" placeholder="请输入...">
+		            </div>
+		            <div class="form-group">
+		                <a class="btn btn-default" href="javascript:void(0);"  onclick="query();">
+		                    <i class="fa fa-search"></i>搜索
+		                </a>
+		                <a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv();">重置</a>
+		            </div>
+		        </form>
+		    </div>
+		    <table
+		            id="table"
+		            data-classes="table table-public"
+		            data-toggle="table"
+		            data-url="$!rc.contextPath/crmbusiness/queryPage"
+		            data-pagination="true"
+		            data-pagination-v-align="both"
+		            data-side-pagination="server"
+		            data-page-size="20"
+		            data-page-list="[10,20,50]">
+		        <thead>
+		        <tr>
+		            <th data-checkbox="true"></th>
+		            <th data-field="id" data-align="center">ID</th>
+		            <th data-field="name" data-align="center">姓名</th>
+		            <th data-field="workTime" data-align="center" data-formatter="dateFormatter">入职时间</th>
+		            <th data-field="position" data-align="center">岗位职务 </th>
+		            <th data-field="contactTele"  data-align="center">联系电话</th>
+		            <th data-field="weChat"  data-align="center">微信号码</th>
+		            <th data-field="operate" data-align="center" data-formatter="operateFormatter" >操作</th>
+		        </tr>
+		        </thead>
+		    </table>
+		    <div class="mt10">
+		        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+		            <i class="fa fa-cloud-download"></i>导出
+		        </a>
+		    </div>
+		</div>
+    </div>
+    <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap/bootstrap-table.js"></script>
+	<script type="text/javascript">
+	    $(function(){
+	        $('#table').bootstrapTable();
+	    });
+	
+	    function operateFormatter(value, row, index) {
+	        return [
+				'<a href="/static/html/system_operate/customer_list.html" target="_blank">查看客户列表</a>'+
+				return str;
+	        ].join('');
+	    }
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

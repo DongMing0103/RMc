@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="kzscrm-split">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="kzscrm-service-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kzscrm-service/kzscrm-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kzscrm-dao-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kzscrm-dao/kzscrm-dao">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="kzscrm-util-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/kzscrm-util/kzscrm-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-all-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-all/wolverine-all">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-core-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-core/wolverine-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-cache-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-cache/wolverine-cache">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-web-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-web/wolverine-web">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-mq-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-mq/wolverine-mq">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-soa-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-soa/wolverine-soa">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-search-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-search/wolverine-search">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="wolverine-util-1.6.6-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/wolverine-util/wolverine-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="kzscrm-split"/>
+        <property name="java-output-path" value="/kzscrm-split/target/classes"/>
+    </wb-module>
+</project-modules>

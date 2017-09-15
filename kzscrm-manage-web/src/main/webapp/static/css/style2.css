@@ -1,0 +1,610 @@
+/*登录页面*/
+.login-bg{
+    width: 100%;
+    height: 680px;
+    background: url(../images/login-bg.png) no-repeat;
+}
+.pr {
+    position: relative;
+}
+.login-header{
+    position: relative;
+    height: 100px;
+    padding: 26px 0 28px;
+}
+
+.login-header .shade{
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0.8;
+    z-index: 0;
+}
+
+.login-header .login-logo{
+    display: inline-block;
+    width: 100px;
+    height: 45px;
+    background: url(../images/logo.png) no-repeat;
+}
+
+.login-header .login-nav{
+    position: absolute;
+    right: 220px;
+}
+
+.login-header .login-nav li{
+    float: left;
+    margin: 0 30px;
+    line-height: 45px;
+}
+
+.login-header .login-nav li.active{
+    border-bottom: 1px solid #ffda44;
+}
+
+.login-header .login-nav li a{
+    color: #fff;
+}
+
+.login-header .btns{
+    line-height: 45px;
+}
+
+.login-header .btns .btn{
+    margin-left:18px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.login-content{
+    height: 580px;
+    position: relative;
+}
+
+.login-content .cn-left{
+    width: 752px;
+    height: 180px;
+    position: absolute;
+    left: 0;
+    bottom: 100px;
+
+}
+
+.login-content .shade{
+    background: #000;
+    opacity: 0.4;
+}
+
+.login-content .background{
+    background: url(../images/login-title.png) no-repeat 190px 50px;
+}
+
+.login-content .cn-left .qr-code{
+    width: 140px;
+    height: 180px;
+    padding: 20px;
+    background: #fff;
+}
+
+.login-content .cn-left .qr-code img{
+    width:100px;
+    height:100px;
+    margin-bottom: 8px;
+    background: #bfbfbf;
+}
+
+.login-content .cn-left .qr-code p{
+    margin-bottom: 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+
+.login-content .cn-right{
+    width: 388px;
+    height: 400px;
+    padding: 30px;
+    position: absolute;
+    right: 0;
+    bottom: 100px;
+    background: #fff;
+}
+
+.login-content .cn-right h4{
+    margin: 0;
+    color: #0f0906;
+}
+
+.login-content  .error-msg{
+    padding-left: 20px;
+    height: 30px;
+    line-height: 30px;
+    color: #f00;
+    background: url(../images/error.png) no-repeat 0 7px;
+    visibility: hidden;
+}
+
+.login-content .cn-right .form-group{
+    margin-bottom: 20px;
+}
+
+.login-content .cn-right .user-icon,
+.login-content .cn-right .psd-icon{
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #aaa;
+}
+.login-content .cn-right .fa-user,
+.login-content .cn-right .fa-lock{
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #aaa;
+    font-size:16px;
+}
+
+.login-content .cn-right .verification{
+    width: 150px;
+}
+
+.login-content .cn-right .valid-img{
+    margin: 0 20px;
+    height: 34px;
+    cursor: pointer;
+}
+
+.login-content .cn-right .ver-info{
+    display: inline-block;
+    width: 38px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.login-content .cn-right .btn-login{
+    color: #333;
+    background: #ffda44;
+}
+
+.login-footer{
+    margin-top: 44px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.login-footer p{
+    margin-bottom: 0;
+    line-height: 40px;
+    color: #535353;
+}
+
+.login-footer a{
+    padding: 0 12px;
+    border-left: 1px solid #8d8d8d;
+    color: #535353;
+}
+
+.login-footer a:first-child{
+    border-left: none;
+}
+/*新增代理商*/
+.add-merchants {
+    padding: 50px;
+}
+
+.add-merchants .form-group {
+    margin-bottom: 20px;
+}
+
+.add-merchants .img-box1 {
+    position: relative;
+    width: 210px;
+    height: 210px;
+    border: 5px solid #ddd;
+}
+
+.add-merchants .imgsbox1 .upimg {
+    width: 200px;
+    height: 200px;
+}
+
+.add-merchants .imgsbox2 {
+    width: 290px;
+    height: 220px;
+}
+
+.add-merchants .imgsbox3 {
+    width: 290px;
+    height: 220px;
+}
+
+.add-merchants .imgsbox4 {
+    width: 290px;
+    height: 220px;
+    position: relative;
+    border: 5px solid #ddd;
+}
+
+.licence4 {
+    margin-top: -20px;
+}
+
+.add-merchants .imgsbox2 .upimg, .add-merchants .imgsbox3 .upimg,
+.add-merchants .imgsbox4 .upimg {
+    width: 280px;
+    height: 210px;
+}
+
+.add-merchants .btn-upload {
+    margin: 0;
+}
+/*目标修正*/
+#foodke {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+#foodke>thead>tr>th {
+    border: 1px solid #ddd;
+    height: 42px;
+    padding-left: 15px;
+    color: #555;
+    font-weight: normal;
+    background-color: #ddd;
+    background: linear-gradient(#fff, #eee);
+}
+
+#foodke>tbody>tr>td {
+    height: 42px;
+    border: 1px solid #ddd;
+    padding-left: 15px;
+}
+.foodke>tbody>tr>td input {
+    width: 100%;
+    border: none;
+    height: 100%;
+}
+
+.foodke>tbody>tr>td input:focus {
+    outline: none;
+}
+/*提现*/
+.l-tit{width:100%; line-height:40px; border-bottom:1px solid #ddd;}
+.l-tit span{ display:inline-block; font-size:16px; color:#cb9a1a; border-bottom:2px solid #cb9a1a; }
+.l-title {
+    width: 100%;
+    line-height: 40px;
+    padding-left:20px;
+}
+.l-title span {
+    display: inline-block;
+    font-size: 16px;
+    color: #cb9a1a;
+    border-bottom: 2px solid #cb9a1a;
+}
+.cp-msg span{border-bottom: 0;}
+.bill{ padding:20px; margin-bottom:30px; background-color:#fff;}
+.bill-money{ float:left;width:250px; height:100px; padding-top:15px; border-right:1px solid #e5e5e5; text-align:center;}
+.bill-money span{ display:block; font-size:16px; color:#939393;}
+.bill-money .money{ font-size:30px; color:#ff6c64;}
+.bill-con{ float:left; padding-top:10px; margin-left:40px;}
+.bill-card{ margin-bottom:20px;}
+.bill-card a{ margin-left:10px;}
+.bill-card .ts{ display:block; font-size:12px; color:#939393;}
+.bill-kj a{ margin-right:10px;}
+.btn-bill{
+    padding: 0px 25px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    height: 32px;
+    margin-right: 10px;
+    display: inline-block;
+    line-height: 32px;
+}
+.btn-bill:hover,
+.btn-bill:visited,
+.btn-bill:focus{border:1px solid #57bdde; text-decoration:none;}
+.btn-green,.btn-green:visited{ background-color:#32b16c; color:#fff;border-color:#32b16c;}
+.btn-green:hover{ background-color:#26a15e; color:#fff;border-color:#32b16c;}
+
+.table-bill{ border:1px solid #dadada; }
+.table-bill > thead > tr > th{  height:42px;padding-left:15px; color:#555; font-weight:normal;border-bottom:1px solid #ddd; background-color:#F6F6F6\9;background: linear-gradient(#fff, #eee);}
+.table-bill > tbody > tr > td{height:55px; padding-left:15px; vertical-align:middle;background-color:#fff;border-bottom:1px solid #ddd;}
+.bootstrap-table .table > thead > tr > th{background-color:#F6F6F6\9;}
+
+/*新增食堂*/
+.merchants { padding: 50px;}
+.merchants .add-merchants { padding: 0;}
+
+
+
+/*订单分帐明细*/
+.header {padding: 0 30px;}
+.content-cap { height: 49px; line-height: 47px; border-bottom: 1px solid #dddee2; margin-bottom: 20px;}
+.content-cap .cap-name { display: inline-block; border-bottom: 2px solid #cb9a1a; font-size: 16px; font-weight: bold; color: #cfa64a;}
+.fz-date{ margin-bottom:20px;}
+.fz-date span{ color:#999;}
+#ohistory { position: relative; min-height: 1000px;background-color:#ecf0f5;}
+#ohistory .history-info {
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #ffffff;
+    min-height: 1050px;
+}
+#ohistory .history-list {
+    padding: 30px 60px 160px;
+    font-size: 14px;
+    margin-left: 300px;
+    position: relative;
+    min-height: 1000px;
+    min-width: 650px;
+}
+#ohistory .history-num {
+	text-align: center;
+	height: 210px;
+	border-bottom: 1px solid #E2E2E2;
+}
+#ohistory .history-num h2 {
+	font-size: 12px;
+	color: #828282;
+	margin: 0;
+	padding: 50px 0 10px 0;
+}
+#ohistory .history-num span {
+	font-size: 13px;
+	color: #000000;
+	display: block;
+	font-weight: bold;
+	padding-bottom: 25px;
+}
+#ohistory .history-num button {
+	font-size: 16px;
+	color: #ffffff;
+	background: #FF6C64;
+	height: 42px;
+	width: 170px;
+	border-radius: 7px;
+}
+.history-peo {
+	padding: 20px 30px;
+}
+#ohistory .history-peo h2 {
+	font-size: 16px;
+	color: #828282;
+	margin: 0;
+	text-align: center;
+}
+#ohistory .peonum {
+	width: 240px;
+	height: 65px;
+	background: #E9EDF0;
+	border-radius: 6px;
+	line-height: 65px;
+	text-align: center;
+	margin-top: 30px;
+	font-size: 24px;
+}
+#ohistory .peoinfo {
+	margin-top: 20px;
+	font-size: 12px;
+	color: #333333;
+	line-height: 2;
+}
+#ohistory .peoinfo span {
+	width: 70px;
+	display: inline-block;
+	color: #828282;
+}
+#ohistory .sendadd {
+	padding: 28px 30px;
+    color: #888;
+    background: url(../images/add-bg.png) no-repeat left center;
+    border-top: 1px solid #DADEE4;
+}
+#ohistory .flavor {
+    padding: 28px 0;
+    color: #888;
+    border-top: 1px solid #DADEE4;
+    background: none;
+}
+#ohistory .table {
+	background: #ffffff;
+    border: 1px solid #dadada;
+}
+#ohistory .table-history th {
+    height: 42px;
+    color: #939393;
+    font-weight: normal;
+    border-bottom: 1px solid #ddd;
+    background: linear-gradient(#fff, #eee);
+	text-align: center;
+}
+#ohistory .table-history > tbody > tr > td {
+    height: 75px;
+    vertical-align: middle;
+    background-color: #fff;
+    border:none;
+    text-align: center;
+}
+#ohistory .table-history .foodtime,
+#ohistory .table-history > tbody > tr .foodtime {
+	text-align: left;
+    padding-left: 25px;
+}
+#ohistory table>tbody>tr .foodadd {
+	padding: 0 25px;
+}
+#ohistory .sendadd span {
+	color: #333333;
+	padding-right: 30px;
+	position: relative;
+}
+#ohistory .sendadd .sendno:after {
+	content: none;
+}
+#ohistory .sendadd span:after {
+	content: "";
+    position: absolute;
+    top: 1px;
+    right: 15px;
+    height: 15px;
+    width: 1px;
+    background: #A4A4A4;
+}
+#ohistory .foodpic {
+	width: 90px;
+	height: 90px;
+	overflow: hidden;
+	border-radius: 5px;
+	float: left;
+}
+#ohistory .foodpic img {
+	width: 90px;
+	height: 90px;
+	display: block;
+}
+#ohistory .foodint {
+	float: left;
+	margin-left: 20px;
+	padding: 25px 0;
+	color: #828282;
+}
+#ohistory .foodint span {
+	display: block;
+}
+#ohistory .table-history > tbody > tr .fimg {
+	padding: 30px 25px;
+}
+#ohistory .foodint .beef {
+	font-size: 18px;
+	color: #333333;
+}
+#ohistory .goodp {
+	font-size: 18px;
+	color: #cb9a1a;
+}
+#ohistory .goodn{
+	font-size: 18px;
+	color: #22ac38;
+}
+#ohistory .lookp {
+	font-size: 14px;
+	color: #333333;
+}
+.probar {
+	padding: 0 50px;	
+}
+.progressbar {
+    width: 100%;
+    height: 30px;
+    position: relative;
+}
+.progressbar .progressline {
+    background: #D5DBE0;
+     background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent 20%); 
+    background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent 20%);
+    background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0.1), transparent 20%);
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent 20%);
+     -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px rgba(255, 255, 255, 0.1); 
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px rgba(255, 255, 255, 0.1);
+    height: 12px;
+    margin: 13px 0;
+}
+.progressbar .progressline span {
+    position: absolute;
+    display: inline-block;
+    /*background: #32B16C;*/
+    height: 4px;
+    width: 33%;
+    z-index: 999;
+    margin: 4px 0;
+    /*background: -webkit-linear-gradient(left, #32B16C , #B4BABE);*/
+}
+.progressbar>span {
+    position: absolute;
+    top: 0;
+    margin-top: -10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: -20px;
+    border: 5px solid #D5DBE0;
+    background: #D5DBE0;
+}
+.progressbar .lineo {
+    left: 0%;
+    background: #32B16C;
+}
+.progressbar .linet {
+    left: 33%;
+    background: #B4BABE;
+}
+.progressbar .lineth {
+    left: 66%;
+    background: #B4BABE;
+}
+.progressbar .linef {
+    left: 100%;
+    background: #B4BABE;
+}
+.hprocess {
+    position: relative;
+    height: 24px;
+    font-size: 15px;
+    color: #333333;	
+}
+.hprocess .horder {
+	position: absolute;
+    left: 0;
+    width: 90px;
+    text-align: center;	
+}
+.hprocess .hpay {
+    position: absolute;
+    left: 32.5%;
+    width: 40px;
+    text-align: center;
+}
+.hprocess .hevaluate {
+    position: absolute;
+    right: 34%;
+    width: 40px;
+    text-align: center;	
+}
+.hprocess .hcomplete {
+    position: absolute;
+    right: 12px;
+    width: 90px;
+    text-align: center;	
+}
+.htime {
+	font-size: 12px;
+	color: #828282;
+    margin-bottom: 45px;
+}
+.htime .hpay {
+    left: 30.5%;
+    width: 90px;
+}
+.htime .hevaluate {
+    right: 32%;
+    width: 90px;
+}
+.progressbarywc .linet,
+.progressbarywc .lineth,
+.progressbarywc .linef {
+    background: #32B16C;	
+}
+.progressbarywc .progressline span {
+	width: 100%;
+    background: #32B16C;
+}

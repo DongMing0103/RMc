@@ -1,0 +1,136 @@
+<!--我的业务员-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">我的业务员</span>
+    </div>
+    <ul class="nav nav-tabs nav-self">
+        <li><span>职业状态</span></li>
+        <li class="active"><a href="#all" data-toggle="tab" onclick="" aria-expanded="true">全部（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#effective" data-toggle="tab" onclick="" aria-expanded="false">在职（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#failure" data-toggle="tab" onclick="" aria-expanded="false">离职（0）</a></li>
+    </ul>
+    <div class="form-box">
+	    <form class="form-inline" id="form" role="form">
+	    	<input id="userId" name="userId" type="hidden"/>
+	    	<div class="form-group">
+	            <label class="control-label">所属团队</label>
+		        <div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="status">
+		                <option value="">状态</option>
+		                <option>团务一部</option>
+		                <option>团务二部</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+		    </div>
+	        <div class="form-group">
+	        	<div class="has-feedback" style="display: inline-block;">
+		        	<select class="form-control selectarrow" name="status">
+		                <option value="0">请选择搜索条件</option>
+		                <option value="1">姓名</option>
+		                <option value="2">编号</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	            <input class="form-control" name="" id="" placeholder="请输入...">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+	        </div>
+	    </form>
+    </div>
+    
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="$!rc.contextPath/crmbusiness/queryPage?userId=$!userId"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="jobStatus" data-align="center" data-formatter="jobStatus">职业状态</th>
+            <th data-field="positionName" data-align="center" >岗位职务 </th>
+            <th data-field="mobilephone"  data-align="center">联系电话</th>
+            <th data-field="weixin"  data-align="center">微信号码</th>
+            <th data-field="teamName" data-align="center">所属团队</th>
+            <th data-field="workTime" data-align="center" data-formatter="dateFormatter">入职时间</th>
+            <th data-field="i" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function opFormatter(value, row, index) {
+        var a = "";
+        if (true) {
+            var a = '<span>在职</span>';
+        } else {
+            var a = '<span>离职</span>';
+        }
+        return a;
+    }
+    function operationFormatter(value, row, index) {
+        var str = 	"<div class=tddiv>"+
+            "<span class=settingtda>请选择</span>"+
+            "<ul class=settingtdmenu>"+
+            "<li><a href= target=_blank>查看资料</a></li>"+
+            "<li><a href=/static/html/system_operate/work_targe.html target=_blank>当月工作目标</a></li>"+
+            "<li><a href=/static/html/system_operate/customer_list.html target=_blank>客户列表</a></li>"+
+            "<li><a href=/static/html/system_operate/fashionable_detail.html target=_blank>分账明细</a></li>"+
+            "<li><a href=javascript:void(0); onclick=inFire('解雇','确定要和该业务员解除合同吗?','');>解雇</a></li>"+
+            "<li><a href=javascript:void(0); onclick=inFire('入职','确定接受该业务经理立即入职本公司吗?','')>入职</a></li>"+
+            "<li><a onclick=editData('编辑','/crmbusiness/addInit','768px','550px')>编辑</a></li>"+
+            "</ul></div>";
+        return str;
+
+    }
+
+    /*解约*/
+    function inFire(title,content,url){
+    	layer.open({
+            title: title,
+            content: content,
+            icon:"3",
+            btn: ["确定","取消"],
+            yes: function(index, layero) {
+            	/*$.ajax({
+            		type:"POST",
+            		url:"",
+            		data:postData,
+            		dataType:"json",
+            		success:function(){
+            			//按钮【按钮一】的回调
+            			layer.msg(msg); 
+    					$('#table').bootstrapTable('refresh');  //刷新table
+    					layer.close(index);//关闭弹窗
+            		}
+            	});       */      
+            }
+        })
+    }
+</script>
+

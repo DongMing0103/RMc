@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>业务员列表</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">业务员列表</span>
+    </div>
+	    <ul class="nav nav-tabs nav-self">
+	        <li><span>职业状态</span></li>
+	        <li class="active"><a href="#all" data-toggle="tab" onclick="findBusiness('jobStatus','')">全部（$!map.all）</a></li>
+	        <li class="mt10">|</li>
+	        <li><a href="#work" data-toggle="tab" onclick="findBusiness('jobStatus',1)">在职（$!map.onjob）</a></li>
+	        <li class="mt10">|</li>
+	        <li><a href="#departure" data-toggle="tab" onclick="findBusiness('jobStatus',0)">离职（$!map.quitjob）</a></li>
+	    </ul>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+        	<input name="jobStatus" id="jobStatus" type="hidden" />
+        	<input name="agentId" id="agentId" type="hidden" value="$!agentId"/>
+            <div class="form-group">
+                <label class="control-label">所属团队</label>
+                <div class="has-feedback" style="display: inline-block">
+	                <select class="form-control" name="teamId">
+	                    <option value="0">请选择</option>
+						#foreach($!team in $!crmTeamPOs)                    
+	                    	<option value="$!team.id">$!team.name</option>
+	                	#end
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>                
+            </div>
+            <div class="form-group">
+            	<div class="has-feedback" style="display: inline-block">
+	                <select class="form-control" name="selectNum">
+	                    <option value="0">请选择搜索条件</option>
+	                    <option value="1">姓名</option>
+	                    <option value="2">编号</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+                <input class="form-control" placeholder="请输入..." name="condition">
+            </div>
+            <div class="form-group">
+                <a class="btn btn-default crmAgentSalesmanListSearch" href="javascript:void(0);"  onclick="query();">
+                    <span class="glyphicon glyphicon-search"></span>搜索
+                </a>
+                <a class="btn btn-default crmAgentSalesmanListReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmbusiness/init');">重置</a>
+            </div>
+        </form>
+    </div>														
+    <table
+            id="table"
+            data-classes="table table-public"
+            data-toggle="table"
+        	data-url="$!rc.contextPath/crmbusiness/queryPage"
+            data-pagination="true"
+            data-pagination-v-align="both"
+            data-page-size="20"
+            data-side-pagination="server"
+            data-query-params="queryParams"
+            data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">姓名</th>
+            <th data-field="workTime" data-align="center" data-formatter="dateFormatter">入职时间</th>
+            <th data-field="teamName" data-align="center">所属团队</th>
+            <th data-field="positionName" data-align="center" >岗位职务 </th>
+            <th data-field="jobStatus" data-align="center" data-formatter="jobStatus">职业状态</th>
+            <th data-field="mobilephone"  data-align="center">联系电话</th>
+            <th data-field="weixin"  data-align="center">微信号码</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning crmAgentSakesmanListExport" href="javascript:void(0);" onclick="downloadData('','$!rc.contextPath/crmbusiness/excelOut?businessIds=')">
+        	<i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+    
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/business/findBusiness.js"></script>    
+    <script type="text/javascript">
+	    $(function(){
+	        $('#table').bootstrapTable();
+	        $("#table").on('load-success.bs.table',function(e,data){
+				#foreach($!cSourcesVO in $!cSourcesVOs)
+					#if(!$!cSourcesVO.check)
+						$('$!cSourcesVO.frontContrlName').remove();
+					#end
+				#end
+			})
+	    });
+	
+	    /* 操作 */
+	    function operateFormatter(value, row, index) {
+	    	return [
+	                '<a href="customer_list.html" target="_blank">客户列表</a>',
+	            ].join('');
+	    }
+	    
+	  //在职状态
+	    function jobStatus(value,row,index){
+	    	var a = "";
+	    	if(value==0){
+	    		return "离职";
+	    	}else if(value==1){
+	    		return "在职";
+	    	}else{
+	    		return "-";
+	    	}
+	    }
+	    
+	    /*地理联动*/
+	    $("#city").citySelect({
+	        url:"/static/js/cityselect/city.min.js",
+	        prov:"",//省份
+	        city:"",//城市
+	        dist:"",//区县
+	        nodata:"none",//当子集无数据时，隐藏select
+	        required:false
+	    });
+	</script>
+</body>
+</html>
+
+

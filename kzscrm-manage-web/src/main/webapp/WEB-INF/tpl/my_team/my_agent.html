@@ -1,0 +1,148 @@
+<!--我的代理商-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">我的代理商</span>
+    </div>
+    <ul class="nav nav-tabs nav-self">
+        <li><span>代理状态</span></li>
+        <li class="active"><a href="#all" data-toggle="tab"  onclick="find('agentStatus','')">全部（$!map.all）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#effective" data-toggle="tab" onclick="find('agentStatus',1)">有效（$!map.vali）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#failure" data-toggle="tab" onclick="find('agentStatus',0)">失效（$!map.novali）</a></li>
+    </ul>
+    <form class="form-inline mb10" id="form" role="form">
+    	<input id="userId"  name ="userId" type="hidden" />
+    	<input id="agentStatus" name="agentStatus" type="hidden" />
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="selectNum">
+                <option value="0">请选择搜索条件</option>
+                <option value="1">代理商姓名</option>
+                <!-- <option value="2">代理商编号</option> -->
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="condition" id="condition" placeholder="请输入文字">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default" href="javascript:void(0);" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default" href="javascript:void(0);"  onclick="loadHtmlDiv('$!rc.contextPath/crmagent/myAgentInit')">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="$!rc.contextPath/crmagent/queryPage"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="agentNature" data-align="center" data-formatter="agentNature">性质</th>
+            <th data-field="agentStatus" data-align="center" data-formatter="agentStatus">代理状态</th>
+            <th data-field="address" data-align="center">代理区域</th>
+            <th data-field="businessName" data-align="center">联系业务员</th>
+            <th data-field="principalName" data-align="center">联系人姓名</th>
+            <th data-field="mobilephoe" data-align="center">联系人电话</th>
+            <th data-field="i" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData('','$!rc.contextPath/crmagent/excelOut?agentIds=')">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="allTermination()">解约</a>
+      <!--   <a class="btn btn-warning" href="javascript:void(0);" onclick="">续约</a> -->
+    </div>
+
+</div>
+<script src="$!rc.contextPath/static/js/agent/find.js"></script>
+<script src="$!rc.contextPath/static/js/common.js"></script>
+<script type="text/javascript">
+    $(function(){
+    	jQuery.fn.bootstrapTable.defaults.onLoadSuccess=function(){
+    		var tableRows=$('#table tbody tr');
+    		var rows=$('#table').bootstrapTable('getData');
+    		$.each(rows,function(index,row){
+    			var current=new Date();
+    			var cooperationEndTime=new Date(row.cooperationEndTime);
+    			cooperationEndTime.setMonth(cooperationEndTime.getMonth()+1);
+    			//快到期一个月之内时，标红提示
+    			if(current.getFullYear()>cooperationEndTime.getFullYear()||current.getMonth()>=cooperationEndTime.getMonth()-1){
+    				$(tableRows[index]).css('color','red');
+    			}else{
+    				$(tableRows[index]).css('color','black');
+    			}
+    		});
+    	}
+        $('#table').bootstrapTable();
+    });
+
+    
+    
+    function agentStatus(value,row,index){
+    	if(value==0){
+    		return '失效';
+    	}else{
+    		return '有效';
+    	}
+    }
+    function agentNature(value,row,index){
+    	if(value==1){
+    		return '企业法人';
+    	}else{
+    		return '非企业法人';
+    	}
+    }
+    function operationFormatter(value, row, index) {
+//         var str = 	"<div class=tddiv>"+
+//             "<span class=settingtda>请选择</span>"+
+//             "<ul class=settingtdmenu>"+
+//             "<li><a href= target=_blank>查看资料</a></li>"+
+//             "<li><a href=/static/html/system_operate/work_targe.html target=_blank>当月工作目标</a></li>"+
+//             '<li><a class="crmAgentSurrender" href="javascript:void(0);" onclick="termination('+id+',1)">解约</a></li>'+
+//             '<li><a class="crmAgentRenew" href="javascript:void(0);" onclick=editData(\'续约\',\'/crmagentapply/agentApplyInit?agentId='+row.id+'\',\'768px\',\'700px\')>续约</a></li>'+
+//             "<li><a href=javascript:void(0); onclick=editData('编辑','$!rc.contextPath/crmagent/addInit','768px','90%')>编辑资料</a></li>"+
+//             "<li><a href=$!rc.contextPath/salesman_list.html target=_blank>业务员列表</a></li>"+
+//             "<li><a href=/static/html/system_operate/customer_list.html target=_blank>客户列表</a></li>"+
+//             "<li><a href=/static/html/system_operate/fashionable_detail.html target=_blank>分账明细</a></li>"+
+//             "</ul></div>";
+//             return str;
+
+            
+            var id = row.id;
+        	var str = '<div class=tddiv>'+
+        		        '<span class=settingtda>请选择</span>'+
+        		        '<ul class=settingtdmenu>'+
+        			        '<li><a class="crmAgentSee" href=crmagent/see?agentId='+row.id+' target=_blank>查看资料</a></li>'+
+        			        '<li><a class="crmAgentMonthGoalse" href=crmagent/monthGoals?agentId=' +row.id+  ' target=_blank>当月工作目标</a></li>'+
+        			        /*代理状态有效为解约操作，代理状态无效为续约操作*/
+        			        '<li><a class="crmAgentSurrender" href="javascript:void(0);" onclick="termination('+id+',1)">解约</a></li>'+
+        			        '<li><a class="crmAgentRenew" href="javascript:void(0);" onclick=editData(\'续约\',\'/crmagentapply/agentApplyInit?agentId='+row.id+'\',\'768px\',\'700px\')>续约</a></li>'+
+        			        /* ********************************************** */
+        			        '<li><a class="crmAgentEdit" href="javascript:void(0);" onclick="editData(\'编辑\',\'/crmagent/addInit?id='+id+'\',\'768px\',\'90%\')">编辑资料</a></li>'+
+        			        '<li><a class="crmAgentBusinessListInit" href=crmagent/businessListInit?agentId='+id+' target=_blank>业务员列表</a></li>'+
+        			        '<li><a class="crmAgentClientListInit" href=crmclientresource/clientListInit?agentId='+id+' target=_blank>客户列表</a></li>'+
+        			        /*'<li><a class="crmAgentLowerAgentListInit" href=crmagent/LowerAgentListInit?agentId='+id+'   target=_blank>下级代理列表</a></li>'+*/
+        			        '<li><a class="crmAgentViewInfoInit" href=crmbusinesssplitdetail/viewInfoInit?agentId='+id+' target=_blank>分账明细</a></li>'+
+        		        '</ul></div>';
+            return str;
+        
+    }
+    
+    
+
+   
+</script>
+

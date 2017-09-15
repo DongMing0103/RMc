@@ -1,0 +1,161 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">代理商列表</span>
+    </div>
+<!--     <ul class="nav nav-tabs nav-self">
+        <li><span>代理状态</span></li>
+        <li class="active"><a href="#all"  data-toggle="tab"  onclick="find('agentStatus','')">全部（$!map.all）</a></li>
+        <li class="mt10">|</li>
+        <li><a href="#effective" data-toggle="tab"  onclick="find('agentStatus',1)">有效（$!map.vali）</a></li>
+        <li class="mt10">|</li>
+        <li><a href="#failure" data-toggle="tab"  onclick="find('agentStatus',0)">无效（$!map.novali）</a></li>
+    </ul> -->
+    <div class="form-box">
+        <form class="form-inline" id="form">
+        <!-- <input id="agentStatus" name="agentStatus" type="hidden" value="$!agentStatus"/> -->
+        <input id="agentStatus" name="agentStatus" type="hidden" value="1"  />
+        <input id="userType" name="userType" type="hidden" value="$!userType"  />
+    <!--     <input id="userId" name="userId" type="hidden" value="$!userId"  />
+            <!-- <div class="form-group">
+                <label class="control-label">代理区域</label>
+                <div class="city-select" id="city">
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control prov" name="provCode"><option value="">请选择</option><option value="86011">北京市</option><option value="86012">天津市</option><option value="86013">河北省</option><option value="86014">山西省</option><option value="86015">内蒙古自治区</option><option value="86021">辽宁省</option><option value="86022">吉林省</option><option value="86023">黑龙江省</option><option value="86031">上海市</option><option value="86032">江苏省</option><option value="86033">浙江省</option><option value="86034">安徽省</option><option value="86035">福建省</option><option value="86036">江西省</option><option value="86037">山东省</option><option value="86041">河南省</option><option value="86042">湖北省</option><option value="86043">湖南省</option><option value="86044">广东省</option><option value="86045">广西壮族自治区</option><option value="86046">海南省</option><option value="86050">重庆市</option><option value="86051">四川省</option><option value="86052">贵州省</option><option value="86053">云南省</option><option value="86054">西藏自治区</option><option value="86061">陕西省</option><option value="86062">甘肃省</option><option value="86063">青海省</option><option value="86064">宁夏回族自治区</option><option value="86065">新疆维吾尔自治区</option><option value="86071">台湾省</option><option value="86081">香港特别行政区</option><option value="86082">澳门特别行政区</option></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control city" name="cityCode" disabled="disabled" style="display: none;"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control dist" disabled="disabled" style="display: none;" name="areaCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+	                </div>
+	            </div>
+            </div> -->
+            <div class="form-group">
+            	<!-- <div class="has-feedback" style="display: inline-block;">
+	            	<select class="form-control" name="selectNum">
+	                    <option value="0">请选择搜索条件</option>
+	                    <option value="1">代理商名称</option>
+	                  	<option value="2">代理商编号</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>  
+            	</div>  --> 
+				<label class="control-label">代理商名称</label>
+                <input class="form-control" placeholder="请输入..." name="condition">
+            </div>
+            <div class="form-group">
+                <a class="btn btn-default" href="javascript:void(0);"  onclick="commit();">
+                    <i class="fa fa-search"></i>搜索
+                </a>
+               <a class="btn btn-default crmAgentReset" onclick="loadHtmlDiv('$!rc.contextPath/crmagent/init')">重置</a>
+            </div>
+        </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="$!rc.contextPath/crmagent/queryPage"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="agentNature" data-align="center" data-formatter="agentNature">性质</th>
+<!--             <th data-field="agentStatus" data-align="center" data-formatter="agentStatus">代理状态</th> -->
+            <th data-field="areaName" data-align="center">代理区域 </th>
+            <th data-field="businessName" data-align="center">联系业务员</th>
+            <th data-field="contactRealname"  data-align="center">联系人姓名</th>
+            <th data-field="contactPhone"  data-align="center">联系人电话</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+    	#if($!userType==0 || $!userType == 1)
+    		<div>
+        		<a class="btn btn-warning crmAgentDownload" href="javascript:void(0);" onclick="downloadData('请选择要导出的数据！','$!rc.contextPath/crmagent/excelOut?agentIds=');">
+            		<i class="fa fa-cloud-download"></i>导出
+        		</a>
+        		<a class="btn btn-warning crmAgentSurrenderAll" href="javascript:void(0);" onclick="termination(null,2)">解约</a>
+       	    </div>
+    	#end	
+    		
+    <!-- <div class="mt10">
+        <a class="btn btn-warning crmAgentSurrenderAll" href="javascript:void(0);" onclick="surrender('是否要解约','content','$!rc.contextPath/crmagent/updateStatus','1')">解约</a>
+        <a class="btn btn-warning crmAgentRenewAll" href="javascript:void(0);" onclick="surrender('是否要续约','content','$!rc.contextPath/crmagent/updateStatus','2')">续约</a>
+
+        <a class="btn btn-warning crmAgentRenewAll" href="javascript:void(0);" onclick="surrender('是否要续约','content','$!rc.contextPath/crmagent/updateStatus','2')">续约</a>
+
+    </div> -->
+</div>
+<!-- <script src="$!rc.contextPath/static/js/agent/find.js"></script> -->
+<script src="$!rc.contextPath/static/js/common.js"></script>
+<script src="$!rc.contextPath/static/js/administrator/agent_list.js"></script>
+<script>
+
+
+$(function(){
+	jQuery.fn.bootstrapTable.defaults.onLoadSuccess=function(){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+			#if(!$!cSourcesVO.check)
+				$('$!cSourcesVO.frontContrlName').remove();
+			#end
+		#end
+		var tableRows=$('#table tbody tr');
+		var rows=$('#table').bootstrapTable('getData');
+		$.each(rows,function(index,row){
+			var current=new Date();
+			var cooperationEndTime=new Date(row.cooperationEndTime);
+			cooperationEndTime.setMonth(cooperationEndTime.getMonth()+1);
+			//快到期一个月之内时，标红提示
+			if(current.getFullYear()>cooperationEndTime.getFullYear()||current.getMonth()>=cooperationEndTime.getMonth()-1){
+				$(tableRows[index]).css('color','red');
+			}else{
+				$(tableRows[index]).css('color','black');
+			}
+		});
+	}
+	console.log(jQuery.fn.bootstrapTable.defaults);
+	$('#table').bootstrapTable();
+});
+//代理状态统计 
+//筛选条件
+function find(id,value){
+	$("#"+id+"").val(value);
+	qurery();
+}
+
+function commit(){
+	qurery();
+}
+//查询
+function qurery(url){
+	var _url =$("#table").attr("data-url");
+	if(url==null){
+		url=_url;
+	}
+	
+	$("#table").bootstrapTable("removeAll");
+	$("#table").bootstrapTable('refresh',{
+		url:url
+	},{
+		query:$('#form').serialize()
+	})
+}
+/*分页查询*/
+function queryParams(params) {
+	return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+
+}
+
+</script>
+
+

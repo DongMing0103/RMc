@@ -1,0 +1,327 @@
+/*登录页面*/
+.login-bg{
+    width: 100%;
+    height: 680px;
+    background: url(../images/login-bg.png) no-repeat;
+}
+.pr {
+    position: relative;
+}
+.login-header{
+    position: relative;
+    height: 100px;
+    padding: 26px 0 28px;
+}
+
+.login-header .shade{
+    width: 100%;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    opacity: 0.8;
+    z-index: 0;
+}
+
+.login-header .login-logo{
+    display: inline-block;
+    width: 100px;
+    height: 45px;
+    background: url(../images/logo.png) no-repeat;
+}
+
+.login-header .login-nav{
+    position: absolute;
+    right: 220px;
+}
+
+.login-header .login-nav li{
+    float: left;
+    margin: 0 30px;
+    line-height: 45px;
+}
+
+.login-header .login-nav li.active{
+    border-bottom: 1px solid #ffda44;
+}
+
+.login-header .login-nav li a{
+    color: #fff;
+}
+
+.login-header .btns{
+    line-height: 45px;
+}
+
+.login-header .btns .btn{
+    margin-left:18px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    color: #fff;
+}
+
+.login-content{
+    height: 580px;
+    position: relative;
+}
+
+.login-content .cn-left{
+    width: 752px;
+    height: 180px;
+    position: absolute;
+    left: 0;
+    bottom: 100px;
+
+}
+
+.login-content .shade{
+    background: #000;
+    opacity: 0.4;
+}
+
+.login-content .background{
+    background: url(../images/login-title.png) no-repeat 190px 50px;
+}
+
+.login-content .cn-left .qr-code{
+    width: 140px;
+    height: 180px;
+    padding: 20px;
+    background: #fff;
+}
+
+.login-content .cn-left .qr-code img{
+    width:100px;
+    height:100px;
+    margin-bottom: 8px;
+    background: #bfbfbf;
+}
+
+.login-content .cn-left .qr-code p{
+    margin-bottom: 0;
+    font-size: 12px;
+    text-align: center;
+}
+
+
+.login-content .cn-right{
+    width: 388px;
+    height: 400px;
+    padding: 30px;
+    position: absolute;
+    right: 0;
+    bottom: 100px;
+    background: #fff;
+}
+
+.login-content .cn-right h4{
+    margin: 0;
+    color: #0f0906;
+}
+
+.login-content  .error-msg{
+    padding-left: 20px;
+    height: 30px;
+    line-height: 30px;
+    color: #f00;
+    background: url(../images/error.png) no-repeat 0 7px;
+    visibility: hidden;
+}
+
+.login-content .cn-right .form-group{
+    margin-bottom: 20px;
+}
+
+.login-content .cn-right .user-icon,
+.login-content .cn-right .psd-icon{
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #aaa;
+}
+.login-content .cn-right .fa-user,
+.login-content .cn-right .fa-lock{
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #aaa;
+    font-size:16px;
+}
+
+.login-content .cn-right .verification{
+    width: 150px;
+}
+
+.login-content .cn-right .valid-img{
+    margin: 0 20px;
+    height: 34px;
+    cursor: pointer;
+}
+
+.login-content .cn-right .ver-info{
+    display: inline-block;
+    width: 38px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.login-content .cn-right .btn-login{
+    color: #333;
+    background: #ffda44;
+}
+
+.login-footer{
+    margin-top: 44px;
+    font-size: 13px;
+    text-align: center;
+}
+
+.login-footer p{
+    margin-bottom: 0;
+    line-height: 40px;
+    color: #535353;
+}
+
+.login-footer a{
+    padding: 0 12px;
+    border-left: 1px solid #8d8d8d;
+    color: #535353;
+}
+
+.login-footer a:first-child{
+    border-left: none;
+}
+/*新增代理商*/
+.add-merchants {
+    padding: 50px;
+}
+
+.add-merchants .form-group {
+    margin-bottom: 20px;
+}
+
+.add-merchants .img-box1 {
+    position: relative;
+    width: 210px;
+    height: 210px;
+    border: 5px solid #ddd;
+}
+
+.add-merchants .imgsbox1 .upimg {
+    width: 200px;
+    height: 200px;
+}
+
+.add-merchants .imgsbox2 {
+    width: 290px;
+    height: 220px;
+}
+
+.add-merchants .imgsbox3 {
+    width: 290px;
+    height: 220px;
+}
+
+.add-merchants .imgsbox4 {
+    width: 290px;
+    height: 220px;
+    position: relative;
+    border: 5px solid #ddd;
+}
+
+.licence4 {
+    margin-top: -20px;
+}
+
+.add-merchants .imgsbox2 .upimg, .add-merchants .imgsbox3 .upimg,
+.add-merchants .imgsbox4 .upimg {
+    width: 280px;
+    height: 210px;
+}
+
+.add-merchants .btn-upload {
+    margin: 0;
+}
+/*目标修正*/
+#foodke {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 20px;
+}
+
+#foodke>thead>tr>th {
+    border: 1px solid #ddd;
+    height: 42px;
+    padding-left: 15px;
+    color: #555;
+    font-weight: normal;
+    background-color: #ddd;
+    background: linear-gradient(#fff, #eee);
+}
+
+#foodke>tbody>tr>td {
+    height: 42px;
+    border: 1px solid #ddd;
+    padding-left: 15px;
+}
+.foodke>tbody>tr>td input {
+    width: 100%;
+    border: none;
+    height: 100%;
+}
+
+.foodke>tbody>tr>td input:focus {
+    outline: none;
+}
+/*提现*/
+.l-tit{width:100%; line-height:40px; border-bottom:1px solid #ddd;}
+.l-tit span{ display:inline-block; font-size:16px; color:#cb9a1a; border-bottom:2px solid #cb9a1a; }
+.l-title {
+    width: 100%;
+    line-height: 40px;
+    padding-left:20px;
+}
+.l-title span {
+    display: inline-block;
+    font-size: 16px;
+    color: #cb9a1a;
+    border-bottom: 2px solid #cb9a1a;
+}
+.cp-msg span{border-bottom: 0;}
+.bill{ padding:20px; margin-bottom:30px; background-color:#fff;}
+.bill-money{ float:left;width:250px; height:100px; padding-top:15px; border-right:1px solid #e5e5e5; text-align:center;}
+.bill-money span{ display:block; font-size:16px; color:#939393;}
+.bill-money .money{ font-size:30px; color:#ff6c64;}
+.bill-con{ float:left; padding-top:10px; margin-left:40px;}
+.bill-card{ margin-bottom:20px;}
+.bill-card a{ margin-left:10px;}
+.bill-card .ts{ display:block; font-size:12px; color:#939393;}
+.bill-kj a{ margin-right:10px;}
+.btn-bill{
+    padding: 0px 25px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    height: 32px;
+    margin-right: 10px;
+    display: inline-block;
+    line-height: 32px;
+}
+.btn-bill:hover,
+.btn-bill:visited,
+.btn-bill:focus{border:1px solid #57bdde; text-decoration:none;}
+.btn-green,.btn-green:visited{ background-color:#32b16c; color:#fff;border-color:#32b16c;}
+.btn-green:hover{ background-color:#26a15e; color:#fff;border-color:#32b16c;}
+
+.table-bill{ border:1px solid #dadada; }
+.table-bill > thead > tr > th{  height:42px;padding-left:15px; color:#555; font-weight:normal;border-bottom:1px solid #ddd; background-color:#F6F6F6\9;background: linear-gradient(#fff, #eee);}
+.table-bill > tbody > tr > td{height:55px; padding-left:15px; vertical-align:middle;background-color:#fff;border-bottom:1px solid #ddd;}
+.bootstrap-table .table > thead > tr > th{background-color:#F6F6F6\9;}
+/*新增食堂*/
+.merchants {
+    padding: 50px;
+}
+.merchants .add-merchants {
+    padding: 0;
+}

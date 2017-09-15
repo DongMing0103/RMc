@@ -1,0 +1,56 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">业务团队</span>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="../static/json/data.json"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="teamName" data-align="center">团队名称</th>
+            <th data-field="setupTime" data-align="center" data-formatter="dateFormatter">成立时间</th>
+            <th data-field="managementArea" data-align="center">负责区域</th>
+            <th data-field="businessManager" data-align="center">业务经理</th>
+            <th data-field="teamNumber" data-align="center">团队人数 </th>
+            <th data-field="developAgent" data-align="center">发展代理商</th>
+            <th data-field="developCateen"  data-align="center">发展食堂</th>
+            <th data-field="orderNumber"  data-align="center">订单数量</th>
+            <th data-field="orderMoney"  data-align="center">订单金额</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+   	/*  操作 */
+   	function operateFormatter(value, row, index) {
+		var str = '<div class=tddiv>'+
+					'<span class=settingtda>请选择</span>'+
+					'<ul class=settingtdmenu>'+
+						'<li><a href="/static/html/system_operate/salesman_list.html" target="_blank">团队成员</a></li>'+
+						'<li><a href="/static/html/system_operate/work_targe.html" target="_blank">当月工作目标</a></li>'+
+						'<li><a href="/static/html/system_operate/customer_list.html" target="_blank">客户列表</a></li>'+
+	      			'</ul></div>';
+		return str;
+	}
+</script>
+

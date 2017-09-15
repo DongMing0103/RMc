@@ -1,0 +1,94 @@
+<!--订单分账表-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">订单分账表</span>
+    </div>
+    <div class="form-box">
+	    <form class="form-inline" id="form" role="form">
+	    	<input type="hidden" id="id" name="id">
+	    	<input type="hidden" id="orderId" name="orderId" value="$!orderId">
+	        <div class="form-group">
+	            <label class="control-label">分账时间</label>
+	            <input class="Wdate input-date" id="stratTimes" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTimes\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="endTimes" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'stratTimes\')}',maxDate:'2020-10-01'})">
+	            <input type="hidden" value="2" name="leixing">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">支付方式</label>
+	            <div class="has-feedback" style="display:inline-block;">
+		        	<select class="form-control selectarrow" name="payModel" id="payModel">
+		                <option value="">请选择</option>
+		                <option value="1">余额</option>
+		                <option value="2">支付宝</option>
+		                <option value="3">微信</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	        </div>
+	        <br>
+	        <div class="form-group">
+	            <label class="control-label" name="orderNo" id="orderNo">订单编号</label>
+	            <input class="form-control" placeholder="请输入订单编号" name="orderNo" id="orderNo">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default crmOrderCutSearch" href="javascript:void(0);" onclick="query();"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default crmOrderCutReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/orderCutController/init')">重置</a>
+	        </div>
+	    </form>
+    </div>
+    
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="$!rc.contextPath/orderCutController/queryPage"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="10"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="orderFlowNo" data-align="center">流水号</th>
+            <th data-field="orderNo" data-align="center">订单编号</th>
+            <th data-field="realMoney" data-align="center">实付金额（￥）</th>
+            <th data-field="payModel" data-align="center" data-formatter="payModel">支付方式</th>
+            <th data-field="generalLedgerDate" data-align="center" data-formatter="dateFormatter">分帐时间</th>
+            <th data-field="canteenMoney" data-align="center">商家金额（￥）</th>
+            <th data-field="cutMoney" data-align="center">抽成金额（￥）</th>
+            <th data-field="channelMoney" data-align="center">通道费（￥）</th>
+            <!-- <th data-field="status" data-formatter="opFormatter" data-align="center">状态</th> -->
+            <th data-field="operate" data-align="center" data-formatter="operationFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning crmOrderCutExport" href="javascript:void(0);" onclick="downloadData('请选择要导出的数据！','$!rc.contextPath/orderCutController/excelOut?idS=')">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+</div>
+<script src="/static/js/common.js"></script>
+<script src="/static/js/order/order_fashinable.js"></script>
+<script type="text/javascript">
+/**
+ * 订单基础信息js
+ */
+
+	$(function(){
+		$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+	});
+
+</script>

@@ -1,0 +1,146 @@
+<!--平台分账-->
+<div class="m-content">
+	<div class="content-cap">
+		<span class="cap-name">平台分账</span>
+	</div>
+	<form class="form-inline mb10" id="form" role="form">
+		<div class="form-group">
+			<label class="control-label">分账时间&nbsp;</label>
+		</div>
+		<div class="form-group">
+			<input class="Wdate input-date" id="d4311" name="startTime"
+				type="text" placeholder="请选择日期"
+				onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+			&nbsp;至&nbsp; <input class="Wdate input-date" id="d4312"
+				name="endTime" type="text" placeholder="请选择日期"
+				onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+			<input type="hidden" value="2" name="leixing">
+		</div>
+		<div class="form-group">
+			<label class="control-label">支付方式</label>
+		</div>
+		<div class="form-group has-feedback">
+			<select class="form-control selectarrow" name="payModel">
+				<option value="">请选择</option>
+				<option value="1">余额</option>
+				<option value="2">支付宝</option>
+				<option value="3">微信</option>
+			</select> <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		</div>
+		<div class="form-group">
+			<label class="control-label">订单查询</label>
+		</div>
+		<div class="form-group">
+			<input class="form-control" id="" placeholder="请输入订单编号"
+				name="condition">
+		</div>
+		<div class="form-group">
+			<a class="btn btn-default crmBusinessSplitPlatformSearch"
+				href="javascript:void(0);" onclick="commit()"><i
+				class="fa fa-search"></i>搜索</a> <a
+				class="btn btn-default crmBusinessSplitPlatformReset"
+				href="javascript:void(0);"
+				onclick="loadHtmlDiv('$!rc.contextPath/crmbusinesssplitdetail/inits')">重置</a>
+		</div>
+	</form>
+
+	<table data-toggle="table" id="table" data-classes="table table-bill"
+		data-toggle="table"
+		data-url="$!rc.contextPath/crmbusinesssplitdetail/queryPages"
+		data-pagination="true" data-pagination-v-align="both"
+		data-side-pagination="server" data-cache="false"
+		data-query-params="queryParams" data-page-size="20"
+		data-page-list="[10,20,50]">
+		<thead>
+			<tr>
+				<th data-checkbox="true"></th>
+				<th data-field="orderNo" data-align="center">订单编号</th>
+				<th data-field="orderFlowNo" data-align="center">支付流水号</th>
+				<th data-field="payModel" data-align="center" data-formatter="model">支付方式</th>
+				<th data-field="createTime" data-align="center"
+					data-formatter="dateFormatter">分账时间</th>
+				<th data-field="canteenSplitMoney" data-align="center">食堂分账（￥）</th>
+				<th data-field="agentSplitMoney" data-align="center">代理商分账（￥）</th>
+				<th data-field="businessSplitMoney" data-align="center">业务员分账（￥）</th>
+				<th data-field="channelMoney" data-align="center">通道费（￥）</th>
+				<th data-field="platformMoney" data-align="center">平台分账（￥）</th>
+				<th data-field="j" data-formatter="operationFormatter">操作</th>
+			</tr>
+		</thead>
+	</table>
+	<div class="mt10">
+		<a class="btn btn-warning crmBusinessSplitPlatformExport"
+			href="javascript:void(0);"
+			onclick="downloadData('请选择要导出的数据','$!rc.contextPath/crmbusinesssplitdetail/platformExcelOut?ids=')">
+			<span class="glyphicon glyphicon-save"></span>导出
+		</a>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+					#end
+				#end
+			})
+		});
+    
+    function commit(){
+    	query();
+    }
+    
+  //根据条件查询
+	function query(url){
+		var _url=$('#table').attr("data-url");
+		if(url==null){
+			url=_url;
+		}
+		
+		$('#table').bootstrapTable('removeAll'); 
+		$('#table').bootstrapTable('refresh', {
+			url : url
+		}, {
+			params : $('#form').serialize()
+		});
+	}
+  
+   /* 支付条件格式化 */
+   function model(value,row,index){
+	  var a="";
+	   if(value==1){
+		a="余额";
+	   }else if(value==2){
+		a="支付宝";
+	   }else{
+		  a="微信";
+	   }
+	   return a;
+   }
+    
+    /* 表格分页 */
+    function queryParams(params) {
+		return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+	}
+
+    //操作
+     function operationFormatter(value, row, index) {
+		var ONo = row.orderNo;
+		orderNo = ONo.toString();
+		var str="<a href='javascript:void(0)' onclick=view('"+orderNo+"') >查看</a>";
+		return str;
+     }
+	// 查看
+    function view(orderNo) {
+    	var url = '/crmbusinesssplitdetail/orderView/' + orderNo;
+    	window.open(url);
+    }
+
+
+
+</script>
+

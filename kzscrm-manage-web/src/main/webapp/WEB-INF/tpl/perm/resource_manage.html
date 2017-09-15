@@ -1,0 +1,95 @@
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">资源列表</span>
+        <div class="pull-right">
+        	<a class="btn btn-warning role_newAdd" onclick="editData('新增资源','permmenu/addPage','900px','90%')">
+        		<span class="glyphicon glyphicon-plus"></span>新增
+        	</a>
+        </div>
+    </div>
+    <div class="container">
+	    <table
+	        id="table"
+	        data-classes="table table-bill" 
+	        data-toggle="table"
+	        data-url="/permMenu/listData"
+	        data-side-pagination="server"
+	        data-cache="false">
+	        <thead>
+	            <tr>
+	                <th data-field="name1" data-align="center">一级菜单</th>
+	                <th data-field="name2" data-align="center">二级菜单</th>
+	                <th data-field="permType" data-align="center" data-formatter="permTypeFormatter">类型</th>
+	                <th data-field="sourcesName" data-align="center">功能按钮</th>
+	                <th data-field="permType" data-align="center" data-formatter="permTypeFormatter">类型</th>
+	                <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+	            </tr>
+	        </thead>
+	    </table>
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#table').bootstrapTable();
+	});
+	function operateFormatter(value, row, index) {
+		return [
+			'<div class="tddiv">',
+				'<span class="settingtda">请选择</span>'+
+				'<ul class="settingtdmenu">'+
+					'<li><a class="delresource role_delect_first" onclick="deleteBtn('+row.id+',\'一级\')" href="javascript:void(0);">删除一级菜单</a><li>'+
+					'<li><a class="delresource role_delect_second" onclick="deleteBtn('+row.secondId+',\'二级\')" href="javascript:void(0);">删除二级菜单</a><li>'+
+				'</ul>'+
+			'</div>'			
+       	].join('');
+   	}
+	function permTypeFormatter(value,row,index){
+		switch(value){
+			case 1:return "食堂";
+			case 2:return "企业";
+			case 3:return "后端";
+		}
+	}
+	function deleteBtn(id,parentId) {
+		var postData={};
+		if(parentId=='一级'){
+			postData.parentId=0;
+		}else if(parentId=='二级'){
+			postData.parentId=1;
+		}
+		postData.id=id;
+    	layer.open({
+			title:"删除",
+		  	icon:3,
+		  	content:"确定要删除销该资源吗？",
+		  	btn:["确定","取消"],
+		  	yes:function(index){
+		  		$.ajax({
+		  			type:"POST",
+		  			data:postData,
+		  			dataType:"json",
+		  			url:"/permmenu/delete",
+		  			success:function(data){
+		  				layer.msg(data.message);
+				  		layer.close(index);
+				  		$("#table").bootstrapTable('refresh');
+		  				
+		  			}
+		  		})
+		  	}
+		})
+    }
+	function permTypeFormatter(value,row,index){
+		if(value==1){
+			return "食堂";
+		}else if(value==2){
+			return "企业";
+		}else if(value==3){
+			return "后台";
+			
+		}
+	}
+</script>
+
+
+

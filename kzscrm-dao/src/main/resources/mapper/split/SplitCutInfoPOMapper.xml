@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SplitCutInfoPOMapper">
+
+	<!-- 表中列对应PO -->
+	<resultMap type="com.hd.kzscrm.dao.entity.split.SplitCutInfoPO"
+		id="BaseResultMap">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CANTEEN_ID" property="canteenId" jdbcType="BIGINT" />
+		<result column="CANTEEN_USER_ID" property="canteenUserId"
+			jdbcType="BIGINT" />
+		<result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+		<result column="USER_ID" property="userId" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="REAL_MONEY" property="realMoney" jdbcType="DECIMAL" />
+		<result column="CUT_MONEY" property="cutMoney" jdbcType="DECIMAL" />
+		<result column="CUT_RATIO" property="cutRatio" jdbcType="DECIMAL" />
+		<result column="CHANNEL_MONEY" property="channelMoney"
+			jdbcType="DECIMAL" />
+		<result column="CUT_STATUS" property="cutStatus" jdbcType="BIGINT" />
+		<result column="CUT_TIME" property="cutTime" jdbcType="TIMESTAMP" />
+		<result column="CANCEL_TIME" property="cancelTime" jdbcType="TIMESTAMP" />
+		<result column="REFUND_ORDER_NO" property="refundOrderNo"
+			jdbcType="VARCHAR" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="TINYINT" />
+		<result column="ORDER_REAL_MONEY" property="orderRealMoney" jdbcType="DECIMAL" />
+		<result column="PAY_MODEL" property="payModel" jdbcType="TINYINT" />
+		<result column="business_cut_status" property="businessCutStatus" jdbcType="TINYINT" />
+	</resultMap>
+
+	<!-- 显示的记录对应的列 -->
+	<sql id="Base_Column_List">
+		splitcutinfo.id as id,
+		splitcutinfo.pay_model as payModel,
+		splitcutinfo.canteen_id as canteenId,
+		splitcutinfo.canteen_user_id as canteenUserId,
+		splitcutinfo.order_no as orderNo,
+		splitcutinfo.user_id as userId,
+		splitcutinfo.create_time as createTime,
+		splitcutinfo.real_money as realMoney,
+		splitcutinfo.order_real_money as orderRealMoney,
+		splitcutinfo.cut_money as cutMoney,
+		splitcutinfo.cut_ratio as cutRatio,
+		splitcutinfo.channel_money as channelMoney,
+		splitcutinfo.cut_status as cutStatus,
+		splitcutinfo.cut_time as cutTime,
+		splitcutinfo.cancel_time as cancelTime,
+		splitcutinfo.refund_order_no as refundOrderNo,
+		splitcutinfo.del_flag as delFlag
+	</sql>
+	<!-- 无分页查询 -->
+	<select id="queryList" parameterType="com.hd.wolverine.util.ParamMap"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="querySqlMain" />
+		where del_flag=1
+		<include refid="queryOptions" />
+		<include refid="orderControl" />
+		<if test="@Ognl@isNotEmpty(limit)">
+			 limit 1,${limit}
+		</if>
+	</select>
+
+	<!-- 列表对应的查询条件组合 -->
+	<sql id="queryOptions">
+	<if test="@Ognl@isNotEmpty(canteenIds)">
+			and canteen_id in
+			<foreach collection="canteenIds" item="canteenId" index="index"
+				open="(" separator="," close=")">
+				#{canteenId}
+			</foreach>
+		</if>
+		<if test="leixing == 1 and @Ognl@isNotEmpty(inputContent)">and order_no like CONCAT('%',#{inputContent},'%')</if>
+		<if test="@Ognl@isNotEmpty(stratTimes)">
+			and create_time <![CDATA[ >= ]]> #{stratTimes}
+		</if>
+		<if test="@Ognl@isNotEmpty(endTimes)">
+			and date_format(create_time,'%Y-%m-%d')<![CDATA[<=]]>
+			#{endTimes}
+		</if>
+		<if test="payModel != null and payModel != ''"> AND splitcutinfo.pay_model = #{payModel}</if>
+		<if test="id != null and id != ''"> AND splitcutinfo.id = #{id}</if>
+		<if test="canteenId != null and canteenId != ''"> AND splitcutinfo.canteen_id = #{canteenId}</if>
+		<if test="canteenUserId != null and canteenUserId != ''"> AND splitcutinfo.canteen_user_id = #{canteenUserId}</if>
+		<if test="orderNo != null and orderNo != ''"> AND splitcutinfo.order_no = #{orderNo}</if>
+		<if test="userId != null and userId != ''"> AND splitcutinfo.user_id = #{userId}</if>
+		<if test="createTime != null and createTime != ''"> AND splitcutinfo.create_time &lt;= #{createTime}</if>
+		<if test="realMoney != null and realMoney != ''"> AND splitcutinfo.real_money = #{realMoney}</if>
+		<if test="cutMoney != null and cutMoney != ''"> AND splitcutinfo.cut_money = #{cutMoney}</if>
+		<if test="cutRatio != null and cutRatio != ''"> AND splitcutinfo.cut_ratio = #{cutRatio}</if>
+		<if test="channelMoney != null and channelMoney != ''"> AND splitcutinfo.channel_money = #{channelMoney}</if>
+		<if test="cutStatus != null and cutStatus != ''"> AND splitcutinfo.cut_status = #{cutStatus}</if>
+		<if test="cutTime != null and cutTime != ''"> AND splitcutinfo.cut_time = #{cutTime}</if>
+		<if test="cancelTime != null and cancelTime != ''"> AND splitcutinfo.cancel_time = #{cancelTime}</if>
+		<if test="refundOrderNo != null and refundOrderNo != ''"> AND splitcutinfo.refund_order_no = #{refundOrderNo}</if>
+		<if test="delFlag != null and delFlag != ''"> AND splitcutinfo.del_flag = #{delFlag}</if>
+		<if test="businessCutStatus != null and businessCutStatus != ''"> AND splitcutinfo.business_cut_status = #{businessCutStatus}</if>
+	</sql>
+
+	<!-- 列表查询对应的排序选项 -->
+	<sql id="orderControl">
+		<if test="orders != null">
+			<foreach collection="orders.keys" index="key" item="value"
+				open="order by" separator=",">
+				${key} ${orders[key]}
+			</foreach>
+		</if>
+	</sql>
+	<!-- 添加抽成明细信息 -->
+	<insert id="isnertSplitCutInfo" parameterType="com.hd.wolverine.util.ParamMap">
+		insert into
+		`split_cut_info`(id,canteen_id,canteen_user_id,order_no,user_id,create_time,real_money,
+		cut_money,cut_ratio,channel_money,cut_status,del_flag,order_real_money,pay_model,pay_timestamp)
+		values(#{id},#{canteenId},#{canteenUserId},#{orderNo},#{userId},now(),#{realMoney},
+		#{cutMoney},#{cutRatio},#{channelMoney},1,1,#{orderRealMoney},#{payModel},current_timestamp(6))
+	</insert>
+	<!-- 添加抽成明细信息 -->
+	<insert id="isnertSplitCutInfoByOrderNO" parameterType="com.hd.wolverine.util.ParamMap">
+		 insert into `split_cut_info`(id,canteen_id,canteen_user_id,order_no,user_id,create_time,real_money,cut_money,cut_ratio,channel_money,cut_status,
+		cut_time,cancel_time,refund_order_no,pay_model)
+		select ${id},canteen_id,canteen_user_id,order_no,user_id,now(),-real_money,-cut_money,cut_ratio,-channel_money,4,
+		cut_time,now(),refund_order_no,pay_model
+ 		from `split_cut_info` where order_no = #{orderNo}
+	</insert>
+	<!-- 列表查询对应的表关系SQL -->
+	<sql id="querySqlMain">
+		split_cut_info splitcutinfo
+	</sql>
+	<!-- 判断订单是否存在 -->
+	<select id="queryOrderNoISNull" resultType="java.lang.Integer" parameterType="com.hd.wolverine.util.ParamMap">
+		 select count(order_no) count from `split_cut_info` where order_no = #{orderNo}
+	</select>
+	<!-- 查询时间戳后的金额 -->
+	<select id="queryMoneyByCanteenId" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		 select sum(real_money) from `split_cut_info` where canteen_id = #{canteenId} and cut_status =3
+		 <if test="@Ognl@isNotEmpty(payTimestamp)">
+				and pay_timestamp<![CDATA[>=]]>#{payTimestamp}
+			</if>
+	</select>
+	<!-- 查询时间戳后的所有订单  大后台suchangsong -->
+	<select id="querySplitOrder" resultType="com.hd.kzscrm.dao.entity.split.SplitCutInfoPO" parameterType="com.hd.wolverine.util.ParamMap">
+		 select * from `split_cut_info` where canteen_id = #{canteenId} and cut_status =3
+		 <if test="@Ognl@isNotEmpty(payTimestamp)">
+				and pay_timestamp<![CDATA[>=]]>#{payTimestamp}
+			</if>
+	</select>
+	
+	<!-- 分页查询对应的记录 -->
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="querySqlMain" />
+		where del_flag=1
+		
+		<include refid="queryOptions" />
+		order by create_time desc
+	</select>
+
+	<!-- 修改抽成明细状态 -->
+	<update id="updateSplitCutInfoStatus" parameterType="com.hd.wolverine.util.ParamMap">
+		update split_cut_info  
+		<set> 
+			<if test="@Ognl@isNotEmpty(cutStatus)">
+				 cut_status=#{cutStatus}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(cancelTime)">
+				cancel_time=#{cancelTime}, 
+			</if> 
+			<if test="@Ognl@isNotEmpty(businessCutStatus)">
+				business_cut_status=#{businessCutStatus}, 
+			</if> 
+		</set> 
+		
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">
+				and order_No=#{orderNo}
+			</if>
+			<if test="@Ognl@isNotEmpty(cutStatusOld)">
+				and cut_status=#{cutStatusOld}
+			</if>
+			<if test="@Ognl@isNotEmpty(businessCutStatus)">
+				and business_cut_status=0
+			</if> 
+		</where>
+	</update>
+</mapper>
+
+
+

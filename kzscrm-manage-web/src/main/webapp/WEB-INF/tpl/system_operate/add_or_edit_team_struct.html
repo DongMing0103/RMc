@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/css/style.css?V1">
+        <link rel="stylesheet" href="/static/css/common.css">
+        <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+        <script src="/static/js/jquery/jquery-extend.js"></script>
+        <script src="/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="/static/js/layer/layer.js"></script>
+        <script src="/static/js/ValidForm/Validform_v5.3.2.js"></script> 
+        <script src="/static/js/cityselect/jquery.cityselect.js"></script>
+        
+        <script src="$!rc.contextPath/static/js/systemOperate/addOrEditTeamStruct/addOrEditTeamStruct.js"></script>
+    </head>
+    <body>
+		<form class="form-horizontal add-team" id="form">
+			<input name="id" value="$!crmTeamVO.id" id="teamId" type="hidden">
+			#foreach($!parentCrmTeamVO in $!parentCrmTeamVOs)
+				<input class="parentCrmTeamVO" id="$!parentCrmTeamVO.id" type="hidden">
+			#end
+			<div class="form-group">
+			    <div class="col-sm-3 text-right">
+			        <label class="control-label">团队名称</label>
+			    </div>
+			    <div class="col-sm-4">
+			        <input class="form-control first-input" id="name" name="name" value="$!crmTeamVO.name" placeholder="请输入团队名称" datatype="*" nullmsg="团队名称不能为空" sucmsg=" "/>
+			    </div>
+			    <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+			</div>
+	        <div class="form-group leaderManager">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">上级主管</label>
+	            </div>
+	            <div class="col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="parentId" id="higherManagerCountry" onchange="addOrEditTeamStruct.searchTeam(1)">
+	                		<option value="">请选择</option>
+	                		#foreach($!crmTeamVO in $!crmTeamVOs)
+	                			#if($!crmTeamVO.level==1)
+	                				<option value="$!crmTeamVO.id" areaCode="$!crmTeamVO.areaCode">$!crmTeamVO.name</option>
+	                			#end
+	                		#end
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	        <div class="form-group leaderManager" style="display:none">
+	            <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="parentId" id="higherManagerBigArea" onchange="addOrEditTeamStruct.searchTeam(2)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	        <div class="form-group leaderManager" style="display:none">
+	            <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="parentId" id="higherManagerProvince" onchange="addOrEditTeamStruct.searchTeam(3)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	        <div class="form-group leaderManager" style="display:none">
+	           
+	            <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="parentId" id="higherManagerCity" onchange="addOrEditTeamStruct.searchTeam(4)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	        <div class="form-group leaderManager" style="display:none">
+	           
+	            <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="parentId" id="higherManagerDistrict" onchange="addOrEditTeamStruct.searchTeam(5)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	      
+			<div class="form-group businessScope" id="businessScopeBigArea">
+                 <div class="col-sm-3 text-right">
+                     <label class="control-label" for="cuser">业务范围</label>
+                 </div>
+                 <div class="col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="areaCode" disabled="disabled" id="bigArea" onchange="addOrEditTeamStruct.searchArea(1,this)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group businessScope" id="businessScopeProvince" style="display:none">
+                 <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="areaCode" id="province" onchange="addOrEditTeamStruct.searchArea(2,this)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group businessScope" id="businessScopeCity" style="display:none">
+                 <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="areaCode" id="city" onchange="addOrEditTeamStruct.searchArea(3,this)">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group businessScope" id="businessScopeDistrict" style="display:none">
+                 <div class="col-sm-offset-3 col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="areaCode" id="district">
+	                		<option value="">请选择</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group text-center mt40">
+            	<a href="javascript:void(0);" onclick="addOrEditTeamStruct.addTeam()" class="btn btn-warning btn-size">确定</a>
+            </div>
+        </form>
+    </body>
+    <script type="text/javascript">
+    	var crmTeamVOs=[];
+    	#foreach($!crmTeamVO in $!crmTeamVOs)
+    		var crmTeamVO={};
+    		crmTeamVO['id']=$!crmTeamVO.id;
+    		crmTeamVO['name']='$!crmTeamVO.name';
+    		crmTeamVO['level']=$!crmTeamVO.level;
+    		crmTeamVO['parentId']=$!crmTeamVO.parentId;
+    		crmTeamVO['parentIds']='$!crmTeamVO.parentIds';
+    		crmTeamVO['topParentId']=$!crmTeamVO.topParentId;
+    		crmTeamVO['areaCode']=$!crmTeamVO.areaCode;
+    		crmTeamVOs.push(crmTeamVO);
+    	#end
+    	var parentCrmTeamCount=null;
+    	#if($!customTools.isNotEmpty($!parentCrmTeamCount))
+    		parentCrmTeamCount=$!parentCrmTeamCount;
+    	#end
+    </script>
+</html>
+
+

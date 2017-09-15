@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPermRoleSourcesPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.perm.CrmPermRoleSourcesPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="ROLE_ID" property="roleId" jdbcType="BIGINT"/>
+                    <result column="SOURCES_ID" property="sourcesId" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmpermrolesources.id as id,
+	                	        	           crmpermrolesources.role_id as roleId,
+	                	        	           crmpermrolesources.sources_id as sourcesId,
+	                	        	           crmpermrolesources.del_flag as delFlag
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmpermrolesources.id = #{id}</if>
+                                               <if test="roleId != null and roleId != ''"> AND crmpermrolesources.role_id = #{roleId}</if>
+                                               <if test="sourcesId != null and sourcesId != ''"> AND crmpermrolesources.sources_id = #{sourcesId}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmpermrolesources.del_flag = #{delFlag}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_perm_role_sources crmpermrolesources
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+	<!-- findByRoleId -->
+	<select id="findByRoleId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_perm_role_sources
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(roleId)">and ROLE_ID =#{roleId}</if>
+		</where>
+	
+	</select>
+	
+		
+	
+	</mapper>
+
+
+

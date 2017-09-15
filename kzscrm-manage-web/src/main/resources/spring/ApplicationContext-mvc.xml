@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd	
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="objectMapper">
+					<bean class="com.hd.kzscrm.manage.common.ObjectMappingCustomer"></bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<context:component-scan
+		base-package="com.hd.kzscrm.manager.controller,com.hd.kzscrm.manage.interceptor" />
+
+	<mvc:default-servlet-handler />
+
+	<import resource="classpath:wolverine/wolverine-mvc.xml" />
+
+	<mvc:default-servlet-handler />
+
+	<mvc:interceptors>
+		<bean class="com.hd.kzscrm.manage.interceptor.Interceptor" />
+
+
+	</mvc:interceptors>
+	<bean id="propertyConfigurer" class="com.hd.wolverine.config.WolverineConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:config/dbconfig.properties</value>
+				<value>classpath:config/wolverine.properties</value>
+				<value>classpath:config/environment_variable.properties</value>
+				<value>classpath*:config/kzscrm-dao.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 使用配置中心时用这个 -->
+	<!-- <bean id="propertyConfigurer" class="com.hd.wolverine.config.WolverineConfigurer"/> -->
+
+	<!-- 对静态资源文件的访问 restful -->
+	<mvc:resources mapping="/static/**" location="/,/static/" />
+
+	<!-- 配置SpringMVC的视图解析器 -->
+	<bean id="velocityConfig"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/tpl/"></property>
+		<property name="configLocation" value="classpath:config/velocity.properties"/>
+		<property name="velocityProperties">
+			<props>
+				<prop key="input.encoding">UTF-8</prop>
+				<prop key="output.encoding">UTF-8</prop>
+			</props>
+		</property>
+
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="false"></property>
+		<property name="prefix" value=""></property>
+		<property name="suffix" value=".html" />
+		<property name="requestContextAttribute" value="rc" />
+		<property name="contentType">
+			<value>text/html;charset=UTF-8</value>
+		</property>
+		<property name="toolboxConfigLocation" value="WEB-INF/toolbox.xml" />
+	</bean>
+
+	<!-- 自定义异常处理 -->
+	<!-- 优先要比DefaultHandlerExceptionResolver高，否则部分异常得不到处理机会 -->
+	<!-- DefaultHandlerExceptionResolver order为2，所以此处order设置value为1 -->
+	<bean
+		class="com.hd.kzscrm.common.exceptions.handler.AppHandlerExceptionResolver">
+		<property name="order" value="1" />
+	</bean>
+
+	<!--异步添加公司积分 -->
+	<bean id="KzscrmMessageListener" class="com.hd.kzscrm.manage.listener.KzscrmMessageListener" />
+	<!--文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="52428800" /><!--50M=50*1024*1024(B)=52428800 
+			bytes -->
+	</bean>
+</beans>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmSplitAssignSetPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.agent.CrmSplitAssignSetPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="ENTER_TIME" property="enterTime" jdbcType="TIMESTAMP"/>
+                    <result column="CANTEEN_ID" property="canteenId" jdbcType="BIGINT"/>
+                    <result column="CANTEEN_SPLIT_PERCENT" property="canteenSplitPercent" jdbcType="DOUBLE"/>
+                    <result column="BUSINSS_SPLIT_PERCENT" property="businssSplitPercent" jdbcType="DOUBLE"/>
+                    <result column="AGENT_SPLIT_PERCENT" property="agentSplitPercent" jdbcType="DOUBLE"/>
+                    <result column="CREATER_UID" property="createrUid" jdbcType="BIGINT"/>
+                    <result column="CREATER_TIME" property="createrTime" jdbcType="TIMESTAMP"/>
+                    <result column="effective_time" property="effectiveTime"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="business_id" property="businessId" jdbcType="BIGINT"/>
+                    <result column="agent_id" property="agentId" jdbcType="BIGINT"/>
+                    <result column="business_take_type" property="businessTakeType" jdbcType="BIGINT"/>
+                    <result column="agent_take_type" property="agentTakeType" jdbcType="BIGINT"/>
+                    <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmsplitassignset.id as id,
+	                	        	           crmsplitassignset.enter_time as enterTime,
+	                	        	           crmsplitassignset.canteen_id as canteenId,
+	                	        	           crmsplitassignset.canteen_split_percent as canteenSplitPercent,
+	                	        	           crmsplitassignset.businss_split_percent as businssSplitPercent,
+	                	        	           crmsplitassignset.agent_split_percent as agentSplitPercent,
+	                	        	           crmsplitassignset.creater_uid as createrUid,
+	                	        	           crmsplitassignset.creater_time as createrTime,
+	                	        	           crmsplitassignset.effective_time as effectiveTime,
+	                	        	           crmsplitassignset.del_flag as delFlag,
+	                	        	           crmsplitassignset.business_id as businessId,
+	                	        	           crmsplitassignset.agent_id as agentId,
+	                	        	           crmsplitassignset.business_take_type as businessTakeType,
+	                	        	           crmsplitassignset.agent_take_type as agentTakeType,
+	                	        	           crmsplitassignset.order_id as orderId
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmsplitassignset.id = #{id}</if>
+                                      <if test="enterTime != null and enterTime != ''"> AND crmsplitassignset.enter_time = #{enterTime}</if>
+                                                        <if test="canteenId != null and canteenId != ''"> AND crmsplitassignset.canteen_id = #{canteenId}</if>
+                                      <if test="canteenSplitPercent != null and canteenSplitPercent != ''"> AND crmsplitassignset.canteen_split_percent = #{canteenSplitPercent}</if>
+                                               <if test="businssSplitPercent != null and businssSplitPercent != ''"> AND crmsplitassignset.businss_split_percent = #{businssSplitPercent}</if>
+                                               <if test="agentSplitPercent != null and agentSplitPercent != ''"> AND crmsplitassignset.agent_split_percent = #{agentSplitPercent}</if>
+                                                        <if test="createrUid != null and createrUid != ''"> AND crmsplitassignset.creater_uid = #{createrUid}</if>
+                                      <if test="createrTime != null and createrTime != ''"> AND crmsplitassignset.creater_time = #{createrTime}</if>
+                                      <if test="effectiveTime != null and effectiveTime != ''"> AND crmsplitassignset.effective_time = #{effectiveTime}</if>
+                                                        <if test="delFlag != null and delFlag != ''"> AND crmsplitassignset.del_flag = #{delFlag}</if>
+                                                        <if test="businessId != null and delFlag != ''"> AND crmsplitassignset.business_id = #{businessId}</if>
+                                                        <if test="agentId != null and delFlag != ''"> AND crmsplitassignset.agent_id = #{agentId}</if>
+                                                        <if test="businessTakeType != null and delFlag != ''"> AND crmsplitassignset.business_take_type = #{businessTakeType}</if>
+                                                        <if test="agentTakeType != null and delFlag != ''"> AND crmsplitassignset.agent_take_type = #{agentTakeType}</if>
+                                                        <if test="orderId != null and orderId != ''"> AND crmsplitassignset.order_id = #{orderId}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_split_assign_set crmsplitassignset
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM crm_split_assign_set 
+		<where>
+			del_flag=1
+		<if test=" @Ognl@isNotEmpty(startTime)">and date_format(creater_time,"%Y-%m-%d") <![CDATA[>=]]> #{startTime}</if>
+		<if test=" @Ognl@isNotEmpty(endTime)">and date_format(creater_time,"%Y-%m-%d") <![CDATA[<=]]> #{endTime}</if>
+	    <if test=" @Ognl@isNotEmpty(canteenIds)"> 
+			and CANTEEN_ID in
+			<foreach collection="canteenIds" item="canteenId" index="index" open="(" close=")" separator=",">
+				#{canteenId}
+			</foreach>
+		</if> 
+		
+		</where>
+    </select>
+   
+    <!-- 查询全部 有条件就按条件查询 -->
+	<select id="findByAll" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_split_assign_set
+		<where>
+			del_flag = 1
+		</where>
+	</select>
+   
+      <!-- 根据id查询详情 -->
+	<select id="findById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+	   select * from crm_split_assign_set
+	   <where>
+	      del_flag = 1
+	      <if test="@Ognl@isNotEmpty(orderId)">and order_id = #{orderId}</if>
+	   </where>
+	</select>
+	
+	 <!-- 根据主键查询详情 -->
+	<select id="findByResourceId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+	   select * from crm_split_assign_set
+	   <where>
+	      del_flag = 1
+	      <if test="@Ognl@isNotEmpty(id)">and id =#{id}</if>
+	   </where>
+	</select>
+
+	
+	<select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, enter_time, canteen_id, canteen_split_percent, businss_split_percent, agent_split_percent, creater_uid, creater_time, effective_time, business_id, agent_id, business_take_type, agent_take_type
+		from crm_split_assign_set
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id = #{canteenId}</if>
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" separator="," close=")">#{canteenId}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(createrUid)">and creater_uid = #{createrUid}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(businessTaketype)">and business_take_type = #{businessTaketype}</if>
+			<if test="@Ognl@isNotEmpty(agentTaketype)">and agent_take_type = #{agentTaketype}</if>
+			<if test="@Ognl@isNotEmpty(judgeEffectiveTime)">and date_format(effective_time,"%Y-%m-%d") <![CDATA[>]]> date_format(#{judgeEffectiveTime},"%Y-%m-%d")</if>
+		</where>
+		order by id
+	</select>
+	
+	
+	<!-- 查询最近生效时间的抽成信息 -->
+	<select id="getLastEffectiveSplitMsg" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, enter_time, canteen_id, canteen_split_percent, businss_split_percent, agent_split_percent, creater_uid, creater_time, effective_time,business_id, agent_id, business_take_type, agent_take_type
+		from crm_split_assign_set
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id = #{canteenId}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(judgeEffectiveTime)">and date_format(effective_time,"%Y-%m-%d") <![CDATA[<=]]> date_format(#{judgeEffectiveTime},"%Y-%m-%d")</if>
+		</where>
+		order by effective_time desc limit 1
+	</select>
+	
+	<!-- findByCanteenId  根据canteenId 查询对象 -->
+	<select id="findByCanteenId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select *
+		from crm_split_assign_set
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(canteenId)"> and  canteen_id =#{canteenId}</if>
+		</where>
+	</select>
+	
+	<!-- findByOrderId  根据OrderId 查询对象 -->
+	<select id="findByOrderId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select *
+		from crm_split_assign_set
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(orderId)"> and order_id =#{orderId}</if>
+		</where>
+	</select>
+	
+	<!-- 根据业务员id 获取业务员分账比例 -->
+	<select id="findByBussiness" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select *
+		from crm_split_assign_set
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(businessId)"> and  business_id =#{businessId}</if>
+		</where>
+	</select>
+	
+	</mapper>
+
+
+

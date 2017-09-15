@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="EnterpriseDepartmentMapper">
+
+<resultMap type="com.hd.kzscrm.dao.entity.enterprise.EnterpriseDepartmentPO" id="DepartmentMap">
+	<id column="id" jdbcType="BIGINT" property="id"/>
+	<result column="d_name" jdbcType="VARCHAR" property="dName"/>
+	<result column="parent_id" jdbcType="BIGINT" property="parentId"/>
+	<result column="id_no" jdbcType="BIGINT" property="idNo"/>
+	<result column="level" jdbcType="INTEGER" property="level"/>
+	<result column="enterprise_id" jdbcType="INTEGER" property="enterpriseId"/>
+	<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+	<result column="create_uid" property="createUid"/>
+	<result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+	<result column="update_uid" jdbcType="BIGINT" property="updateUid"/>
+	<result column="status" jdbcType="INTEGER" property="status"/>
+	<result column="del_flag" jdbcType="INTEGER" property="delFlag"/>	
+</resultMap>
+	<sql id="allField">
+		id,d_name,parent_id,id_no,level,enterprise_id,create_time,create_uid,update_time,update_uid,status,del_flag 
+	</sql>
+	<select id="findAll" resultMap="DepartmentMap">
+		select id ,id_no,d_name,enterprise_id,status
+		from enterprise_department
+		where del_flag =1
+	</select>
+	
+	<select id="findById" resultMap="DepartmentMap">
+	select d_name,enterprise_id 
+	from enterprise_department
+	<where>
+		del_flag = 1
+		<if test="id !=null and id != 0"> and id=#{id}</if>
+		
+	</where>
+</select>
+	
+	<select id="findByEnterpriseId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="DepartmentMap">
+		select <include refid="allField"/>
+		from enterprise_department
+		<where>
+			status = 1 and del_flag = 1
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id = #{enterpriseId}
+			</if>
+			<if test="@Ognl@isNotEmpty(parentId)">
+				and parent_id = #{parentId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByParam" parameterType="com.hd.wolverine.util.ParamMap" resultMap="DepartmentMap">
+		select <include refid="allField"/>
+		from enterprise_department
+		<where>
+			status = 1 and del_flag = 1
+			<if test="@Ognl@isNotEmpty(id)">
+				and id = #{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id = #{enterpriseId}
+			</if>
+			<if test="@Ognl@isNotEmpty(parentId)">
+				and parent_id = #{parentId}
+			</if>
+			<if test="@Ognl@isNotEmpty(level)">
+				and level = #{level}
+			</if>
+			<if test="@Ognl@isNotEmpty(dName)">
+				and d_name = #{dName}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByParams" parameterType="com.hd.wolverine.util.ParamMap" resultMap="DepartmentMap">
+		select <include refid="allField"/>
+		from enterprise_department
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id = #{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id = #{enterpriseId}
+			</if>
+			<if test="@Ognl@isNotEmpty(parentId)">
+				and parent_id = #{parentId}
+			</if>
+			<if test="@Ognl@isNotEmpty(level)">
+				and level = #{level}
+			</if>
+			<if test="@Ognl@isNotEmpty(dName)">
+				and d_name = #{dName}
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				and del_flag = #{delFlag}
+			</if>
+			<if test="@Ognl@isEmpty(delFlag)">
+				and del_flag = 1
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				and status = #{status}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateDepartment" parameterType="com.hd.wolverine.util.ParamMap">
+		update enterprise_department  
+			<set>
+				<if test="@Ognl@isNotEmpty(updateTime)">
+					 update_time = #{updateTime},
+				</if>
+				<if test="@Ognl@isNotEmpty(updateUid)">
+					 update_uid = #{updateUid},
+				</if>
+				<if test="@Ognl@isNotEmpty(delFlag)">
+					 del_flag = #{delFlag},
+				</if>
+			</set>
+			<where>
+				<if test="@Ognl@isNotEmpty(id)">
+					and id = #{id}
+				</if>
+				<if test="@Ognl@isNotEmpty(ids)">
+					and id in 
+					<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+						#{id}
+					</foreach>
+				</if>
+			</where>
+	</update>
+</mapper>

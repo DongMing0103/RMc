@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmCanteenApplyPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.canteen.CrmCanteenApplyPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="APPLY_TIME" property="applyTime" jdbcType="TIMESTAMP"/>
+                    <result column="CHECK_STATUS" property="checkStatus" jdbcType="BIGINT"/>
+                    <result column="CHECK_USER_ID" property="checkUserId" jdbcType="BIGINT"/>
+                    <result column="CHECK_TIME" property="checkTime" jdbcType="TIMESTAMP"/>
+                    <result column="CANTEEN_ID" property="canteenId" jdbcType="BIGINT"/>
+                    <result column="client_id" property="clientId" jdbcType="BIGINT"/>
+                    <result column="enter_time" property="enterTime" jdbcType="TIMESTAMP"/>
+                    <result column="canteen_split_percent" property="canteenSplitPercent" jdbcType="DECIMAL"/>
+                    <result column="contract_img_path" property="contractImgPath" jdbcType="VARCHAR"/>
+                    <result column="create_uid" property="createUid" jdbcType="BIGINT"/>
+                    <result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmcanteenapply.id as id,
+	                	        	           crmcanteenapply.apply_time as applyTime,
+	                	        	           crmcanteenapply.check_status as checkStatus,
+	                	        	           crmcanteenapply.check_user_id as checkUserId,
+	                	        	           crmcanteenapply.check_time as checkTime,
+	                	        	           crmcanteenapply.canteen_id as canteenId,
+	                	        	           crmcanteenapply.client_id as clientId,
+	                	        	           crmcanteenapply.enter_time as enterTime,
+	                	        	           crmcanteenapply.canteen_split_percent as canteenSplitPercent,
+	                	        	           crmcanteenapply.contract_img_path as contractImgPath,
+	                	        	           crmcanteenapply.create_uid as createUid
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmcanteenapply.id = #{id}</if>
+                                      <if test="applyTime != null and applyTime != ''"> AND crmcanteenapply.apply_time = #{applyTime}</if>
+                                      <if test="@Ognl@isNotEmpty(checkStatus)"> AND crmcanteenapply.check_status = #{checkStatus}</if>
+                                      <if test="checkUserId != null and checkUserId != ''"> AND crmcanteenapply.check_user_id = #{checkUserId}</if>
+                                      <if test="checkTime != null and checkTime != ''"> AND crmcanteenapply.check_time = #{checkTime}</if>
+                                      <if test="canteenId != null and canteenId != ''"> AND crmcanteenapply.canteen_id = #{canteenId}</if>
+                                      <if test="clientId != null and clientId != ''"> AND crmcanteenapply.client_id = #{clientId}</if>
+                                      <if test="enterTime != null and enterTime != ''"> AND crmcanteenapply.enter_time = #{enterTime}</if>
+                                      <if test="canteenSplitPercent != null and canteenSplitPercent != ''"> AND crmcanteenapply.canteen_split_percent = #{canteenSplitPercent}</if>
+                                      <if test="contractImgPath != null and contractImgPath != ''"> AND crmcanteenapply.contract_img_path = #{contractImgPath}</if>
+                                      <if test="createUid != null and createUid != ''"> AND crmcanteenapply.create_uid = #{createUid}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_canteen_apply crmcanteenapply
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+	<!-- 根据参数查询食堂入驻申请信息 -->
+	<select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, apply_time, check_status, check_user_id, check_time, canteen_id, client_id, enter_time, canteen_split_percent, contract_img_path, create_uid
+		from crm_canteen_apply
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(applyTime)">and apply_time = #{applyTime}</if>
+			<if test="@Ognl@isNotEmpty(checkStatus)">and check_status = #{checkStatus}</if>
+			<if test="@Ognl@isNotEmpty(checkUserId)">and check_user_id = #{checkUserId}</if>
+			<if test="@Ognl@isNotEmpty(checkTime)">and check_time = #{checkTime}</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id = #{canteenId}</if>
+			<if test="@Ognl@isNotEmpty(clientId)">and client_id = #{clientId}</if>
+			<if test="@Ognl@isNotEmpty(enterTime)">and enter_time = #{enterTime}</if>
+			<if test="@Ognl@isNotEmpty(canteenSplitPercent)">and canteen_split_percent = #{canteenSplitPercent}</if>
+			<if test="@Ognl@isNotEmpty(contractImgPath)">and contract_img_path = #{contractImgPath}</if>
+			<if test="@Ognl@isNotEmpty(createUid)">and create_uid = #{createUid}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+		</where>
+	</select>
+	
+	<!-- 根据参数删除申请信息(delFlag置0) -->
+	<update id="deleteCanteenApplyEntity" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_canteen_apply
+		<set>
+			<if test="@Ognl@isNotEmpty(delFlag)">del_flag = #{delFlag}</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id = #{canteenId}</if>
+		</where>
+	</update>
+		
+	
+	</mapper>
+
+
+

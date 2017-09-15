@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>跟踪记录</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+        
+            <h2><a href="/index">筷子说CRM</a></h2>
+            <h3>跟踪记录</h3>
+            <form action=""  id="form">
+            	<input type="hidden" name="customerId" id="customerId"  value="$!customerId"/>
+            	<input type="hidden" name="accessAgentCanteenId" id="accessAgentCanteenId"  value="$!accessAgentCanteenId"/>
+            	<!-- <input type="hidden" name="clientType" id="clientType"  value="$!clientType"/> -->
+            </form>
+            
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+            <table
+                    id="table"
+		        data-classes="table table-public"
+		        data-toggle="table"
+		        data-url="/crmbusinesstailrecord/queryList"
+		        data-pagination="true"
+		        data-pagination-v-align="both"
+		        data-side-pagination="server"
+		        data-cache="false"
+		        data-query-params="queryParams"
+		        data-page-size="20"
+		        data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-field="businessName" data-align="center">业务员</th>
+		            <th data-field="tailNatureName" data-align="center">跟踪性质</th>
+		            <th data-field="tailTimeStartAndEnd" data-align="center">时间</th>
+		            <th data-field="accessName" data-align="center">对接人</th>
+		            <th data-field="accessMobile" data-align="center">对接人电话</th>
+		            <th data-field="remark" data-align="center" data-width="30%" style="position:relative">跟踪情况</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/agent/platformAndAgentCustomer.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">资源列表</span>
+        <div class="pull-right">
+            <a class="btn btn-warning btn-width role_addOneMenu" onclick="editData('新增一级菜单','/permMenu/menuFirst','900px','90%')">
+        		<span class="glyphicon glyphicon-plus"></span>一级菜单
+        	</a>
+        	<a class="btn btn-warning btn-width role_addTowMenu" onclick="editData('新增二级菜单','/permMenu/menuSecond','900px','90%')">
+        		<span class="glyphicon glyphicon-plus"></span>二级菜单
+        	</a>
+        	<a class="btn btn-warning btn-width role_addSrouce" onclick="editData('新增按钮资源','/permMenu/addPermMenu1','1000px','90%')">
+        		<span class="glyphicon glyphicon-plus"></span>新增按钮资源
+        	</a>
+        </div>
+    </div>
+    <div class="container">
+     <form class="form-inline mb10" id="form" role="form">
+			<div class="form-group has-feedback">
+				<select class="form-control role_permType" id="permType" name="permType" onchange="permTypeSelect();">
+					<option value="">资源类型</option> 
+					<option value="1">商家</option>
+					<option value="2">企业</option>
+					<option value="3" selected="selected">系统</option>
+				</select> 
+				<span class="glyphicon glyphicon-triangle-bottom form-control-feedback caret-self" aria-hidden="true"></span>
+			</div>
+		</form>
+	    <table
+	        id="table"
+	        data-classes="table table-bill resource-table" 
+	        data-toggle="table"
+	        data-url="permMenu/listQueryMenu?permType=3"
+	        data-side-pagination="server"
+	        data-cache="false">
+	        <thead>
+	            <tr>
+	                <th data-field="permType" data-align="center" width="10%" data-formatter="permTypeFormatter">类型</th>
+	                <th data-field="name" data-align="center" width="10%">一级菜单</th>
+	                <th data-field="name2" data-align="left" data-formatter="secondList">二级菜单(菜单、按钮、操作)</th>
+	                <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+	            </tr>
+	        </thead>
+	    </table>
+    </div>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#table').bootstrapTable();
+	});
+	
+	function permTypeFormatter(value,row,index){
+		switch(value){
+			case 1:return "食堂菜单";
+			case 2:return "企业菜单";
+			case 3:return "系统菜单";
+		}
+	}
+	/* 二级菜单 */
+	function secondList(value, row, index){
+		var datas=row.permMenuDTOs;
+		var _html="";
+		if(datas.length>0){
+			_html+='<div class="table-responsive"><table class="table second-table"><tbody>';
+			for(var i=0;i<datas.length;i++){
+			 	_html+='<tr>';
+			 	_html+='<td style="width:20%">'+datas[i].name+'</td>';
+			 	_html+='<td style="width:60%">';
+			 	/* 按钮 */
+			 	var sources=datas[i].permSourcesDTOs;
+			 	if(sources.length>0){
+				 	for(var j=0;j<sources.length;j++){
+				 		if(/\S/.test(sources[j].sourcesName)){
+					 		_html+='<span class="pl15" style="width:80px;display:inline-block;text-align:left;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;" title='+sources[j].sourcesName+'>'+sources[j].sourcesName+'</span>';
+				 		}
+				 	}
+			 	}
+			 	_html+='</td>';
+			 	_html+='<td><a href="javascript:void(0);" onclick="deleteMenu('+datas[i].id+','+datas[i].parentId+')" > 二级删除  </a><a class="pl15 role_editTowSource" href="javascript:void(0);" onclick=editData("编辑二级菜单","permMenu/menuSecond?id='+datas[i].id+'","900px","90%")> 编辑</a> </td>';
+			 	_html+='</tr>'
+			}
+			_html+='</tbody></table></div>';
+		}else{
+			_html+='<div class="table-responsive"><table class="table second-table"><tbody>';
+		 	_html+='<tr>';
+		 	_html+='<td>';
+		 	/* 按钮 */
+		 	console.log(row);
+		 	var sources=row.permSourcesDTOs;
+		 	if(sources.length>0){
+			 	for(var j=0;j<sources.length;j++){
+			 		if(/\S/.test(sources[j].sourcesName)){
+				 		_html+='<span class="pl15">'+sources[j].sourcesName+'</span>';
+			 		}
+			 	}
+		 	}
+		 	_html+='</td>';
+		 	_html+='</tr>'
+			_html+='</tbody></table></div>';
+		}
+		return _html;
+	}
+	
+	/* 操作 */
+	function operateFormatter(value, row, index) {
+		return [
+			'<a href="javascript:void(0);" onclick="deleteMenu('+row.id+','+row.parentId+')">一级删除 </a>',
+			'<a class="pl15 role_addOneSource" href="javascript:void(0);" onclick=editData("编辑二级菜单","permMenu/menuFirst?id='+row.id+'","900px","90%")>编辑</a>'
+       	].join('');
+   	}
+	function deleteMenu(id,parentId){
+		layer.open({
+			title:"删除",
+		  	icon:3,
+		  	content:"确定要删除销该资源吗？",
+		  	btn:["确定","取消"],
+		  	yes:function(index){
+		  		$.ajax({
+		  			type:"POST",
+		  			data:{
+		  				id:id,
+		  				parentId:parentId
+		  			},
+		  			dataType:"json",
+		  			url:"/permMenu/delete",
+		  			success:function(data){
+		  				layer.msg(data.message);
+				  		layer.close(index);
+				  		$("#table").bootstrapTable('refresh');
+		  				
+		  			}
+		  		})
+		  	}
+		})
+	}
+	function permTypeFormatter(value,row,index){
+		switch(value){
+			case 1:return "食堂";
+			case 2:return "企业";
+			case 3:return "后端";
+		}
+	}
+	
+	function editMenu(id){
+		$.ajax({
+			type:"POST",
+			data:id,
+			dataType:"json",
+			url:"",
+			success:function(){
+				alert("编辑");
+			}
+		})
+	}
+	function permTypeSelect(){
+		$("#table").bootstrapTable('refresh',{
+			url:"/permMenu/listQuery?"+$("#form").serialize()
+		})
+	}
+</script>

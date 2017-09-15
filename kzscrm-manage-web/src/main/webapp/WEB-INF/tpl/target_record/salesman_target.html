@@ -1,0 +1,111 @@
+<!-- 业务员目标 -->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">#if($!businessCheckTitle) $!businessCheckTitle #else 个人目标 #end</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+    	<input type="hidden" name="teamIdsStr" value="$!teamIds">
+    	<input type="hidden" name="businessPOs" value="$!businessPOs">
+        <div class="form-group">
+            <label class="control-label">工作月&nbsp;</label>
+        </div>
+        <div class="form-group">
+            <input class="Wdate input-date" id="d4311" name="applyMonthStr" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+        </div>
+		<div class="form-group">
+            <label class="control-label">所属团队</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="teamId">
+                <option value="">请选择</option>
+                #foreach($!crmTeamPO in $!crmTeamPOs)
+            	<option value="$!crmTeamPO.id">$!crmTeamPO.name</option>
+            	#end
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+        	 <select class="form-control selectarrow" name="businessId">
+                <option value="" class="business">请选择业务员</option>
+                #foreach($!businessPO in $!businessPOs)
+            	<option value="$!businessPO.id" class="$!businessPO.teamId business" style="display: none;">$!businessPO.name</option>
+               #end 
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            <!-- <input class="form-control" name="businessNameLike" id="enterNoName" placeholder="请输入业务员姓名"> --> 
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default crmWorkTargetSalesmanSearch" href="javascript:void(0);" onclick="query()"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default crmWorkTargetSalesmanReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/businessTargetInit')">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill tabledown"
+           data-toggle="table"
+           data-url="$!rc.contextPath/crmworktarget/getBusinessTargetDetails"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="businessName" data-align="center">业务员姓名</th>
+            <th data-field="applyMonth" data-align="center" data-formatter="applyMonthFormatter">工作月</th>
+            <th data-field="teamName" data-align="center">所属团队</th>
+            <th data-field="agentNum" data-align="right">发展代理商数量</th>
+            <th data-field="completeAgentNum" data-align="right">完成量</th>
+            <th data-field="canteenNum" data-align="right">发展食堂数量</th>
+            <th data-field="completeCanteenNum" data-align="right">完成量</th>
+            <th data-field="orderMoney" data-align="right">订单总金额（￥）</th>
+            <th data-field="completeOrderMoney" data-align="right">完成量</th>
+            <th data-field="percentageCompletion" data-align="right">完成度（%）</th>
+            <th data-field="operate" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+	<div class="mt10">
+        <a class="btn btn-warning crmWorkTargetSalesmanExport" href="javascript:void(0);" onclick="tabledown('crmworktarget/businessTargetDetailsExcelOut?Ids=')">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="$!rc.contextPath/static/js/target_record/salesman_target.js"></script>
+<script type="text/javascript">
+
+$(function(){
+	 $('#table').bootstrapTable();
+	 $("#table").on('load-success.bs.table',function(e,data){
+		 #foreach($!cSourcesVO in $!cSourcesVOs)
+		    	#if(!$!cSourcesVO.check)
+			    	$('$!cSourcesVO.frontContrlName').remove();
+			 #end
+		 #end
+	  })
+     });
+
+    //操作
+    function operationFormatter(value, row, index) {
+    	var str='<a crmWorkTargetSalesmanSee href="$!rc.contextPath/crmclientresource/businessClientListInit?businessId='+row.businessId+'&applyMonth='+row.applyMonth+'" target=_blank>查看</a>';
+        return str;
+    }
+
+   
+    $("[name=teamId]").change(function(){
+    	$("[name=businessId]:first-child").val("");
+    	$(".business:not(:first)").hide();
+    	var teamId = $("[name=teamId]").val();
+    	if(null == teamId || '' == teamId){
+    		$(".business:not(:first)").hide();
+    	}else{
+    		$('.'+teamId+'').show();
+    	}
+    })
+
+</script>

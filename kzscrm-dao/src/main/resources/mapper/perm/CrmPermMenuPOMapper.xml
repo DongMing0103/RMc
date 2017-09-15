@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPermMenuPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.perm.CrmPermMenuPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+                    <result column="URL" property="url" jdbcType="VARCHAR"/>
+                    <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+                    <result column="SORT_NO" property="sortNo" jdbcType="BIGINT"/>
+                    <result column="DEEPTH" property="deepth" jdbcType="BIGINT"/>
+                    <result column="IS_LEAF" property="isLeaf" jdbcType="BIGINT"/>
+                    <result column="STATUS" property="status" jdbcType="BIGINT"/>
+                    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+                    <result column="CODE" property="code" jdbcType="VARCHAR"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_ID" property="createId" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_ID" property="updateId" jdbcType="BIGINT"/>
+                    <result column="ICON" property="icon" jdbcType="VARCHAR"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmpermmenu.id as id,
+	                	        	           crmpermmenu.name as name,
+	                	        	           crmpermmenu.url as url,
+	                	        	           crmpermmenu.parent_id as parentId,
+	                	        	           crmpermmenu.sort_no as sortNo,
+	                	        	           crmpermmenu.deepth as deepth,
+	                	        	           crmpermmenu.is_leaf as isLeaf,
+	                	        	           crmpermmenu.status as status,
+	                	        	           crmpermmenu.description as description,
+	                	        	           crmpermmenu.code as code,
+	                	        	           crmpermmenu.del_flag as delFlag,
+	                	        	           crmpermmenu.create_time as createTime,
+	                	        	           crmpermmenu.create_id as createId,
+	                	        	           crmpermmenu.update_time as updateTime,
+	                	        	           crmpermmenu.update_id as updateId,
+	                	        	           crmpermmenu.icon as icon
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        
+        <where>
+        <include refid="queryOptions"/>
+        </where>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+    	<choose>
+    		<when test="@Ognl@isNotEmpty(delFlag)">
+    			and del_flag=#{delFlag}
+    		</when>
+    		<when test="@Ognl@isNotEmpty(delFlagAll)">
+    			and del_flag in(0,1)
+    		</when>
+    		<otherwise>
+    			and del_flag=1
+    		</otherwise>
+    	</choose>
+                                      <if test="id != null and id != ''"> AND crmpermmenu.id = #{id}</if>
+                                      <if test="name != null and name != ''"> AND crmpermmenu.name = #{name}</if>
+                                               <if test="url != null and url != ''"> AND crmpermmenu.url = #{url}</if>
+                                                        <if test="parentId != null and parentId != ''"> AND crmpermmenu.parent_id = #{parentId}</if>
+                                               <if test="sortNo != null and sortNo != ''"> AND crmpermmenu.sort_no = #{sortNo}</if>
+                                               <if test="deepth != null and deepth != ''"> AND crmpermmenu.deepth = #{deepth}</if>
+                                               <if test="isLeaf != null and isLeaf != ''"> AND crmpermmenu.is_leaf = #{isLeaf}</if>
+                                               <if test="status != null and status != ''"> AND crmpermmenu.status = #{status}</if>
+                                      <if test="description != null and description != ''"> AND crmpermmenu.description = #{description}</if>
+                                               <if test="code != null and code != ''"> AND crmpermmenu.code = #{code}</if>
+                                                        <if test="delFlag != null and delFlag != ''"> AND crmpermmenu.del_flag = #{delFlag}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmpermmenu.create_time = #{createTime}</if>
+                                                        <if test="createId != null and createId != ''"> AND crmpermmenu.create_id = #{createId}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmpermmenu.update_time = #{updateTime}</if>
+                                                        <if test="updateId != null and updateId != ''"> AND crmpermmenu.update_id = #{updateId}</if>
+                                      <if test="icon != null and icon != ''"> AND crmpermmenu.icon = #{icon}</if>
+                                      <if test="@Ognl@isNotEmpty(parentId)"> AND crmpermmenu.parent_id = #{parentId}</if>
+                              </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_perm_menu crmpermmenu
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+	<!-- findByMemuIdOrParentId -->
+	  <select id="findByMemuIdOrParentId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM crm_perm_menu
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(id)">and  id in (#{id})</if>
+		</where>
+    </select>
+	
+		
+	
+	</mapper>
+
+
+

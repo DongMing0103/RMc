@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>下级代理列表</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header fashionable-detail">
+        <div class="container">
+            <h2><a href="../../index.html">筷子说CRM</a></h2>
+            <h3>下级代理列表</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+<!--           	<ul class="nav nav-tabs nav-self"> -->
+<!-- 				<li><span>代理状态</span></li> -->
+<!-- 				<li class="active"><a href="#" data-toggle="tab" onclick="findAgent('agentStatus','')">全部（$!map.all）</a></li> -->
+<!-- 				<li class="mt10">|</li> -->
+<!-- 				<li><a href="#" data-toggle="tab" onclick="findAgent('agentStatus',1)">有效（$!map.effective）</a></li> -->
+<!-- 				<li class="mt10">|</li> -->
+<!-- 				<li><a href="#" data-toggle="tab" onclick="findAgent('agentStatus',2)">无效（$!map.invalid）</a></li> -->
+<!-- 			</ul> -->
+            <div class="form-box">
+                <form class="form-inline" id="form">
+                	<input name="agentStatus" id="agentStatus" type="hidden"/>
+                	<input name="agentId"  id ="agentId" type="hidden" value="$!agentId">
+                    <div class="form-group">
+		                <label class="control-label">地理信息</label>
+		                <div class="city-select" id="city">
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select name="provCode" class="form-control prov"><option value="">请选择</option><option value="86011">北京市</option><option value="86012">天津市</option><option value="86013">河北省</option><option value="86014">山西省</option><option value="86015">内蒙古自治区</option><option value="86021">辽宁省</option><option value="86022">吉林省</option><option value="86023">黑龙江省</option><option value="86031">上海市</option><option value="86032">江苏省</option><option value="86033">浙江省</option><option value="86034">安徽省</option><option value="86035">福建省</option><option value="86036">江西省</option><option value="86037">山东省</option><option value="86041">河南省</option><option value="86042">湖北省</option><option value="86043">湖南省</option><option value="86044">广东省</option><option value="86045">广西壮族自治区</option><option value="86046">海南省</option><option value="86050">重庆市</option><option value="86051">四川省</option><option value="86052">贵州省</option><option value="86053">云南省</option><option value="86054">西藏自治区</option><option value="86061">陕西省</option><option value="86062">甘肃省</option><option value="86063">青海省</option><option value="86064">宁夏回族自治区</option><option value="86065">新疆维吾尔自治区</option><option value="86071">台湾省</option><option value="86081">香港特别行政区</option><option value="86082">澳门特别行政区</option></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+			                </div>
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select name="cityCode" class="form-control city" disabled="disabled" style="display: none;"></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+			                </div>
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select name="areaCode" class="form-control dist" disabled="disabled" style="display: none;"></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+			                </div>
+			            </div>
+		            </div>
+		            <div class="form-group">
+		            	<div class="has-feedback" style="display: inline-block">
+			            	<select class="form-control" name="selectNum">
+			                    <option value="0">请选择搜索条件</option>
+			                    <option value="1">代理商名称</option>
+			                    <!-- <option value="2">代理商编号</option> -->
+			                </select>
+			                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		            	</div>
+		                <input class="form-control" placeholder="请输入..." name="condition">
+		            </div>
+		            <div class="form-group">
+		                <a class="btn btn-default crmAgentLowerAgentSearch" href="javascript:void(0);"  onclick="commit();">
+		                    <i class="fa fa-search"></i>搜索
+		                </a>
+		                <a class="btn btn-default crmAgentLowerAgentReset" href="javascript:void(0);" onclick="loadHtmlDiv(crmagent/LowerAgentListInit?agentId=$!agentId);">重置</a>
+		            </div>
+                </form>
+            </div>
+            <table
+                id="table"
+                data-classes="table table-public"
+                data-toggle="table"
+                data-url="$!rc.contextPath/crmagent/getLowerAgentList"
+                data-pagination="true"
+                data-pagination-v-align="both"
+                data-side-pagination="server"
+                data-query-params="queryParams"
+                data-page-size="20"
+                data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th data-field="id" data-align="center">ID</th>
+                    <th data-field="name" data-align="center">名称</th>
+                    <th data-field="agentNature" data-align="center" data-formatter="agentNature">性质</th>
+<!--                     <th data-field="agentStatus" data-align="center" data-formatter="agentStatus">代理状态</th> -->
+                    <th data-field="areaName" data-align="center">代理区域</th>
+                    <th data-field="businessName"  data-align="center">联系业务员</th>
+                    <th data-field="principalName"  data-align="center">联系人姓名</th>
+                    <th data-field="mobilephoe"  data-align="center">联系人电话</th>
+                    <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+                </tr>
+                </thead>
+            </table>
+            <div class="mt10">
+                <a class="btn btn-warning crmAgentLowerAgentExport" href="javascript:void(0);" onclick="downloadData()">
+                    <i class="fa fa-cloud-download"></i>导出
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+<!--     <script src="$!rc.contextPath/static/js/agent/find.js"></script> -->
+    <script src="$!rc.contextPath/static/js/administrator/agent_list.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    <script type="text/javascript">
+	    $(function(){
+	        $('#table').bootstrapTable();
+			$("#table").on('load-success.bs.table',function(e,data){
+				#foreach($!cSourcesVO in $!cSourcesVOs)
+					#if(!$!cSourcesVO.check)
+						$('$!cSourcesVO.frontContrlName').remove();
+					#end
+				#end
+			})
+	    });
+	
+	    
+	    
+	    function operateFormatter(value, row, index) {
+	    	var id= row.id;
+	    	var str = '<div class=tddiv>'+
+				        '<span class=settingtda>请选择</span>'+
+				        '<ul class=settingtdmenu>'+
+					        '<li><a class=crmAgentLowerAgentSee href=crmagent/see?agentId='+row.id+' target=_blank>查看资料</a></li>'+
+		                    '<li><a class=crmAgentLowerAgentRenew href="javascript:void(0);">续约</a></li>'+
+		                    '<li><a class=crmAgentLowerAgentAddEdit href="javascript:void(0);" onclick="editData(\'编辑\',\'/crmagent/addInit?agentId='+id+'\',\'768px\',\'90%\')">编辑</a></li>'+
+		                    '<li><a class=crmAgentLowerAgentBusinessList href=/crmagent/businessListInit?agentId='+id+' target=_blank>业务员列表</a></li>'+
+		                    '<li><a class=crmAgentLowerAgentClientResource href=/crmagent/clientResourceInit?agentId='+id+' target=_blank>客户列表</a></li>'+
+		                    '<li><a class=crmAgentLowerAgentSplitdetail href=crmbusinesssplitdetail/viewInfoInit?agentId='+id+' target="_blank">分账明细</a></li>'+
+				        '</ul></div>';
+			return str;
+	    }
+	
+	  //查询
+	    function qurery(url){
+	    	var _url =$("#table").attr("data-url");
+	    	if(url==null){
+	    		url=_url;
+	    	}
+	    	
+	    	$("#table").bootstrapTable("removeAll");
+	    	$("#table").bootstrapTable('refresh',{
+	    		url:url
+	    	},{
+	    		query:$('#form').serialize()
+	    	})
+	    }
+	    /*分页查询*/
+	    function queryParams(params) {
+	    	return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+
+	    }
+
+	    //代理状态统计 
+	    function findAgent(id,value){
+	    	$("#"+id+"").val(value);
+	    	qurery();
+	    }
+	    
+	    
+	    /*地理联动*/
+	    $("#city").citySelect({
+	        url:"$!rc.contextPath/static/js/cityselect/city.min.js",
+	        prov:"",//省份
+	        city:"",//城市
+	        dist:"",//区县
+	        nodata:"none",//当子集无数据时，隐藏select
+	        required:false
+	    });
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+

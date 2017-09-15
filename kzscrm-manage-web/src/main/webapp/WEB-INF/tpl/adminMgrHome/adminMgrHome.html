@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>筷子说CRM</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/adminlte/AdminLTE.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/adminlte/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style2.css">
+
+    <!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="skin-blue sidebar-mini">
+	<div class="wrapper">
+      	<header class="main-header">
+        <!-- Logo -->
+	        <a href="index.html" class="logo">
+				<span class="logo-mini">CRM</span>
+				<span class="logo-lg">筷子说CRM</span>
+	        </a>
+	        <nav class="navbar navbar-static-top">
+	          	<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+	            	<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+		            <ul class="nav navbar-nav topMenuRoot">
+						<!--管理员：平台收益表、客户资源表、区域代理表-->
+						<!--业务员、代理商、业务经理：客户资源表、区域代理表-->
+							<li class="platformIncome">
+								<a href="$!rc.contextPath/static/html/index/platform_earnings.html" target="_blank">平台收益表</a>
+							</li>
+						<li class="clientSource">
+							<!-- <a href="javascript:void(0);" target="_blank" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/init')">客户资源库</a> -->
+							<a href="$!rc.contextPath/crmclientresource/customsResourceInit" target="_blank" >客户资源库</a>
+						</li>
+						<li class="areaAgent">
+							<a href="$!rc.contextPath/crmclientresource/areaAgent" target="_blank">区域代理表</a>
+						</li>
+						<li>
+							<div class="dropdown">
+								<a class="btn btn-default dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+									操作
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+									<!--管理员：修改密码、退出-->
+									<!--业务员、代理商、业务经理：修改密码、修改头像、退出-->
+									<li><a href="javascript:void(0);" onclick="">修改头像</a></li>
+									<li><a href="javascript:void(0);" onclick="editData('修改密码','/crmUser/modifyPasswordShow','768px','400px')">修改密码</a></li>
+									<li><a href="/doLogout" onclick="">退出</a></li>
+	
+								</ul>
+							</div>
+						</li>
+		            </ul>
+				</div>
+			</nav>
+      	</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel" >
+						<div class="head-portrait">
+							<img src="static/images/logo.png" class="img-circle"/>
+						</div>
+					<!--管理员-->
+					<div class="info">
+						#if($!crmAccountPO.userType==3 || $!crmAccountPO.userType==4)
+						<p>欢迎，$!userName</p>
+						#else
+							<p>欢迎，$!crmAccountPO.userName</p>
+						#end
+						<p>
+						#if($!crmAccountPO.userType==1)
+							管理员
+						#elseif($!crmAccountPO.userType==2)
+							代理商
+						#elseif($!crmAccountPO.userType==3)
+							业务员
+						#elseif($!crmAccountPO.userType==4)
+							业务经理
+						#else
+							未定义
+						#end</p>
+						#if($!crmAccountPO.userType==2)
+							$!agentArea
+						#end
+					</div>
+					<!--业务员、业务经理-->
+					<!--<div class="head-portrait">
+						<img src="images/head_portrait.png" class="img-circle"/>
+					</div>
+					<div class="info">
+						<p>欢迎，13000000000</p>
+						<p>业务员/业务经理 <span>[商务一部]</span></p>
+					</div>-->
+					<!--代理商-->
+					<!--<div class="head-portrait">
+						<img src="images/head_portrait.png" class="img-circle"/>
+					</div>
+					<div class="info">
+						<p>欢迎，13000000000</p>
+						<div class="agent-area">代理区域:
+							<p>浙江 杭州 拱墅</p>
+							<p>河北 保定 雄安</p>
+						</div>
+					</div>-->
+				</div>
+				<div class="sidebar-form homePageRoot">
+					<li class="btn-left-kjk">
+						<!--管理员：新增代理商、新增业务员、新增食堂、团队目标审核、新客户审核、代理商审核-->
+						<!--业务员：新增代理商、新增食堂、工作目标申报、提现-->
+						<!--代理商：新增代理商、新增业务员、新增食堂、工作目标申报、工作目标审核、提现-->
+						<!--业务经理：新增代理商、新增食堂、个人目标申报、团队目标申报、工作目标审核、提现-->
+						<a href="javascript:void(0);" class="btn-left-xk newAddAgent" onclick="editData('新增代理商','$!rc.contextPath/crmagent/addInit','768px','90%')">新增代理商</a>
+						<a href="javascript:void(0);" class="btn-left-xk newAddBusiness" onclick="editData('新增业务员','$!rc.contextPath/crmbusiness/addInit','768px','550px')">新增业务员</a>
+						<a href="javascript:void(0);" class="btn-left-xk newAddCanteen" onclick="editData('新增食堂','$!rc.contextPath/crmclientresource/addCrmClientResourceByCanteenInit','768px','500px')">新增食堂</a>
+						<a href="javascript:void(0);" class="btn-left-xk personTargetReport" onclick="editData('个人目标申报','$!rc.contextPath/crmworktarget/addCrmWorkPersonTargetInit','768px','500px')">个人目标申报</a>
+						<a href="javascript:void(0);" class="btn-left-xk teamTargetReport" onclick="editData('团队目标申报','$!rc.contextPath/crmworktarget/addCrmWorkTeamTargetInit','768px','500px')">团队目标申报</a>
+						<a href="javascript:void(0);" class="btn-left-xk workTargetReport" onclick="editData('工作目标申报','$!rc.contextPath/crmworktarget/addCrmWorkTargetInit','768px','500px')">工作目标申报</a>
+						<a href="javascript:void(0);" class="btn-left-xk teamTargetCheck" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/initTargetCheck')">工作目标审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk newClientCheck" onclick="loadHtmlDiv('$!rc.contextPath/crmcanteenapply/newClientCheck')">新客户审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk agentCheck" onclick="loadHtmlDiv('$!rc.contextPath/crmagent/initShow')">代理商审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk workTargetCheck" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/addCrmWorkTargetAuditInit')">工作目标审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk withdrawal" onclick="loadHtmlDiv('$!rc.contextPath/myBill/withdrawalInit')">提现</a>
+					</li>
+				</div>
+	          	<ul class="sidebar-menu">
+					<!--管理员-->
+	            	<li class="treeview teamManagerRoot">
+						<a href="#">
+							<i class="fa fa-th-list"></i>
+							<span>团队管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							#if($!crmAccountPO.userType != 4)
+							<li><a href="javascript:void(0);" class="agentList" data-url="$!rc.contextPath/crmagent/init" onclick="loadHtmlDiv('$!rc.contextPath/crmagent/init')">代理商列表</a></li>
+							#end
+								<li><a href="javascript:void(0);" class="businessTeam" data-url="$!rc.contextPath/crmteam/init" onclick="loadHtmlDiv('$!rc.contextPath/crmteam/init')">业务团队</a></li>
+							<li><a href="javascript:void(0);" class="businessList" data-url="$!rc.contextPath/crmbusiness/init" onclick="loadHtmlDiv('$!rc.contextPath/crmbusiness/salesmanListInit')">业务员列表</a></li>
+						</ul>
+	            	</li>
+					<li class="treeview clientManagerRoot">
+						<a href="#">
+							<i class="fa fa-file-text"></i>
+							<span>客户管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="platformClient" data-url="$!rc.contextPath/crmclientresource/platformCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/platformCustomerInit')">平台客户</a></li>
+							<li><a href="javascript:void(0);" class="agentClient" data-url="$!rc.contextPath/crmclientresource/agentCustomer" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/agentCustomer')">代理商客户</a></li>
+						</ul>
+					</li>
+	            	<li class="treeview targetCheckRoot">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>目标考核</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="teamCheck" data-url="$!rc.contextPath/crmworktarget/teamTargetInit"  onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/teamTargetInit')">团队考核</a></li>
+							<li><a href="javascript:void(0);" class="agentCheck" data-url="$!rc.contextPath/crmworktarget/agentTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/agentTargetInit')">代理商考核</a></li>
+							<li><a href="javascript:void(0);" class="businessCheck" data-url="$!rc.contextPath/crmworktarget/businessTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/businessTargetInit')">业务员考核</a></li>
+						</ul>
+	            	</li>
+            	
+	            	<li class="treeview splitCountRoot">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>分账统计</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="orderSplit" data-url="$!rc.contextPath/orderCutController/init" onclick="loadHtmlDiv('$!rc.contextPath/orderCutController/init')">订单分账表</a></li>
+							<li><a href="javascript:void(0);" class="agentSplit" data-url="$!rc.contextPath/crmbusinesssplitdetail/init"  onclick="loadHtmlDiv('$!rc.contextPath/crmbusinesssplitdetail/init')">代理商分账</a></li>
+							<li><a href="javascript:void(0);" class="businessSplit" data-url="$!rc.contextPath/crmagentsplitdetail/init" onclick="loadHtmlDiv('$!rc.contextPath/crmagentsplitdetail/init')">业务员分账</a></li>
+							<li><a href="javascript:void(0);"  class="canteenSplit" data-url="$!rc.contextPath/crmclientresource/canteenClienResourceInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/canteenClienResourceInit')">食堂分账</a></li>
+							<li><a href="javascript:void(0);"  class="platformSplit" data-url="$!rc.contextPath/crmbusinesssplitdetail/inits" onclick="loadHtmlDiv('$!rc.contextPath/crmbusinesssplitdetail/inits')">平台分账</a></li>
+							<li><a href="javascript:void(0);"  class="withdrawalRecord" data-url="$!rc.contextPath/myBill/init" onclick="loadHtmlDiv('$!rc.contextPath/myBill/init')">提现记录</a></li>
+						</ul>
+	            	</li>
+	            	<li class="treeview systemSetRoot">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>系统设置</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="teamStructure" data-url="$!rc.contextPath/crmteam/initTeamStrctrue" onclick="loadHtmlDiv('$!rc.contextPath/crmteam/initTeamStrctrue')">团队结构</a></li>
+							<li><a href="javascript:void(0);" class="positionDuty" data-url="$!rc.contextPath/crmposition/showPositionInit" onclick="loadHtmlDiv('$!rc.contextPath/crmposition/showPositionInit')">岗位职务</a></li>
+							<!-- <li><a href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/static/html/system_set/access_configuration.html')">权限配置</a></li> -->
+						</ul>
+	            	</li>
+	            	<li class="treeview permissionSetRoot">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>权限设置</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="userManager" data-url="$!rc.contextPath/crmUser/adminManagement" onclick="loadHtmlDiv('$!rc.contextPath/crmUser/adminManagement')">用户管理</a></li>
+							<li><a href="javascript:void(0);" class="roleList" data-url="$!rc.contextPath/crmpermrole/roleList" onclick="loadHtmlDiv('$!rc.contextPath/crmpermrole/roleList')">角色列表</a></li>
+							<li><a href="javascript:void(0);" class="resourceList" data-url="$!rc.contextPath/crmpermsources/resourceList" onclick="loadHtmlDiv('$!rc.contextPath/crmpermsources/resourceList')">资源列表</a></li>
+						</ul>
+	            	</li>
+					<li class="treeview myClientRoot">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>我的客户</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="protectClient" data-url="$!rc.contextPath/crmclientresource/protectCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/protectCustomerInit')">保护客户（$!map.protectNum）</a></li>
+							<li><a href="javascript:void(0);" class="officialClient" data-url="$!rc.contextPath/crmclientresource/formalCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/formalCustomerInit')">正式客户（$!map.formalNum）</a></li>
+							<li><a href="javascript:void(0);" class="agentClient1" data-url="$!rc.contextPath/crmclientresource/agentCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/agentCustomerInit')">代理商客户</a></li>
+							<li><a href="javascript:void(0);" class="businessClient" data-url="$!rc.contextPath/crmclientresource/salesmanCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/salesmanCustomerInit')">业务员客户</a></li>
+						</ul>
+					</li>
+					<li class="treeview myTreasureRoot">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>我的财富</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li class="myTreasure"><a href="javascript:void(0);" data-url="$!rc.contextPath/crmsplitassignset/init" onclick="loadHtmlDiv('$!rc.contextPath/crmsplitassignset/init')">我的财富</a></li>
+						</ul>
+					</li>
+					<li class="treeview myTeamRoot">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>我的团队</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="myAgent" data-url="$!rc.contextPath/crmagent/myAgentInit" onclick="loadHtmlDiv('$!rc.contextPath/crmagent/myAgentInit')">我的代理商</a></li>
+							<li><a href="javascript:void(0);" class="businessTeam1" data-url="$!rc.contextPath/crmteam/init" onclick="loadHtmlDiv('$!rc.contextPath/crmteam/init')">业务团队</a></li>
+							<li><a href="javascript:void(0);" class="myBusiness" data-url="$!rc.contextPath/crmbusiness/myInit"  onclick="loadHtmlDiv('$!rc.contextPath/crmbusiness/myInit')">我的业务员</a></li>
+						</ul>
+					</li>
+					<li class="treeview targetRecordRoot">
+						<!-- <a href="#" #if($!crmAccountPO.userType==3) onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/personalTargetInit')" #end> -->
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>目标记录</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="agentTarget" data-url="$!rc.contextPath/crmworktarget/agentTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/agentTargetInit')">代理商目标</a></li>
+							<li><a href="javascript:void(0);" class="teamTarget" data-url="$!rc.contextPath/crmworktarget/teamTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/teamTargetInit')">团队目标</a></li>
+							<li><a href="javascript:void(0);" class="businessTarget" data-url="$!rc.contextPath/crmworktarget/businessTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/businessTargetInit')">业务员目标</a></li>
+							#if($!crmAccountPO.userType==3)
+								<li><a href="javascript:void(0);" class="personTarget" data-url="$!rc.contextPath/crmworktarget/personalTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/personalTargetInit')">个人目标</a></li>
+							#else
+								<li><a href="javascript:void(0);" class="personTarget" data-url="$!rc.contextPath/crmworktarget/businessTargetInit" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/businessTargetInit')">个人目标</a></li>
+							#end
+						</ul>
+					</li>
+					<li class="treeview clientSummaryRoot">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>客户一览</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" class="protectClient1" data-url="$!rc.contextPath/crmclientresource/protectCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/protectCustomerInit')">保护客户（$!map.protectNum）</a></li>
+							<li><a href="javascript:void(0);" class="officialClient1" data-url="$!rc.contextPath/crmclientresource/formalCustomerInit" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/formalCustomerInit')">正式客户（$!map.formalNum）</a></li>
+						</ul>
+					</li>
+	          	</ul>
+	        </section>
+	  	</aside>
+		<div class="content-wrapper" id="content-div"></div> 
+    </div>
+
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/app/app.js"></script>
+	<script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/jquerycookie/jquery.cookie.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/ValidForm/Validform_v5.3.2.js"></script>
+    <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/jquerycookie/jquery.cookie.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    <script type="text/javascript">
+    	window.name="huangxiaoyi";
+ 	    $(function(){
+	    	//下拉时，如果点击菜单，其它已打开的菜单关闭
+	    	$('.treeview-menu li').click(function(event){
+	    		//event.stopPropagation();//阻止事件传递
+	    		/* $.each($(this).parents('.treeview').siblings(),function(index,item){
+	    			$(item).find('ul').slideUp($.AdminLTE.options.animationSpeed,function(){
+		    			$(item).removeClass('active');
+	    			});
+	    		}) */
+	    		$(this).parents('.treeview').siblings().find('ul').slideUp($.AdminLTE.options.animationSpeed,function(){
+	    			$(this).parents('.treeview').removeClass('active');
+    			});
+	    	});
+	    	/* $('.treeview').click(function(event){
+	    		console.log('treeview');
+	    	}); */
+	    	#foreach($!crmPermMenuVO in $!crmPermMenuVOs)
+	    		#if(!$!crmPermMenuVO.checked)
+	    			$('$!crmPermMenuVO.code').remove();
+	    		#end
+	    	#end
+	    }); 
+	    
+	    
+	    
+ 	   /* 使用loadHtmlDiv载入右侧页面*/
+		function loadHtmlDiv(urlPath){
+			$.get(urlPath,{"t": new Date().getTime()}, function (result) {
+			   if (result.indexOf('login-content') > -1) {
+			       window.location.reload();
+				} else {
+					var sysDate = new Date();
+					//设置有效时间 30分钟
+					sysDate.setTime(sysDate.getTime() + (31 * 60 * 1000));
+					$.cookie("loadUrl",urlPath, {expires: sysDate});
+					$("#content-div").html(result);
+					window.scrollTo(0,0);
+				}
+			});
+		}  
+		
+		
+		
+		//F5刷新当前页
+		$(function () {
+			if(isNotNull($.cookie("loadUrl")) && $.cookie("loadUrl")!="null"){
+				loadHtmlDiv($.cookie("loadUrl"));
+				$(".treeview-menu li a").each(function(index, value){
+					var _menua=$(".treeview-menu li a")[index];
+					if(_menua.getAttribute("data-url")==$.cookie("loadUrl")){
+						$(_menua).parent().addClass("active"); 
+		   				$(_menua).parents(".treeview").addClass("active"); 
+		   				$(_menua).parents(".treeview-menu").addClass("menu-open").css("display","block"); 
+					}
+				});
+			}
+		});
+	    
+	    
+	    
+	    
+    </script>
+</body>
+</html>

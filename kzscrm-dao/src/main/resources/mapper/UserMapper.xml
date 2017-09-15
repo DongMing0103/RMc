@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="UserMapper">
+	<resultMap type="com.hd.kzscrm.dao.entity.UserPO" id="UserMap">
+		<id column="id"  property="id"/>
+		<result column="user_name" property="userName"/>
+		<result column="password" property="password"/>
+		<result column="consume_code" property="consumeCode"/>
+		<result column="regiser_time" property="regiserTime"/>
+		<result column="mobilephone" property="mobilephone"/>
+		<result column="area_code" property="areaCode"/>
+		<result column="user_type" property="userType"/>
+		<result column="user_status" property="userStatus"/>
+		<result column="authentication_status" property="authenticationStatus"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="nick_name" property="nickName"/>
+		<result column="account" property="account"/>
+		<result column="create_time" property="createTime"/>
+		<result column="create_id" property="createId"/>
+		<result column="update_id" property="updateId"/>
+		<result column="head_img" property="headImg"/>
+		<result column="last_login" property="lastLogin"/>
+		<result column="is_receive_msg" property="isReceiveMsg"/>
+		<result column="mail" property="mail"/>
+		<result column="qq" property="qq"/>
+		<result column="address" property="address"/>
+		<result column="birthday" property="birthday"/>
+		<result column="sex" property="sex"/>
+		<result column="user_no" property="userNo"/>
+	</resultMap>
+	<sql id="allField">id,user_name,password,consume_code,regiser_time,mobilephone,area_code,user_type,
+		user_status,authentication_status,del_flag,nick_name,account,create_time,create_id,update_id,head_img,last_login,
+		is_receive_msg,mail,qq,address,birthday,sex,user_no,is_web_first_login
+	</sql>
+	
+	<select id="findAll" resultMap="UserMap">
+		select <include refid="allField"/> from user
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(mobilephone) and @Ognl@isEmpty(selectId)">
+				and mobilephone=#{mobilephone}
+			</if>
+			<if test="@Ognl@isNotEmpty(userName)">
+				and user_name=#{userName}
+			</if>
+			<if test="@Ognl@isNotEmpty(userType)">
+				and user_type=#{userType}
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag) and delFlag>=0">
+				and del_flag=#{delFlag}
+			</if>
+			<if test="@Ognl@isEmpty(delFlag)">
+				and del_flag=1
+			</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">
+				and area_code=#{areaCode}
+			</if>
+			<if test="@Ognl@isNotEmpty(userStatus)">
+				and user_status=#{userStatus}
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus) and authenticationStatus==0">
+				and (authentication_status=#{authenticationStatus} or authentication_status is null) 
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus) and authenticationStatus==1">
+				and authentication_status=#{authenticationStatus} 
+			</if>
+			<if test="telName!=null and telName!=''"> 
+				and user_name like "%"#{telName}"%"
+			</if>
+			<if test="@Ognl@isNotEmpty(searchName)"> 
+				and (user_name like "%"#{searchName}"%" or mobilephone like "%"#{searchName}"%")
+			</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(mobilephone) and selectId==1">
+				and mobilephone like "%"#{mobilephone}"%"
+			</if>
+			<!-- excel yyy -->
+			<if test="@Ognl@isNotEmpty(userIds)">
+				and id in (${userIds})
+			</if>
+		</where>
+		order by regiser_time  desc,authentication_status asc
+	</select>
+	<!-- 批量插入 -->
+	<select id="batchInsert" resultType="java.lang.Integer" parameterType="com.hd.wolverine.util.ParamMap">
+		insert into user(id,user_name,password,consume_code,regiser_time,mobilephone,area_code,user_type,
+		user_status,del_flag,nick_name,account,create_time,create_id,update_id,head_img,last_login,
+		is_receive_msg,mail,qq,address,birthday,sex,user_no) 
+		<foreach collection="users" index="index" item="user" open="values" close=";" separator=",">
+			(#{user.id},#{user.userName},#{user.password},#{user.consumeCode},#{user.regiserTime},#{user.mobilephone},#{user.areaCode},#{user.userType},
+			#{user.userStatus},1,#{user.nickName},#{user.account},#{user.createTime},#{user.createId},#{user.updateId},#{user.headImg},#{user.lastLogin},
+			#{user.isReceiveMsg},#{user.mail},#{user.qq},#{user.address},#{user.birthday},#{user.sex},#{user.userNo})
+		</foreach> 
+	
+	</select>
+	<select id="findByUserId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="UserMap">
+		select <include refid="allField"/> from `user`
+		<where>
+		<if test="@Ognl@isNotEmpty(userId)"> id = #{userId} </if>
+		</where>
+	</select>
+	<!-- 自定义语句发送 测试使用 -->
+	<select id="customerSql" parameterType="map" resultType="java.util.Map" statementType="STATEMENT">
+		${sql}
+	</select>
+	
+	
+	
+	<!-- 用户注销或屏蔽 [苏常松]-->
+	<update id="updateStatusById" parameterType="com.hd.wolverine.util.ParamMap">
+		update user set 
+		<choose>
+			<when test="@Ognl@isNotEmpty(status)">
+				user_status=#{status} 
+			</when>
+			<when test="@Ognl@isNotEmpty(delFlag)">
+				del_flag=0
+			</when>
+			<when test="@Ognl@isNotEmpty(authenticationStatus)">
+				authentication_status=#{authenticationStatus}
+			</when>
+		</choose>
+		where id=#{id}
+	</update>
+	<!-- 用户统计 【苏常松】-->
+	<select id="findByCount" resultType="Map"  parameterType="com.hd.wolverine.util.ParamMap">
+		select  
+			sum(del_flag=0) cancellation, 
+			sum(user_status=2 and del_flag =1) shield,
+			sum(authentication_status=0 and del_flag=1 AND user_status=1) notCertified,
+			sum(authentication_status=1 AND del_flag=1 AND user_status=1) certified 
+		from user
+		where user_type =3
+	</select>
+	
+	<update id="commonUpdate" parameterType="com.hd.wolverine.util.ParamMap">
+		update user
+		<set>
+			<if test="@Ognl@isNotEmpty(userName)">
+				user_name=#{userName},
+			</if>
+			<if test="@Ognl@isNotEmpty(password)">
+				password=#{password},
+			</if>
+			<if test="@Ognl@isNotEmpty(consumeCode)">
+				consume_code=#{consumeCode},
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus)">
+				authentication_status=#{authenticationStatus},
+			</if>
+			<if test="@Ognl@isNotEmpty(regiserTime)">
+				regiser_time=#{regiserTime},
+			</if>
+			<if test="@Ognl@isNotEmpty(mobilephone)">
+				mobilephone=#{mobilephone},
+			</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">
+				area_code=#{areaCode},
+			</if>
+			<if test="@Ognl@isNotEmpty(userType)">
+				user_type=#{userType},
+			</if>
+			<if test="@Ognl@isNotEmpty(userStatus)">
+				user_status=#{userStatus},
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				del_flag=#{delFlag},
+			</if>
+			<if test="@Ognl@isNotEmpty(nickName)">
+				nick_name=#{nickName},
+			</if>
+			<if test="@Ognl@isNotEmpty(account)">
+				account=#{account},
+			</if>
+			<if test="@Ognl@isNotEmpty(createTime)">
+				create_time=#{createTime},
+			</if>
+			<if test="@Ognl@isNotEmpty(createId)">
+				create_id=#{createId},
+			</if>
+			<if test="@Ognl@isNotEmpty(updateId)">
+				update_id=#{updateId},
+			</if>
+			<if test="@Ognl@isNotEmpty(headImg)">
+				head_img=#{headImg},
+			</if>
+			<if test="@Ognl@isNotEmpty(lastLogin)">
+				last_login=#{lastLogin},
+			</if>
+			<if test="@Ognl@isNotEmpty(isReceiveMsg)">
+				is_receive_msg=#{isReceiveMsg},
+			</if>
+			<if test="@Ognl@isNotEmpty(mail)">
+				mail=#{mail},
+			</if>
+			<if test="@Ognl@isNotEmpty(qq)">
+				qq=#{qq},
+			</if>
+			<if test="@Ognl@isNotEmpty(address)">
+				address=#{address},
+			</if>
+			<if test="@Ognl@isNotEmpty(birthday)">
+				birthday=#{birthday},
+			</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+		</where>
+	</update>
+	<!-- findAllLikeMobilephone 模糊查询 -->
+	<select id="findAllLikeMobilephone" resultMap="UserMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		select id,user_name,mobilephone 
+		from `user`
+		<where>
+			<choose>
+				<when test="@Ognl@isNotEmpty(delFlag)"> del_flag in (0,1) </when>
+				<otherwise>del_flag = 1</otherwise>
+			</choose>
+			<if test="select=1 and @Ognl@isNotEmpty(selectName)"> 
+				and mobilephone like "%"#{selectName}"%" 
+			</if>
+			
+		</where>
+	</select>
+	
+		<!-- findLikeUserName 模糊查询 -->
+	<select id="findLikeUserName" resultMap="UserMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		select id,user_name,mobilephone 
+		from `user`
+		<where>
+			del_flag = 1
+			<if test="selectName!=null and selectName!=''"> 
+				and user_name like CONCAT('%',#{selectName},'%')
+			</if>
+			
+		</where>
+	</select>
+	
+	<!-- findLikeMobliphone 模糊查询 -->
+	<select id="findLikeMobilephone" resultMap="UserMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		select id,user_name,mobilephone 
+		from `user`
+		<where>
+			del_flag = 1
+			<if test="selectName!=null and selectName!=''"> 
+				and mobilephone like CONCAT('%',#{selectName},'%')
+			</if>
+			
+		</where>
+	</select>
+	
+	<!-- 用户注册量统计（苏常松） -->
+	<select id="userRegisterCount" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+		select
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(create_time) time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(create_time,'%Y-%m') time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(create_time,'%Y') time,
+	        </when>
+	        <otherwise>
+	            date_format(create_time,'%Y-%m-%d') time,
+	        </otherwise>
+    	</choose>
+		count(1) num 
+		from `user`
+		<where>
+			user_status=1
+			<if test="@Ognl@isNotEmpty(daysArray)">
+				and date_format(create_time,'%Y-%m-%d') in
+				<foreach collection="daysArray" item="day" index="index" open="(" separator="," close=")">
+					#{day}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(weeksArray)">
+				and YEARWEEK(create_time) in 
+				<foreach collection="weeksArray" item="week" index="index" open="(" separator="," close=")">
+					#{week}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(monthsArray)">
+				and date_format(create_time,'%Y-%m') in
+				<foreach collection="monthsArray" item="month" index="index" open="(" separator="," close=")">
+					#{month}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(yearsArray)">
+				 and date_format(create_time,'%Y') in
+				<foreach collection="yearsArray" item="year" index="index" open="(" separator="," close=")">
+					#{year}
+				</foreach>
+			</if>		
+		</where>
+		GROUP BY
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(create_time)
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(create_time,'%Y-%m')
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(create_time,'%Y')
+	        </when>
+	        <otherwise>
+	            date_format(create_time,'%Y-%m-%d')
+	        </otherwise>
+    	</choose>
+	</select>
+	
+	
+	<!-- 根据user_type找id -->
+	<select id="findUserType" resultMap="UserMap">
+		select id,mobilephone from `user` 
+		<where> 
+			<if test="@Ognl@isNotEmpty(userType)">
+				user_type in (#{userType})
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 根据手机好查找 -->
+	<select id="findByUserName" resultMap="UserMap">
+		select id from `user` where mobilephone=#{mobilephone} 
+	        <if test="@Ognl@isNotEmpty(userId)">
+				and id=#{userId}
+	        </if>
+	</select>
+	
+	<!-- 根据id集合  查基本信息 -->
+	<select id="findByuserIds" resultMap="UserMap">
+		select * from `user` 
+		<where> 
+		<if test="@Ognl@isNotEmpty(userIds)">
+		id in (${userIds})
+		</if>
+		<if test="@Ognl@isNotEmpty(mobilephone)">
+		and mobilephone like "%"#{mobilephone}"%"
+		</if>
+		</where>
+	</select>
+	
+	<update id="updateAuthenticationStatusByEmployeesIds" >
+		update user u set  u.authentication_status=1 
+		<where>
+			<if test="@Ognl@isNotEmpty(employeesIds)">
+		 		u.id in (select l.user_id from enterprise_employees_link l where l.id in(${employeesIds}))
+		     </if>
+		 </where>
+	</update>
+	
+	
+</mapper>

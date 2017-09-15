@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmBusinessAmtPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmBusinessAmtPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT"/>
+                    <result column="TOTAL_INCOME" property="totalIncome" jdbcType="DECIMAL"/>
+                    <result column="TOTAL_CONSUME" property="totalConsume" jdbcType="DECIMAL"/>
+                    <result column="BALANCE" property="balance" jdbcType="DECIMAL"/>
+                    <result column="CAN_WITHDRAW_DEPOSIT" property="canWithdrawDeposit" jdbcType="DECIMAL"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+                    <result column="FROZEN_MONEY" property="frozenMoney" jdbcType="DECIMAL"/>
+                    <result column="USER_TYPE" property="userType" jdbcType="BIGINT"/>
+                    <result column="USER_ID" property="userId" jdbcType="BIGINT"/>
+                    <result column="AGENT_ID" property="agentId" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmbusinessamt.id as id,
+        	        	           crmbusinessamt.user_id as userId,
+        	        	           crmbusinessamt.agent_id as agentId,
+	                	        	           crmbusinessamt.business_id as businessId,
+	                	        	           crmbusinessamt.total_income as totalIncome,
+	                	        	           crmbusinessamt.total_consume as totalConsume,
+	                	        	           crmbusinessamt.balance as balance,
+	                	        	           crmbusinessamt.can_withdraw_deposit as canWithdrawDeposit,
+	                	        	           crmbusinessamt.create_time as createTime,
+	                	        	           crmbusinessamt.create_uid as createUid,
+	                	        	           crmbusinessamt.del_flag as delFlag,
+	                	        	           crmbusinessamt.update_time as updateTime,
+	                	        	           crmbusinessamt.update_uid as updateUid,
+	                	        	           crmbusinessamt.frozen_money as frozenMoney
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmbusinessamt.id = #{id}</if>
+                                               <if test="businessId != null and businessId != ''"> AND crmbusinessamt.business_id = #{businessId}</if>
+                                               <if test="@Ognl@isNotEmpty(userId)"> AND crmbusinessamt.user_id = #{userId}</if>
+                                               <if test="@Ognl@isNotEmpty(agentId)"> AND crmbusinessamt.agent_id = #{agentId}</if>
+                                      <if test="totalIncome != null and totalIncome != ''"> AND crmbusinessamt.total_income = #{totalIncome}</if>
+                                               <if test="totalConsume != null and totalConsume != ''"> AND crmbusinessamt.total_consume = #{totalConsume}</if>
+                                               <if test="balance != null and balance != ''"> AND crmbusinessamt.balance = #{balance}</if>
+                                               <if test="canWithdrawDeposit != null and canWithdrawDeposit != ''"> AND crmbusinessamt.can_withdraw_deposit = #{canWithdrawDeposit}</if>
+                                               <if test="createTime != null and createTime != ''"> AND crmbusinessamt.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmbusinessamt.create_uid = #{createUid}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmbusinessamt.del_flag = #{delFlag}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmbusinessamt.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmbusinessamt.update_uid = #{updateUid}</if>
+                                      <if test="frozenMoney != null and frozenMoney != ''"> AND crmbusinessamt.frozen_money = #{frozenMoney}</if>
+                                      <if test="userType != null and userType != ''"> AND crmbusinessamt.user_type = #{userType}</if>
+                              </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_business_amt crmbusinessamt
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+	<sql id="allField">current_timestamp(6) payTimestamp,id,business_id,total_income,total_consume,balance,can_withdraw_deposit,user_type</sql>
+
+	
+	<select id="findByBusinessId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/> from crm_business_amt
+		<where>
+			<if test="@Ognl@isNotEmpty(businessId)">
+				and business_id=#{businessId}
+			</if>
+			<if test="@Ognl@isNotEmpty(userType)">
+			 and user_type=#{userType}
+			</if>
+		</where>
+	</select>
+		
+	<update id="commonAtomicUpdate" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_business_amt
+		<set>
+			<if test="@Ognl@isNotEmpty(totalIncome)">
+				total_income=total_income+#{totalIncome},
+			</if>
+			<if test="@Ognl@isNotEmpty(balance)">
+				balance=balance+#{balance},
+			</if>
+			<if test="@Ognl@isNotEmpty(totalConsume)">
+				total_consume=total_consume+#{totalConsume},
+			</if>
+			<if test="@Ognl@isNotEmpty(canWithdrawDeposit)">
+				can_withdraw_deposit=can_withdraw_deposit+#{canWithdrawDeposit},
+			</if>
+		</set>
+		<where>
+		<if test="@Ognl@isNotEmpty(businessId)">
+				and business_Id=#{businessId}
+			</if>
+			 	<if test="@Ognl@isNotEmpty(userType)">
+				and user_type=#{userType}
+			</if>
+		</where>
+	</update>
+	
+	</mapper>
+
+
+

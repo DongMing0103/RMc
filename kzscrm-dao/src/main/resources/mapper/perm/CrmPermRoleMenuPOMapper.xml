@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPermRoleMenuPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.perm.CrmPermRoleMenuPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="ROLE_ID" property="roleId" jdbcType="BIGINT"/>
+                    <result column="MENU_ID" property="menuId" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmpermrolemenu.id as id,
+	                	        	           crmpermrolemenu.role_id as roleId,
+	                	        	           crmpermrolemenu.menu_id as menuId
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        	<where>
+		        <include refid="queryOptions"/>
+        	</where>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmpermrolemenu.id = #{id}</if>
+                                               <if test="roleId != null and roleId != ''"> AND crmpermrolemenu.role_id = #{roleId}</if>
+                                               <if test="menuId != null and menuId != ''"> AND crmpermrolemenu.menu_id = #{menuId}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_perm_role_menu crmpermrolemenu
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where 
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+
+	<!-- 根据角色ID删除数据 -->
+	<delete id="delByRoleId" parameterType="com.hd.wolverine.util.ParamMap">
+		delete from crm_perm_role_menu where role_id=#{roleId}
+	</delete>
+	
+	
+		
+	
+	</mapper>
+
+
+

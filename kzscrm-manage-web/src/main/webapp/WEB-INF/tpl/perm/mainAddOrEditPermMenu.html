@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/js/FlexBox/css/jquery.flexbox.css" />
+        
+        
+        <script src="$!rc.contextPath/static/js/dep/jquery-1.12.0.min.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+        <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+        <script src="$!rc.contextPath/static/js/dep/ValidForm/Validform_v5.3.2.js"></script>
+        <script src="$!rc.contextPath/static/js/FlexBox/js/jquery.flexbox.js"></script>
+        <script src="$!rc.contextPath/static/js/common.js"></script>
+    </head>
+	<body>
+		<form class="form-horizontal add-resource p50" id="form" name="form" method="post">
+		<input type="hidden" name="sourcesId" id="sourcesId" value="$!sourcesId">
+	        
+			<div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">一级菜单</label>
+	            </div>
+	            <div class="col-sm-4 has-feedback">
+	                <select class="form-control" id="nameFirst" name="nameFirst" onchange="getMenuSecond()" datatype="*" nullmsg="一级菜单不能为空" sucmsg=" ">
+	                    <option value="">--请选择一级菜单--</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div><br>
+	        
+			<div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">二级菜单</label>
+	            </div>
+	            <div class="col-sm-4 has-feedback">
+	                <select class="form-control" id="nameSecond" name="nameSecond" onchange="getSources()" datatype="*" nullmsg="二级菜单不能为空" sucmsg=" ">
+	                    <option value="">--请选择二级菜单--</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            </div>
+	            <div class="col-sm-3">
+                    <a id="sourceBtn" class="btn btn-warning btn-width role_addSource" onclick="btnajax()" style="display: none;">
+		        		<span class="glyphicon glyphicon-plus"></span>新增按钮
+		        	</a>
+                </div>
+	        </div>
+	        <div class="form-group">
+	        	<div class="col-sm-10 col-sm-offset-1">
+	        		<table style="border: 1px solid #ddd"
+				        id="table"
+				        data-classes="table table-bill resource-table" 
+				        data-toggle="table"
+				        data-url="$!rc.contextPath/crmpermsources/queryPage"
+				        data-pagination="true"
+						data-side-pagination="server"
+						data-page-size="1000"
+						data-page-list="[1000]"
+				        data-cache="false">
+				        <thead>
+				            <tr>
+				                <th data-field="sourcesName" data-align="center" width="10%">按钮名称</th>
+				                <th data-field="sourcesUrl1" data-align="center" width="10%">urls</th>
+				                <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+				            </tr>
+				        </thead>
+				    </table>
+	        	</div>	
+	        </div>
+		</form>
+     <!--    #if($!crmPermMenuVO.parentId==0)
+        			var oneOption="<option value='$!crmPermMenuVO.id'>$!crmPermMenuVO.name</option>";
+        			oneMenus['$!crmPermMenuVO.id']=oneOption;
+        		#else
+        			var towMenusArray=twoMenus['$!crmPermMenuVO.parentId'];
+        			if(!!!towMenusArray){
+        				towMenusArray=new Array();
+        				twoMenus=towMenusArray;
+        			}
+        			var twoOption="<option value='$!crmPermMenuVO.id'>$!crmPermMenuVO.name</option>";
+        			towMenusArray.push(twoOption);
+				#end        		 -->
+        <script type="text/javascript">
+        	var menus=new Array();
+        	#foreach($!crmPermMenuVO in $!crmPermMenuVOs)
+        		var menu={};
+        		menu['id']='$!crmPermMenuVO.id';
+        		menu['parentId']='$!crmPermMenuVO.parentId';
+        		menu['name']='$!crmPermMenuVO.name';
+        		menus.push(menu);
+        	#end
+        	//对ParentId升序
+        	menus.sort(function(a,b){return parseInt(a.parentId)-parseInt(b.parentId)});
+        	
+       		var oneMenu={};//一级菜单
+       		var twoMenu={};//二级菜单
+       		//整理1级和二级菜单
+       		$.each(menus,function(index,menu){
+   				var option="<option value='"+menu.id+"'>"+menu.name+"</option>";
+       			if(menu.parentId==0){
+       				oneMenu[menu.id]=option;
+       			}else{
+       				//如果为空，则赋值一个数组，否则添加元素
+       				var twoArray=twoMenu[menu.parentId];
+       				if(!!!twoArray){
+       					twoMenu[menu.parentId]=twoArray=new Array();
+       				}
+       				twoArray.push(option);
+       			}
+       		});
+        	$(function(){
+        		console.log(oneMenu);
+        		console.log(twoMenu);
+        	});
+        </script>
+	</body>
+</html>
+
+
+
+
+

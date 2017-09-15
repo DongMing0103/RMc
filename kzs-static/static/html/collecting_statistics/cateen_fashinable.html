@@ -1,0 +1,105 @@
+<!--食堂分账-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">食堂分账</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+        <div class="form-group">
+            <label class="control-label">分账时间&nbsp;</label>
+        </div>
+        <div class="form-group">
+            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+            &nbsp;至&nbsp;
+            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+            <input type="hidden" value="2" name="leixing">
+        </div>
+        <div class="form-group">
+            <label class="control-label">客户属性</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择</option>
+                <option>代理商客户</option>
+                <option>平台客户</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <label class="control-label">客户类别</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择</option>
+                <option>厂内食堂</option>
+                <option>校内食堂</option>
+                <option>独立食堂</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择搜索条件</option>
+                <option>食堂名称</option>
+                <option>食堂编号</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="" id="" placeholder="请输入文字">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill"
+           data-toggle="table"
+           data-url="../static/json/12.json"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="a" data-align="center">ID</th>
+            <th data-field="b" data-align="center">名称</th>
+            <th data-field="c" data-align="center">客户属性</th>
+            <th data-field="d" data-align="center">客户类别</th>
+            <th data-field="e" data-align="center">分账比例（%）</th>
+            <th data-field="f" data-align="right">订单数量</th>
+            <th data-field="g" data-align="right">实付金额（￥）</th>
+            <th data-field="h" data-align="right">分账金额（￥）</th>
+            <th data-field="i" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str="<a class=look href=javascript:void(0);>查看</a>";
+        return str;
+    }
+
+
+
+</script>
+

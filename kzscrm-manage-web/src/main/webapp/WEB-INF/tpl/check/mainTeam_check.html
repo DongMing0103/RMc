@@ -1,0 +1,104 @@
+<!--团队考核-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">团队考核</span>
+    </div>
+    <div class="form-box">
+    	<form class="form-inline" id="form">
+	        <div class="form-group">
+	            <label class="control-label">工作月</label>
+	            <input class="Wdate input-date" id="d4311" name="startTime" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">团队检索</label>
+		        <div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="teamId">
+		                <option value="0">请选择</option>
+			            #foreach($!team in $!crmTeamPOs)
+		                <option value="$!team.id">$!team.name</option>
+						#end            
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);" id="search" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);" id="reset" onclick="loadHtmlDiv('$!rc.contextPath/crmteamcheck/init')">重置</a>
+	        </div>
+	    </form>
+    </div>
+
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="$!rc.contextPath/crmteamcheck/queryPage"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+	        <tr>
+	            <th data-checkbox="true"></th>
+	            <th data-field="teamName" data-align="center">团队名称</th>
+	            <th data-field="applyMonth" data-align="center" data-formatter="dateFormatter">工作月</th>
+	            <th data-field="agentNum" data-align="center">发展代理商数量</th>
+	            <th data-field="d" data-align="center">完成量</th>
+	            <th data-field="canteenNum" data-align="center">发展食堂数量</th>
+	            <th data-field="f" data-align="center">完成量</th>
+	            <th data-field="orderMoney" data-align="center">订单总金额（￥）</th>
+	            <th data-field="h" data-align="center">完成量</th>
+	            <th data-field="i" data-align="center">完成度（%）</th>
+	            <th data-field="j" data-align="center" data-formatter="operationFormatter">操作</th>
+	        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData('','$!rc.contextPath/crmteamcheck/queryPage?agentIds=')">
+            <i class="fa fa-cloud-download" onclick="loadHtmlDiv('$!rc.contextPath/crmteamcheck/excelOut')"></i>导出
+        </a>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="$!rc.contextPath/static/js/common.js"></script>
+<script type="text/javascript">
+	$(function(){
+	    $('#table').bootstrapTable();
+	});
+	
+	//操作
+	function operationFormatter(value, row, index) {
+	    var str='<a href="/static/html/system_operate/customer_list.html" target="_blank">查看</a>';
+	    return str;
+	}
+
+	function commit(){
+		query();
+	}
+	
+	//根据条件查询
+	function query(url){
+		var _url=$('#table').attr("data-url");
+		if(url==null){
+			url=_url;
+		}
+		
+		$('#table').bootstrapTable('removeAll'); 
+		$('#table').bootstrapTable('refresh', {
+			url : url
+		}, {
+			params : $('#form').serialize()
+		});
+	}
+	
+	
+	/*表格分页*/
+	function queryParams(params) {
+		return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+	}
+</script>
+

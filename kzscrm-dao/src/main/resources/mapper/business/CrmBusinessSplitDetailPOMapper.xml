@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmBusinessSplitDetailPOMapper">
+	<!-- 表中列对应PO -->
+	<resultMap type="com.hd.kzscrm.dao.entity.business.CrmBusinessSplitDetailPO"
+		id="BaseResultMap">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_UID" property="createUid" jdbcType="BIGINT" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT" />
+		<result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT" />
+		<result column="AGENT_MONEY" property="agentMoney" jdbcType="DECIMAL" />
+		<result column="BUSINESS_MONEY" property="businessMoney"
+			jdbcType="DECIMAL" />
+		<result column="PLATFORM_MONEY" property="platformMoney"
+			jdbcType="DECIMAL" />
+		<result column="AGENT_STATUS" property="agentStatus" jdbcType="BIGINT" />
+		<result column="BUSINESS_STATUS" property="businessStatus"
+			jdbcType="BIGINT" />
+		<result column="PLATFORM_STATUS" property="platformStatus"
+			jdbcType="BIGINT" />
+		<result column="AGENT_USER_ID" property="agentUserId" jdbcType="BIGINT" />
+		<result column="BUSINESS_USER_ID" property="businessUserId"
+			jdbcType="BIGINT" />
+		<result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR" />
+		<result column="REGISTER_TIME" property="registerTime" jdbcType="TIMESTAMP" />
+		<result column="PAY_MODEL" property="payModel" />
+	</resultMap>
+	<!-- 显示的记录对应的列 -->
+	<sql id="Base_Column_List">crmbusinesssplitdetail.id as id,
+		crmbusinesssplitdetail.business_id as businessId,
+		crmbusinesssplitdetail.create_time as createTime,
+		crmbusinesssplitdetail.create_uid as createUid,
+		crmbusinesssplitdetail.del_flag as delFlag,
+		crmbusinesssplitdetail.update_time as updateTime,
+		crmbusinesssplitdetail.update_uid as updateUid,
+		crmbusinesssplitdetail.agent_money as agentMoney,
+		crmbusinesssplitdetail.business_money as businessMoney,
+		crmbusinesssplitdetail.platform_money as platformMoney,
+		crmbusinesssplitdetail.agent_status as agentStatus,
+		crmbusinesssplitdetail.business_status as businessStatus,
+		crmbusinesssplitdetail.platform_status as platformStatus,
+		crmbusinesssplitdetail.agent_user_id as agentUserId,
+		crmbusinesssplitdetail.business_user_id as businessUserId,
+		crmbusinesssplitdetail.order_no as orderNo,
+		crmagent.register_time as
+		registerTime,
+		crmagent.name as cname,
+		orders.general_ledger_date as
+		generalLedgerDate,
+		orders.pay_model as payModel,
+		orders.order_no as
+		orderNo,
+		ccbi.id as cid,
+		team.name
+
+	</sql>
+	<!-- 无分页查询 -->
+	<select id="queryList" parameterType="com.hd.wolverine.util.ParamMap"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="querySqlMain" />
+		where del_flag=1
+		<include refid="queryOptions" />
+		<include refid="orderControl" />
+	</select>
+	<!-- 列表对应的查询条件组合 -->
+	<sql id="queryOptions">
+		<if test="id != null and id != ''">AND crmbusinesssplitdetail.id = #{id}</if>
+		<if test="businessId != null and businessId != ''">AND crmbusinesssplitdetail.business_id = #{businessId}
+		</if>
+		<if test="createTime != null and createTime != ''">AND crmbusinesssplitdetail.create_time = #{createTime}
+		</if>
+		<if test="createUid != null and createUid != ''">AND crmbusinesssplitdetail.create_uid = #{createUid}</if>
+		<if test="delFlag != null and delFlag != ''">AND crmbusinesssplitdetail.del_flag = #{delFlag}</if>
+		<if test="updateTime != null and updateTime != ''">AND crmbusinesssplitdetail.update_time = #{updateTime}
+		</if>
+		<if test="updateUid != null and updateUid != ''">AND crmbusinesssplitdetail.update_uid = #{updateUid}</if>
+		<if test="agentMoney != null and agentMoney != ''">AND crmbusinesssplitdetail.agent_money = #{agentMoney}
+		</if>
+		<if test="businessMoney != null and businessMoney != ''">AND crmbusinesssplitdetail.business_money =
+			#{businessMoney}
+		</if>
+		<if test="platformMoney != null and platformMoney != ''">AND crmbusinesssplitdetail.platform_money =
+			#{platformMoney}
+		</if>
+		<if test="agentStatus != null and agentStatus != ''">AND crmbusinesssplitdetail.agent_status = #{agentStatus}
+		</if>
+		<if test="businessStatus != null and businessStatus != ''">AND crmbusinesssplitdetail.business_status =
+			#{businessStatus}
+		</if>
+		<if test="platformStatus != null and platformStatus != ''">AND crmbusinesssplitdetail.platform_status =
+			#{platformStatus}
+		</if>
+		<if test="agentUserId != null and agentUserId != ''">AND crmbusinesssplitdetail.agent_user_id = #{agentUserId}
+		</if>
+		<if test="businessUserId != null and businessUserId != ''">AND crmbusinesssplitdetail.business_user_id =
+			#{businessUserId}
+		</if>
+		<!-- <if test="orderNo != null and orderNo != ''">AND crmbusinesssplitdetail.order_no 
+			= #{orderNo}</if> -->
+		<if test="generalLedgerDate != null and generalLedgerDate != ''">AND orders.general_ledger_date = #{generalLedgerDate}</if>
+		<if test="payModel != null and payModel != ''">AND orders.pay_model = #{payModel}</if>
+	</sql>
+	<!-- 列表查询对应的排序选项 -->
+	<sql id="orderControl">
+		<if test="orders != null">
+			<foreach collection="orders.keys" index="key" item="value"
+				open="order by" separator=",">${key} ${orders[key]}</foreach>
+		</if>
+	</sql>
+	<!-- 列表查询对应的表关系SQL -->
+	<sql id="querySqlMain">crm_business_split_detail crmbusinesssplitdetail</sql>
+	<!-- 分页查询对应的记录 -->
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		<include refid="querySqlMain" />
+		, crm_agent crmagent
+		, `order` orders
+		,crm_canteen_base_info ccbi
+		,crm_team team
+		,crm_business business
+		<where>
+			crmbusinesssplitdetail.del_flag=1
+			<if test="stratTimes != null and stratTimes != ''">
+				and orders.general_ledger_date >= #{stratTimes}
+			</if>
+			<if test="@Ognl@isNotEmpty(agentStatus)">
+				and crmagent.agent_status >= #{agentStatus}
+			</if>
+			<if test="endTimes != null and endTimes != ''">
+  				<![CDATA[ orders.general_ledger_date <= #{endTimes}]]>
+			</if>
+			<if test="condition != null and condition != '' and selectNum == 1">and crmagent.name like CONCAT('%',#{condition},'%')</if>
+			<if test="condition != null and condition != '' and selectNum == 2">and crmbusinesssplitdetail.id like
+				CONCAT('%',#{condition},'%')</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">and crmagent.AREA_CODE=#{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(areaCodes)">
+				and crmagent.AREA_CODE in
+				<foreach collection="areaCodes" item="areaCode" index="index"
+					open="(" close=")" separator=",">
+					#{areaCode}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(ids)">and crmbusinesssplitdetail.id in (${ids})</if>
+
+			<if test="stratTime != null and stratTime != ''">
+				and orders.general_ledger_date >= #{stratTime}
+			</if>
+			<if test="endTime != null and endTime != ''">
+  				<![CDATA[ and orders.general_ledger_date <= #{endTime}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">and orders.order_no like CONCAT('%',#{orderNo},'%')</if>
+			<if test="@Ognl@isNotEmpty(payModel)">and orders.pay_model = #{payModel}</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">and ccbi.id = #{canteenId}</if>
+			
+			<if test="conditions != null and conditions != '' and selectNums == 1">and business.name like CONCAT('%',#{conditions},'%')</if>
+			<if test="conditions != null and conditions != '' and selectNums == 2">and business.id like
+				CONCAT('%',#{conditions},'%')</if>
+			<if test="@Ognl@isNotEmpty(teamId) and teamId!=0">and business.team_id=#{teamId}</if>
+			<if test="@Ognl@isNotEmpty(jobStatus)">and business.job_status = #{jobStatus}</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and crmagent.id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(agentIds)">and crmagent.id in (${agentIds})</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business.id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">and crmbusinesssplitdetail.business_id in (${businessIds})</if>
+			AND crmbusinesssplitdetail.agent_user_id = crmagent.agent_no
+			AND
+			crmbusinesssplitdetail.order_no = orders.order_no
+			AND
+			crmbusinesssplitdetail.business_id = ccbi.business_id
+			AND
+			business.team_id = team.id
+			AND business.id =
+			crmbusinesssplitdetail.business_id
+		</where>
+		<include refid="queryOptions" />
+		<include refid="orderControl" />
+	</select>
+
+	<!-- 判断订单是否存在 -->
+	<select id="queryOrderNoISNull" resultType="java.lang.Integer"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		select count(order_no) count from
+		`crm_business_split_detail` where order_no
+		= #{orderNo}
+	</select>
+
+	<update id="updateCrmBusinessSplitDetail" parameterType="com.hd.wolverine.util.ParamMap">
+		update `crm_business_split_detail`
+		<set>
+			<if test="@Ognl@isNotEmpty(businessStatus)">
+				business_status = #{businessStatus},
+			</if>
+			<if test="@Ognl@isNotEmpty(agentStatus)">
+				agent_status = #{agentStatus},
+			</if>
+			<if test="@Ognl@isNotEmpty(platformStatus)">
+				platform_status = #{platformStatus},
+			</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(orderNo)">
+				and order_no=#{orderNo}
+			</if>
+
+		</where>
+	</update>
+
+	<!-- 根据id查询 -->
+	<select id="findById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_split_detail
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(id)">and id =#{id}</if>
+		</where>
+	</select>
+	
+	 <!-- 根据订单编号模糊查询 -->
+	 <select id="findLikeByOrderNo" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_split_detail
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(condition)">and order_no like "%"#{condition}"%"</if>
+		</where>
+	</select>
+	
+	<!-- 查询平台分账列表 -->
+	<select id="findByParam" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_split_detail
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(id)">and id =#{id}</if>
+		    <if test="@Ognl@isNotEmpty(ids) ">and id in (${ids})</if>
+			<if test="@Ognl@isNotEmpty(payModel)">and pay_model = #{payModel}</if>
+			<if test="@Ognl@isNotEmpty(condition)">and order_no like "%"#{condition}"%"</if>
+			<if test="@Ognl@isNotEmpty(startTime)">and date_format(create_time,'%Y-%m-%d')<![CDATA[>=]]> #{startTime}</if>
+	        <if test="@Ognl@isNotEmpty(endTime)">and date_format(create_time,'%Y-%m-%d')<![CDATA[<=]]> #{endTime}</if>
+		</where>
+	</select>
+	
+	<!-- 根据代理商编号查询代理商金额 -->
+	<select id="findByAgentNo" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_split_detail
+		<where>
+			<if test="@Ognl@isNotEmpty(agentNo)">and agent_user_id = #{agentNo}</if>
+		</where>
+	</select>
+	
+	<!-- findByOrderNo -->
+		<select id="findByOrderNo" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_split_detail
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(orderNo)">and order_no = #{orderNo}</if>
+		</where>
+	</select>
+</mapper>

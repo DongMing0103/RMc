@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>客户列表</title>
+<link rel="stylesheet"
+	href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap-table.css">
+<link rel="stylesheet" href="/static/css/common.css">
+<link rel="stylesheet" href="/static/css/style.css">
+
+<!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div class="second-page-header">
+		<div class="container">
+			<h2>
+				<a href="../../index.html">筷子说CRM</a>
+			</h2>
+			<h3>客户列表</h3>
+		</div>
+	</div>
+	<div class="second-page-bg">
+		<div class="container second-page-body">
+
+			<!-- <ul class="nav nav-tabs nav-self">
+				<li><span>合作状态</span></li>
+				<li class="active"><a href="#" data-toggle="tab"
+					onclick="findClientNature('clientNature','')">全部（$!map.all）</a></li>
+				<li class="mt10">|</li>
+				<li><a href="#" data-toggle="tab"
+					onclick="findClientNature('clientNature',1)">散客（$!map.retail）</a></li>
+				<li class="mt10">|</li>
+				<li><a href="#" data-toggle="tab"
+					onclick="findClientNature('clientNature',2)">保护客户（$!map.protect）</a></li>
+				<li class="mt10">|</li>
+				<li><a href="#" data-toggle="tab"
+					onclick="findClientNature('clientNature',3)">正式客户（$!map.formal）</a></li>
+			</ul> -->
+			<div class="form-box">
+				<form class="form-inline" id="form">
+					<input name="clientNature" id="clientNature" type="hidden" /> 
+					<input name="businessId" id="businessId" type="hidden" />
+					<input name="address" value="" type="hidden" />
+					<div class="form-group">
+						<label class="control-label">时间查询</label> <input
+							class="Wdate input-date" id="stratTimes" name="stratTimes"
+							type="text" aria-label="Amount (to the nearest dollar)"
+							placeholder="请选择日期"
+							onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTimes\')||\'2020-10-01\'}'})">&nbsp;至&nbsp;
+						<input class="Wdate input-date" id="endTimes" name="endTimes"
+							aria-label="Amount (to the nearest dollar)" type="text"
+							placeholder="请选择日期"
+							onfocus="WdatePicker({minDate:'#F{$dp.$D(\'stratTimes\')}',maxDate:'2020-10-01'})">
+					</div>
+					<div class="form-group">
+						<label class="control-label">客户分类</label>
+						<div class="has-feedback" style="display: inline-block;">
+							<select class="form-control" name="clientType" id="clientType">
+								<option value="">请选择</option>
+								<option value="1">代理商</option>
+								<option value="2">厂内食堂</option>
+								<option value="3">校内食堂</option>
+								<option value="4">独立食堂</option>
+							</select> <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+						</div>
+					</div>
+					<div class="form-group">
+				<label class="control-label">代理区域</label>
+				<div class="city-select" id="city">
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control prov" name="provCode">
+							<option value="">请选择</option>
+							<option value="86011">北京市</option>
+							<option value="86012">天津市</option>
+							<option value="86013">河北省</option>
+							<option value="86014">山西省</option>
+							<option value="86015">内蒙古自治区</option>
+							<option value="86021">辽宁省</option>
+							<option value="86022">吉林省</option>
+							<option value="86023">黑龙江省</option>
+							<option value="86031">上海市</option>
+							<option value="86032">江苏省</option>
+							<option value="86033">浙江省</option>
+							<option value="86034">安徽省</option>
+							<option value="86035">福建省</option>
+							<option value="86036">江西省</option>
+							<option value="86037">山东省</option>
+							<option value="86041">河南省</option>
+							<option value="86042">湖北省</option>
+							<option value="86043">湖南省</option>
+							<option value="86044">广东省</option>
+							<option value="86045">广西壮族自治区</option>
+							<option value="86046">海南省</option>
+							<option value="86050">重庆市</option>
+							<option value="86051">四川省</option>
+							<option value="86052">贵州省</option>
+							<option value="86053">云南省</option>
+							<option value="86054">西藏自治区</option>
+							<option value="86061">陕西省</option>
+							<option value="86062">甘肃省</option>
+							<option value="86063">青海省</option>
+							<option value="86064">宁夏回族自治区</option>
+							<option value="86065">新疆维吾尔自治区</option>
+							<option value="86071">台湾省</option>
+							<option value="86081">香港特别行政区</option>
+							<option value="86082">澳门特别行政区</option>
+						</select> 
+						<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+					</div>
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control city" name="cityCode" disabled="disabled" style="display: none;"></select> 
+						<i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+					</div>
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control dist" disabled="disabled" style="display: none;" name="areaCode"></select> 
+						<i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+					</div>
+				</div>
+			</div>
+					<div class="form-group">
+						<!-- <div class="has-feedback" style="display: inline-block;">
+							<select class="form-control" name="selectNum">
+								<option value="0">请选择搜索条件</option>
+								<option value="1">客户名称</option>
+								<option value="2">客户编号</option>
+							</select> <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+						</div> -->
+						<label class="control-label">客户名称</label>
+						<input class="form-control" placeholder="请输入..." name="condition"
+							id="condition">
+					</div>
+					<div class="form-group">
+						<a class="btn btn-default" href="javascript:void(0);"
+							onclick="querys();"> <i class="fa fa-search"></i>搜索
+						</a> <a class="btn btn-default" href="javascript:void(0);"
+							onclick="location.reload()">重置</a>
+					</div>
+				</form>
+			</div>
+			<table id="table" data-classes="table table-public"
+				data-toggle="table" 
+				data-url="$!rc.contextPath/crmteam/cusQueryPage?businessIds=$!businessIds"
+				data-pagination="true" 
+				data-pagination-v-align="both"
+				data-page-size="20" 
+				data-side-pagination="server"
+				data-query-params="queryParams" 
+				data-page-list="[10,20,50]">
+		
+				<thead>
+					<tr>
+						<th data-checkbox="true"></th>
+						<th data-field="id" data-align="center">ID</th>
+						<th data-field="name" data-align="center">名称</th>
+						<th data-field="clientType" data-align="center" data-formatter="type">客户分类</th>
+						<th data-field="address" data-align="center">地理信息</th>
+						<th data-field="createTime" data-align="center" data-formatter="dateFormatter">时间</th>
+						<th data-field="contact" data-align="center">联系人</th>
+						<th data-field="businessName" data-align="center">业务员</th>
+						<th data-field="mobile" data-align="center">联系电话</th>
+						<th data-field="operate" data-align="center"  data-formatter="operateFormatter" class="selecttd">操作</th>
+					</tr>
+				</thead>
+			</table>
+			<div class="mt10">
+				<a class="btn btn-warning" href="javascript:void(0);"
+					onclick="downloadData('请选择要导出的数据！','$!rc.contextPath/crmteam/cusExcelOut?businessIdS=')">
+					<i class="fa fa-cloud-download"></i>导出
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+	<script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+	<script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+	<script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+	<script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+	<script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+	<script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+	<script src="$!rc.contextPath/static/js/common.js"></script>
+	<script src="$!rc.contextPath/static/js/team/customer_list.js"></script>
+</body>
+</html>
+
+

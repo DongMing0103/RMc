@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="EnterpriseUserPositionMapper">
+<resultMap type="com.hd.kzscrm.dao.entity.enterprise.EnterpriseUserPositionPO" id="UserPositionMap">
+	<id column="id" jdbcType="BIGINT" property="id"/>
+	<result column="name" jdbcType="VARCHAR" property="name"/>
+	<result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId"/>
+	<result column="department_id" jdbcType="BIGINT" property="departmentId"/>
+	<result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+	
+	
+</resultMap>
+	<sql id="allField">id,name,enterprise_id,department_id,del_flag</sql>
+	<select id="commonSearch" resultMap="UserPositionMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"></include> from enterprise_user_position
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(name)">
+				and name=#{name}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id=#{enterpriseId}
+			</if>
+			<if test="@Ognl@isNotEmpty(departmentId)">
+				and department_id=#{departmentId}
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				and del_flag=#{delFlag}
+			</if>
+			<if test="@Ognl@isEmpty(delFlag)">
+				and del_flag=1
+			</if>
+		</where>
+	</select>
+	<sql id="allfield">
+		id,name,enterprise_id,department_id,del_flag 
+	</sql>
+	<select id="findAll" resultMap="UserPositionMap">
+	select id,name,enterprise_id
+	from  enterprise_user_position
+	where del_flag = 1
+</select>
+<select id="findById" resultMap="UserPositionMap">
+	select name,enterprise_id 
+	from enterprise_user_position
+	<where>
+		del_flag = 1
+		<if test="id !=null and id != 0"> and id=#{id}</if>
+	</where>
+</select>
+	<select id="findByenterpriseDepartmentIds" parameterType="com.hd.wolverine.util.ParamMap" resultMap="UserPositionMap">
+		select <include refid="allfield"/>
+		from enterprise_user_position
+		<where>
+			del_flag = "1"
+			<if test="@Ognl@isNotEmpty(enterpriseDepartmentIds)">
+					and department_id in
+				<foreach collection="enterpriseDepartmentIds" item="enterpriseDepartmentId" index="index" open="(" separator="," close=")">
+					#{enterpriseDepartmentId}
+				</foreach>				
+			</if>		
+		</where>
+	</select>
+	
+	<update id="update" parameterType="com.hd.wolverine.util.ParamMap">
+		update enterprise_user_position
+		<set>
+			<if test="@Ognl@isNotEmpty(name)">
+				name = #{name},
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				del_flag = #{delFlag},
+			</if>
+		</set>
+		<where>	
+			<if test="@Ognl@isNotEmpty(departmentId)">
+				and department_id = #{departmentId}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id = #{enterpriseId},
+			</if>
+				<if test="@Ognl@isNotEmpty(id)">
+					and id = #{id}
+				</if>
+		</where>
+		
+	</update>
+</mapper>

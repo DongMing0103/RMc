@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BaseAreaPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.area.BaseAreaPO" id="BaseResultMap">
+                    <result column="AREA_CODE" property="areaCode" jdbcType="BIGINT"/>
+                    <result column="AREA_NAME" property="areaName" jdbcType="VARCHAR"/>
+                    <result column="AREA_LEVEL" property="areaLevel" jdbcType="BIGINT"/>
+                    <result column="PARENT_CODE" property="parentCode" jdbcType="BIGINT"/>
+                    <result column="LANGUAGE_CODE" property="languageCode" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_ID" property="createId" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_ID" property="updateId" jdbcType="BIGINT"/>
+                    <result column="DELETE_FLAG" property="deleteFlag" jdbcType="VARCHAR"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           basearea.area_code as areaCode,
+	                	        	           basearea.area_name as areaName,
+	                	        	           basearea.area_level as areaLevel,
+	                	        	           basearea.parent_code as parentCode,
+	                	        	           basearea.language_code as languageCode,
+	                	        	           basearea.create_time as createTime,
+	                	        	           basearea.create_id as createId,
+	                	        	           basearea.update_time as updateTime,
+	                	        	           basearea.update_id as updateId,
+	                	        	           basearea.delete_flag as deleteFlag
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where delete_flag=0
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="areaCode != null and areaCode != ''"> AND basearea.area_code = #{areaCode}</if>
+                                      <if test="areaName != null and areaName != ''"> AND basearea.area_name = #{areaName}</if>
+                                      <if test="@Ognl@isNotEmpty(areaCodeLike)"> AND basearea.area_code  like CONCAT(#{areaCodeLike},'%')</if>
+                                                        <if test="areaLevel != null and areaLevel != ''"> AND basearea.area_level = #{areaLevel}</if>
+                                               <if test="parentCode != null and parentCode != ''"> AND basearea.parent_code = #{parentCode}</if>
+                                               <if test="languageCode != null and languageCode != ''"> AND basearea.language_code = #{languageCode}</if>
+                                      <if test="createTime != null and createTime != ''"> AND basearea.create_time = #{createTime}</if>
+                                                        <if test="createId != null and createId != ''"> AND basearea.create_id = #{createId}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND basearea.update_time = #{updateTime}</if>
+                                                        <if test="updateId != null and updateId != ''"> AND basearea.update_id = #{updateId}</if>
+                                      <if test="deleteFlag != null and deleteFlag != ''"> AND basearea.delete_flag = #{deleteFlag}</if>
+                                      <if test="@Ognl@isNotEmpty(areaCodes)">
+                                      			and basearea.area_code in
+                                      		<foreach collection="areaCodes" index="key" item="areaCode" open="(" close=")" separator=",">
+								        		${areaCode}
+								        	</foreach>
+                                      </if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        base_area basearea
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where delete_flag=0
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+	<select id="getProvince" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from base_area
+		where area_level = '2'
+	</select>
+
+	<select id="getCityByParentCode" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from base_area where and parent_code = #{parentCode}
+	</select>
+
+	<!-- ：苏常松 -->
+	<select id="getCityByParentCodeLevel" resultType="Map" parameterType="com.hd.wolverine.util.ParamMap">
+		select area_code id,area_name n,area_level level
+		from base_area
+		<where>
+			<if test="@Ognl@isNotEmpty(parentCode)">
+			   and parent_code = #{parentCode}
+			</if>
+			<if test="@Ognl@isNotEmpty(areaLevel)">
+			   and area_level=#{areaLevel}
+			</if>
+		</where>
+	</select>
+	<!-- 根据findByAreaCode 查询对象  -->
+	<select id="findByAreaCode" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from base_area
+		<where>
+			<if test="@Ognl@isNotEmpty(areaCode)"> and  area_code=#{areaCode}</if>
+		</where>
+	</select>
+	
+	<select id="findByAreaCodes" resultMap="BaseResultMap">
+	select * from base_area where area_code in (${areaCode})
+	</select>
+	</mapper>
+
+
+

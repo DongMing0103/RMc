@@ -1,0 +1,60 @@
+<script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+<script type="text/javascript" src="../../static/js/index/agentAudit/agentAudit.js"></script>
+<script type="text/javascript" src="../../static/js/index/agentAudit/agentAuditFormatter.js"></script>
+<!--代理商审核-->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">代理商审核</span>
+    </div>
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="/crmagent/showAgent"
+           data-method="post"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="agentAudit.queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-field="name" data-align="center">代理商名称</th>
+            <th data-field="address" data-align="center"  data-formatter="agentAuditFormatter.address">地理信息</th>
+            <th data-field="areaName" data-align="center" data-formatter="agentAuditFormatter.areaName">代理区域</th>
+            <th data-field="applyTime" data-align="center" data-formatter="agentAuditFormatter.registerTimeFormatter">申请时间</th>
+            <th data-field="businessName" data-align="center">业务员</th>
+            <th data-field="businessTeamName" data-align="center">所属团队</th>
+            <th data-field="f" data-formatter="agentAuditFormatter.operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		$('#table').bootstrapTable();
+		$('#table').on('load-success.bs.table',function(){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSorcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+		
+	})    
+
+
+    
+
+
+
+
+
+</script>
+
+

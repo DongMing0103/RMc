@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>工作目标申报</title>
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style2.css">
+
+</head>
+<body>
+<div class="p50 mt30">
+    <form class="form-horizontal" action="">
+    	<!-- <input type="hidden" name="targetType" value=2> -->
+    	<input type="hidden" name="id" value="$!crmWorkTargetPO.id">
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label pull-right">工作月</label>
+            </div>
+           
+            <div class="col-sm-5">
+            #if('$!crmWorkTargetPO.id'!='' && $!crmWorkTargetPO.id>0)
+             $!dateTool.format('yyyy年MM月',$!crmWorkTargetPO.applyMonth)
+            #else
+                <input class="Wdate input-date" id="d4311" datatype="*" sucmsg=" " nullmsg="请选择日期" name="applyMonth" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月',realDateFmt:'yyyy-MM-dd HH:mm:ss'})">
+            #end
+           
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label class="control-label pull-right">本月目标</label>
+            </div>
+            <div class="col-sm-9">
+                <table class="foodke" id="foodke">
+                    <thead>
+                    <tr>
+                        <th>发展代理商数量</th>
+                        <th>发展食堂数量</th>
+                        <th>订单金额（￥）</th>
+                    </tr>
+                    </thead>
+                    <tbody id="sctbody">
+                    <tr>
+                        <td class="pr" >
+                            <input class="materialName" value="$!crmWorkTargetPO.agentNum" name="agentNum" datatype="n" nullmsg="请输入发展代理商数量" errormsg="请输入正确的数字" sucmsg=" ">
+                        </td>
+                        <td class="pr" >
+                            <input class="materialAmount" value="$!crmWorkTargetPO.canteenNum" name="canteenNum" datatype="n" nullmsg="请输入发展食堂数量" errormsg="请输入正确的数字" sucmsg=" ">
+                        </td>
+                        <td class="pr" >
+                            <input class="materialAmount" value="$!crmWorkTargetPO.orderMoney" name="orderMoney"  datatype="nplus" nullmsg="请输入订单金额" errormsg="金额为大于0的数字，小数点后最多保留两位。" sucmsg=" ">
+                        </td>
+                    </tr>
+                    
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-5 col-sm-offset-2">
+                <div id="validformMsg" class="Validform_checktip pull-left ml15"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <a class="btn btn-warning" id="change-next" href="javascript:void(0);" >确定</a>
+            </div>
+        </div>
+    </form>
+</div>
+    
+    <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+	<script src="/static/js/bootstrap/bootstrap.min.js"></script>
+	<script src="/static/js/DatePicker/WdatePicker.js"></script>
+	<script src="/static/js/ValidForm/Validform_v5.3.2.js"></script>
+	<script src="/static/js/layer/layer.js"></script>
+    
+    <script type="text/javascript" src="/static/js/util/stringUtils.js"></script>
+    <script type="text/javascript" src="/static/js/util/dateUtils.js"></script>
+    <script type="text/javascript" src="/static/js/index/agentTargetDeclare/agentTargetDeclare.js"></script>
+<script type="text/javascript">
+
+    /* 表单验证 */
+    var validForm=$('.form-horizontal').Validform({
+        btnSubmit:"#change-next",
+        tiptype:function(msg,o,cssctl){
+			var objtip=$("#validformMsg");//错误信息输出
+			cssctl(objtip,o.type);
+			objtip.text(msg);
+			if((o.type!='' && o.type ==2) || objtip == '正在提交数据…'){
+				cssctl(objtip,1);
+				objtip.text('');
+        	}
+		} ,
+        datatype:{
+        	"nplus":/^(?!0+(?:\.0+)?$)(?:[1-9]\d*|0)(?:\.\d{1,2})?$/
+        },
+        ajaxPost:true,
+        beforeSubmit:function(curform){
+        	agentTargetDeclare.submitTarget();
+        	return false;
+        },
+        callback:function(data){
+        }
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,219 @@
+<!--代理商客户-->
+<div class="main-content agent-customer">
+    <div class="content-cap">
+        <span class="cap-name">代理商客户</span>
+    </div>
+    <div class="form-box">
+    	<form class="form-inline" id="form">
+    	<input type="hidden" name="address" id="address" value="">
+    	<input name="customerAttribute" id="customerAttribute" value="1" type="hidden"/>
+	        <div class="form-group">
+	            <label class="control-label">入驻时间</label>
+	            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">客户类别</label>
+		        <div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="clientType">
+		                <option value="">请选择</option>
+		                <option value="2">厂内食堂</option>
+		                <option value="3">校内食堂</option>
+		                <option value="4">独立食堂</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+	        </div>
+	        <div class="form-group">
+				<label class="control-label">代理区域</label>
+				<div class="city-select" id="city">
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control prov" name="provCode">
+							<option value="">请选择</option>
+							<option value="86011">北京市</option>
+							<option value="86012">天津市</option>
+							<option value="86013">河北省</option>
+							<option value="86014">山西省</option>
+							<option value="86015">内蒙古自治区</option>
+							<option value="86021">辽宁省</option>
+							<option value="86022">吉林省</option>
+							<option value="86023">黑龙江省</option>
+							<option value="86031">上海市</option>
+							<option value="86032">江苏省</option>
+							<option value="86033">浙江省</option>
+							<option value="86034">安徽省</option>
+							<option value="86035">福建省</option>
+							<option value="86036">江西省</option>
+							<option value="86037">山东省</option>
+							<option value="86041">河南省</option>
+							<option value="86042">湖北省</option>
+							<option value="86043">湖南省</option>
+							<option value="86044">广东省</option>
+							<option value="86045">广西壮族自治区</option>
+							<option value="86046">海南省</option>
+							<option value="86050">重庆市</option>
+							<option value="86051">四川省</option>
+							<option value="86052">贵州省</option>
+							<option value="86053">云南省</option>
+							<option value="86054">西藏自治区</option>
+							<option value="86061">陕西省</option>
+							<option value="86062">甘肃省</option>
+							<option value="86063">青海省</option>
+							<option value="86064">宁夏回族自治区</option>
+							<option value="86065">新疆维吾尔自治区</option>
+							<option value="86071">台湾省</option>
+							<option value="86081">香港特别行政区</option>
+							<option value="86082">澳门特别行政区</option>
+						</select> 
+						<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+					</div>
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control city" name="cityCode" disabled="disabled" style="display: none;"></select> 
+						<i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+					</div>
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control dist" disabled="disabled" style="display: none;" name="areaCode"></select> 
+						<i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+					</div>
+				</div>
+			</div>
+	        <div class="form-group">
+	        	<!-- <div class="has-feedback" style="display: inline-block;">
+		        	<select class="form-control selectarrow" name="selectNum">
+		                <option value="">请选择搜索条件</option>
+		                <option value="1">食堂名称</option>
+		                <option value="2">食堂编号</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div> -->
+	        	<label class="control-label">食堂搜索</label>
+	            <input class="form-control" name="condition" id="condition" placeholder="请输入食堂名称">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default crmAgentCustomerSearch" href="javascript:void(0);" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default crmAgentCustomerReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/agentCustomer')">重置</a>
+	        </div>
+	    </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public tabledown"
+        data-toggle="table"
+        data-url="$!rc.contextPath/crmclientresource/platformCustomer"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="clientTypeStr" data-align="center" >客户类别</th>
+            <th data-field="agentName" data-align="center">代理商</th>
+            <!-- <th data-field="e" data-align="center">业务员</th> -->
+            <th data-field="address" data-align="center">地理信息</th>
+            <th data-field="applyApproveTime" data-align="center" data-formatter="dateFormatter">入驻时间</th>
+            <th data-field="canteenSplitPercent" data-align="center">分账比例（%）</th>
+            <th data-field="mobile" data-align="center">联系电话</th>
+            <th data-field="operate" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning crmAgentCustomerExport" href="javascript:void(0);" onclick="downloadData('确定要导出','$!rc.contextPath/crmclientresource/excelOuts?clientIds=')">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+
+</div>
+<script type="text/javascript" src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+<script type="text/javascript" src="$!rc.contextPath/static/js/agent/platformAndAgentCustomer.js"></script>
+<script type="text/javascript" src="$!rc.contextPath/static/js/common.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('#table').bootstrapTable();
+	$("#table").on('load-success.bs.table',function(e,data){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+			#if(!$!cSourcesVO.check)
+				$('$!cSourcesVO.frontContrlName').remove();
+			#end
+		#end
+	})
+});
+	
+    /* 地理联动 */
+	$('#city').citySelect({
+        url:"/static/js/cityselect/city.min.js",
+        prov:"", //省
+        city:"", //市	
+        dist:"", //区
+        nodata:"none", //当子集无数据时，隐藏select
+        required:false
+    }); 
+		
+    //操作
+    function operationFormatter(value, row, index) {
+    	var id = row.id;
+    	/* var str1= 	"<div class=tddiv>"+
+					"<span class=settingtda>请选择</span>"+
+					"<ul class=settingtdmenu>"+
+					"<li><a class=crmAgentCustomerSeeAgent href=crmclientresource/seeAgent?clientId="+row.id+" target=_blank>查看资料</a></li>"; */
+		var str1 =	"<div class=tddiv>"+
+					"<span class=settingtda>请选择</span>"+
+					"<ul class=settingtdmenu>"+
+					"<li><a class=crmAgentCustomerSeeResource href=crmclientresource/agentCustomerLook?clientId="+row.id+" target=_blank>查看</a></li>"+
+					'<li><a class=crmClientResourceEdit1 href="javascript:void(0);" onclick="editData(\'编辑资料\',\'/crmclientresource/editCrmClientResourceInit?crmClientResourceParam.id='+row.id+'\',\'768px\',\'500px\')">编辑资料</a></li>'+
+					"<li><a class=crmClientResourceTailrecord href=/crmbusinesstailrecord/initClint?customerId="+row.id+" target=_blank>跟踪记录</a></li>"+
+					"<li><a class=crmAgentCustomerOrderList href=crmOrder/orderListInit target=_blank>订单列表</a></li>"+
+					"<li><a class=crmClientResourcePlitdetail href=/crmbusinesssplitdetail/viewInfoInit?id="+row.id+" target=_blank>分账明细</a></li>";
+					
+    	
+		var str2 = "<li><a class=crmClientResourceViewEnterprise  href=crmEnterprise/viewEnterpriseInformation?clientId="+row.id+" target=_blank>企业信息</a></li>";
+	               
+	    var str3 ="<li><a class=crmAgentCustomerViewShool href=/crmclientresource/SchoolOrFactory/"+id+" target=_blank>学校信息</a></li>";
+			
+	    var str4 = "<li><a class=crmClientResourceAdjustRatio href=javascript:void(0); onclick=adjustRatio(id="+row.id+");>调整分账比例</a></li>"+
+	    		    "</ul></div>";
+	    
+		if(row.clientTypeStr=="独立食堂"){
+			return str1+str4;
+		}
+		if(row.clientTypeStr=="校内食堂"){
+           return str1+str3+str4;
+		}else if(row.clientTypeStr=="厂内食堂"){
+			 return str1+str2+str4;
+		}	        
+    }
+
+    
+	//客户类别	1.代理商，2.厂内食堂，3.校内食堂，4.独立食堂
+	function clientType(index,value,row){
+		if(value==1){
+			return "代理商";
+		}else if(value==2){
+			return "厂内食堂";			
+		}else if(value==3){
+			return "校内食堂";			
+		}else if(value==4){
+			return "独立食堂";			
+		}
+	}
+  //客户性质	1.散客，2.保护客户，3.正式客户
+	function clientNature(index,value,row){
+		if(value==1){
+			return "散客";
+		}else if(value==2){
+			return "保护客户";			
+		}else if(value==3){
+			return "正式客户";			
+		}
+	}
+
+</script>
+

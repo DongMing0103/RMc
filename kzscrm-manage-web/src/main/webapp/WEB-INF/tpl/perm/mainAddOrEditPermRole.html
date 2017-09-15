@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+        <!-- zTree -->
+        <link rel="stylesheet" href="$!rc.contextPath/static/js/jquery/plugins/zTree/css/demo.css" type="text/css">
+		<link rel="stylesheet" href="$!rc.contextPath/static/js/jquery/plugins/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+		
+        
+        <script src="$!rc.contextPath/static/js/dep/jquery-1.12.0.min.js"></script>
+        <!-- zTree -->
+		<script type="text/javascript" src="$!rc.contextPath/static/js/jquery/plugins/zTree/jquery.ztree.all.js"></script>
+        <script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="$!rc.contextPath/static/js/dep/ValidForm/Validform_v5.3.2.js"></script>
+        <script src="$!rc.contextPath/static/js/FlexBox/js/jquery.flexbox.js"></script>
+        <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+        <script src="$!rc.contextPath/static/js/common.js"></script>
+        <script type="text/javascript" src="$!rc.contextPath/static/js/perm/mainAddOrEditPermRole/mainAddOrEditPermRole.js"></script>
+        <script type="text/javascript">
+        	var permRole={
+        		doSave:'$!rc.contextPath/crmpermrole/doSave',
+        		doUpdate:'$!rc.contextPath/crmpermrole/doUpdate',
+        		crmPermRoleId:'$!crmPermRoleVO.id',
+        		crmPermRoleVO:{
+        			'id':'$!crmPermRoleVO.id'
+        		}
+        	};
+        	
+    		var setting = {
+    			check: {
+    				enable: true
+    			},
+    			data: {
+    				simpleData: {
+    					enable: true
+    				}
+    			}
+    		};
+    		var zNodes =[
+			#foreach($!crmPermMenuVO in $!crmPermMenuVOs)
+				#if($!{velocityCount}!=$!crmPermMenuVOs.size())
+    				{ id:'$!crmPermMenuVO.id', pId:'$!crmPermMenuVO.parentId',checked:$!crmPermMenuVO.checked, name:"$!crmPermMenuVO.name"},
+    			#else
+    				{ id:'$!crmPermMenuVO.id', pId:'$!crmPermMenuVO.parentId',checked:$!crmPermMenuVO.checked, name:"$!crmPermMenuVO.name"}
+    			#end
+    		#end
+    		];
+    	
+    		$(document).ready(function(){
+    			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    		});
+    	</SCRIPT>
+        </script>
+    </head>
+    <body>
+		<form class="form-horizontal add-enterprise" id="form" style="padding: 50px;">
+			<div class="form-group">
+			    <div class="col-sm-3 text-right">
+			        <label class="control-label">角色名称</label>
+			    </div>
+			    <div class="col-sm-4">
+			        <input class="form-control" name="name" value="$!crmPermRoleVO.name" placeholder="请输入角色名称" datatype="zh2-10" nullmsg="角色名称不能为空" errormsg="角色名称长度为2-10个字符" sucmsg=" "/>
+			    </div>
+			    <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+			</div>
+			<input type="hidden" name="type" id="roleType" value="1"><!-- 默认是平台 -->
+	       <div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">角色类型</label>
+	            </div>
+	            <div class="col-sm-3 has-feedback">
+	                <select class="form-control" id="userType"  name="userType" datatype="*" nullmsg="请选择角色类型" sucmsg=" "/>
+	                    <option value="">请选择</option>
+	                    <option value="1" #if($!crmPermRoleVO.userType==1) selected #end>管理员</option>
+	                    <option value="2" #if($!crmPermRoleVO.userType==2) selected #end>代理商</option>
+	                    <option value="3" #if($!crmPermRoleVO.userType==3) selected #end>业务员</option>
+	                    <option value="4" #if($!crmPermRoleVO.userType==4) selected #end>业务经理</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	      
+			<div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">状态</label>
+	            </div>
+	            <div class="col-sm-3 has-feedback">
+	                <select class="form-control" name="delFlag" datatype="*" nullmsg="状态不能为空" sucmsg=" "/>
+	                    <option value="1" #if($!crmPermRoleVO.delFlag==1) selected #end>启用</option>
+	                    <option value="0" #if($!crmPermRoleVO.delFlag==0) selected #end>停用</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            </div>
+	            
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	        <div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">角色描述</label>
+	            </div>
+	            <div class="col-sm-7">
+            		<textarea name="description" placeholder="（请输入角色描述）">$!crmPermRoleVO.description</textarea>
+        		</div>
+	        </div>
+	        #if($!crmPermMenuVOs.size()>0)
+		        <div class="form-group">
+			        <div class="col-sm-3 text-right">
+		            </div>
+		            <div class="col-sm-7">
+				        <div class="zTreeDemoBackground" style="width:100%;">
+							<ul id="treeDemo" class="ztree" style="width:100%;"></ul>
+						</div>
+		            </div>
+			     </div>
+		     #end
+           	<div class="text-center pr" style="margin-top: 50px;">
+           		<div class="shade-save"></div>
+           		#if($!crmPermRoleVO)
+           			<a class="btn btn-warning save role_update_save   crmPremRoleReviseSave" href="javascript:void(0);">修改保存</a>
+           			<input type="hidden" value="$!crmPermRoleVO.id" name="id"/>
+           		#else
+           			<a class="btn btn-warning save role_newAdd_save  crmPremRoleSave" href="javascript:void(0);">确定保存</a>
+           		#end
+			</div>
+        </form>
+        
+              
+        <script type="text/javascript">
+	        /* 表单验证 */
+		   /* 	$('.save').click(function(){
+		   		if($('.Validform_checktip').hasClass('.Validform_wrong')){
+					$(this).prev().css('display','block');
+				}
+		    }); */
+		    var url=$.isEmptyObject('$!crmPermRoleVO')&&permRole.doSave || permRole.doUpdate
+		   	var validForm=$('.form-horizontal').Validform({
+	           btnSubmit:".save",
+	           tiptype:2,
+	           datatype:{
+	               "zh2-10":/^.{2,10}$/,
+	           },
+	           postonce:true,
+	           ajaxPost:true,
+	           showAllError: true,
+	           beforeCheck:function(curform){
+	        	   var treeObj = $.fn.zTree.getZTreeObj("treeDemo");
+	        	   var crmPermRoleMenuParams=new Array();
+	        	   if(treeObj){
+	        	   		$.each(treeObj.getCheckedNodes(),function(index,item){
+	        	   			var crmPermRoleMenuParam={};
+	        	   			crmPermRoleMenuParam['menuId']=item.id;
+							crmPermRoleMenuParams.push(crmPermRoleMenuParam);
+	        	   		});
+	        	   }
+	        	   var validFormConfig={showAllError:true,url:url};
+	        	   //if($.isNotEmptyObject('$!crmPermRoleVO')){
+	        		   validFormConfig['ajaxpost']={contentType:'application/json;charset=UTF-8;',data:JSON.stringify($.extend($('#form').serializeJson(),{crmPermRoleMenuParams:crmPermRoleMenuParams}))};
+	        	   //}
+	        	   
+	        	   validForm.config(validFormConfig);
+					return true;
+	           },
+	           callback:function(data){
+ 	               if(data && data.code==0){
+	                   $('.save').prev().css('display','none');
+	                   parent.$("table").bootstrapTable('refresh');
+	                   parent.layer.closeAll();
+	                   parent.layer.msg(data.desc);
+ 	               }else{
+ 	                   layer.msg(data.desc);
+ 	               }
+ 	              
+	           }
+	       	});
+ 			
+		</script>
+		
+		<!-- <script type="text/javascript">
+		/*一级菜单*/
+		function firstList(value,row,index){
+			if(row.isSelect==1){
+				return '<input type="checkbox" name="firstMenu['+index+']" class="firstMenu" checked="checked" value="'+row.id+'" />'+value;
+			}else{
+				return '<input type="checkbox" name="firstMenu['+index+']" class="firstMenu" value="'+row.id+'" />'+value;
+			}
+		}
+		/* 二级菜单 */
+		var menuN=0;
+		var sourceN=0;
+		function secondList(value, row, index){
+			var datas=row.permMenuDTOs;
+			var _html="";
+			if(datas.length>0){
+				_html+='<div class="table-responsive"><table class="table second-table"><tbody>';
+				for(var i=0;i<datas.length;i++){
+				 	_html+='<tr>';
+				 	if(datas[i].isSelect==1){
+					 	_html+='<td>'+'<input type="checkbox" name="secondMenu['+menuN+']" class="secondMenu" value="'+datas[i].id+'"  checked="checked"/>'+datas[i].name+'</td>';
+				 	}else{
+					 	_html+='<td>'+'<input type="checkbox" name="secondMenu['+menuN+']" class="secondMenu" value="'+datas[i].id+'"  />'+datas[i].name+'</td>';
+				 	}
+				 	_html+='<td style="text-align:left">';
+				 	/* 按钮 */
+				 	var sources=datas[i].permSourcesDTOs;
+				 	if(sources.length>0){
+					 	for(var j=0;j<sources.length;j++){
+					 		if(/\S/.test(sources[j].sourcesName)){
+					 			if(sources[j].isChecked==true){
+							 		_html+='<span class="pl15" style="width:90px;text-align:left;display:inline-block">'+'<input type="checkbox" class="source"  checked="checked" name="source['+sourceN+']" value="'+sources[j].id+'" />'+sources[j].sourcesName+'</span>';
+					 			}else{
+							 		_html+='<span class="pl15" style="width:90px;text-align:left;display:inline-block">'+'<input type="checkbox" class="source" name="source['+sourceN+']" value="'+sources[j].id+'" />'+sources[j].sourcesName+'</span>';
+					 			}
+						 		sourceN++;
+					 		}
+					 	}
+				 	}
+				 	_html+='</td>';
+				 	_html+='</tr>';
+				 	menuN++;
+				}
+				_html+='</tbody></table></div>';
+			}else{
+				_html+='<div class="table-responsive"><table class="table second-table"><tbody>';
+			 	_html+='<tr>';
+			 	_html+='<td>';
+			 	/* 按钮 */
+			 	console.log(row);
+			 	var sources=row.permSourcesDTOs;
+			 	if(sources.length>0){
+				 	for(var j=0;j<sources.length;j++){
+				 		if(/\S/.test(sources[j].sourcesName)){
+				 			if(sources[j].isChecked==true){
+						 		_html+='<span class="pl15">'+'<input type="checkbox" class="source"  checked="checked" name="source['+sourceN+']" value="'+sources[j].id+'" />'+sources[j].sourcesName+'</span>';
+				 			}else{
+						 		_html+='<span class="pl15">'+'<input type="checkbox" class="source" name="source['+sourceN+']" value="'+sources[j].id+'" />'+sources[j].sourcesName+'</span>';
+				 			}
+				 		}
+				 		sourceN++;
+				 	}
+			 	}
+			 	_html+='</td>';
+			 	_html+='</tr>'
+				_html+='</tbody></table></div>';
+			}
+			return _html;
+		}
+		$(function() {
+           /* $(".firstMenu").click(function() { */
+           $("body").on("click",".firstMenu",function(){
+        	    $(this).parent().next().find("input").prop("checked",this.checked);
+            });
+           $("body").on("click",".secondMenu",function(){
+        	    $(this).parent().next().find("input").prop("checked",this.checked);
+            });
+           /* $("body").on("click",".source",function(){
+	           var a=$(".secondMenu").length;
+	           
+	           $(this).parents("td").prev().find(".secondMenu").prop("checked",$(this).parents("td").find(".source").length == $("input[class='supplyIds']:checked").length ? true : false);
+	       }); */
+            /* $("input[class='supplyIds']").click(function(){
+                $("#categoryall").prop("checked",$("input[class='supplyIds']").length == $("input[class='supplyIds']:checked").length ? true : false);
+            }); */
+        });
+		</script> -->
+    </body>
+</html>
+
+

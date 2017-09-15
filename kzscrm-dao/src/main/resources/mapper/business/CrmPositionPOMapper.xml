@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPositionPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmPositionPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+                    <result column="AGENT_ID" property="agentId" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+            </resultMap>
+	
+	<select id="maxId" resultType="java.lang.Long">
+		select max(id) maxId from crm_position
+	</select>
+	<update id="deleteById"  parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_position set del_flag=0 where id=#{id}
+	</update>
+	
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmposition.id as id,
+	                	        	           crmposition.name as name,
+	                	        	           crmposition.agent_id as agentId,
+	                	        	           crmposition.create_time as createTime,
+	                	        	           crmposition.create_uid as createUid,
+	                	        	           crmposition.del_flag as delFlag,
+	                	        	           crmposition.update_time as updateTime,
+	                	        	           crmposition.update_uid as updateUid
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+        <select id="findAll" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+       		 SELECT *
+       	 	 FROM crm_position 
+       		 <where>
+       		 	del_flag=1
+       		 	<if test="@Ognl@isNotEmpty(type)">
+       		 	and type = 1
+       		 	</if>
+       		 </where>
+   	 </select>
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="@Ognl@isNotEmpty(id)"> AND crmposition.id = #{id}</if>
+                                      <if test="@Ognl@isNotEmpty(type)"> AND crmposition.type = #{type}</if>
+                                      <if test="@Ognl@isNotEmpty(ids)">
+                                      AND crmposition.id in 
+                                      	<foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+                                      		#{id}
+                                      	</foreach>
+                                      </if>
+                                      <if test="name != null and name != ''"> AND crmposition.name = #{name}</if>
+                                                        <if test="@Ognl@isNotEmpty(agentId)"> AND crmposition.agent_id = #{agentId}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmposition.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmposition.create_uid = #{createUid}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmposition.del_flag = #{delFlag}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmposition.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmposition.update_uid = #{updateUid}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_position crmposition
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM crm_position
+        <where>
+	        del_flag=1
+        	<if test="@Ognl@isNotEmpty(createUid)"> and create_uid = #{createUid} </if>
+        	<if test="@Ognl@isNotEmpty(agentId)"> and agent_id = #{agentId} </if>
+        	<if test="@Ognl@isNotEmpty(type)"> and type= #{type} </if>
+        </where> 
+    </select>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT *
+        FROM crm_position
+       	<where>
+       		del_flag =1
+       		<if test="id!=null and id!=''">and  id=#{id}</if>
+       		
+       	</where>
+	</select>
+	
+	<!-- 查询岗位名称 -->
+	<select id="getPositionName" resultType="com.hd.kzscrm.dao.entity.business.CrmPositionPO">
+		SELECT * FROM crm_position
+		<where>
+			del_flag = 1
+		</where>
+	</select>
+	
+	<!-- 根据agentid 获取信息 -->
+	<select id="findByAgentId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT *
+        FROM crm_position
+       	<where>
+       		del_flag =1
+       		and type = 2
+       		<if test="agentId != null and agentId != ''">and  agent_id = #{agentId}</if>
+       		
+       	</where>
+	</select>
+	
+	<!-- 通用查询 -->
+	<select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, name, agent_id, create_time, create_uid, del_flag, update_time, update_uid, type
+		from crm_position
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">#{id}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(name)">and name = #{name}</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(createTime)">and create_time = #{createTime}</if>
+			<if test="@Ognl@isNotEmpty(createUid)">and create_uid = #{createUid}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(updateTime)">and update_time = #{updateTime}</if>
+			<if test="@Ognl@isNotEmpty(updateUid)">and update_uid = #{updateUid}</if>
+			<if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+		</where>
+		order by id
+	</select>
+	</mapper>
+
+
+

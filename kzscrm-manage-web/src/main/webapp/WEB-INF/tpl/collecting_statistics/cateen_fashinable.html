@@ -1,0 +1,138 @@
+<!--食堂分账-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">食堂分账</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+      
+        <!-- <div class="form-group">
+            <label class="control-label">分账时间&nbsp;</label>
+        </div>
+        <div class="form-group">
+            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+            &nbsp;至&nbsp;
+            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+            <input type="hidden" value="2" name="leixing">
+        </div> -->
+        <div class="form-group">
+            <label class="control-label">客户属性</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="customerAttribute">
+                <option value="0">请选择</option>
+                <option value=1>代理商客户</option>
+                <option value=2>平台客户</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <label class="control-label">客户类别</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="clientType">
+                <option value="0">请选择</option>
+                <option value=2>厂内食堂</option>
+                <option value=3>校内食堂</option>
+                <option value=4>独立食堂</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="selectNum">
+                <option value=1>食堂名称</option>
+         <!--        <option value="">请选择搜索条件</option>
+                <option value=2>食堂编号</option> -->
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <input class="form-control"  id="" placeholder="请输入文字" name="condition">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default  crmClientResourceCateenFashinaSearch" href="javascript:void(0);" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default crmClientResourceCateenFashinaReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/canteenClienResourceInit')">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill"
+           data-toggle="table"
+           data-url="crmclientresource/canteenClienResource"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="customerAttributeName" data-align="center">客户属性</th>
+            <th data-field="clientTypeName" data-align="center">客户类别</th>
+            <th data-field="canteenSplitPercent" data-align="center">分账比例（%）</th>
+            <th data-field="orderNum" data-align="right">订单数量</th>
+            <th data-field="sumMomey" data-align="right">实付金额（￥）</th>
+            <th data-field="splitMomey" data-align="right">分账金额（￥）</th>
+            <th data-field="i" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning crmClientResourceCateenFashinaExport" href="javascript:void(0);" onclick="downloadData('导出','$!rc.contextPath/crmclientresource/excelOuts?Ids=')">
+            <span class="glyphicon glyphicon-save" ></span>导出
+        </a>
+    </div>
+
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+				#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+  	});
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str= '<li><a class=crmClientResourceCateenFashinaSee href=crmbusinesssplitdetail/canteenSplit?clientId=' +row.id+  ' target=_blank>查看</a></li>';
+        return str;
+    }
+
+
+    
+    function commit(){
+    	qurery();
+    }
+
+
+    //查询
+    function qurery(url){
+    	var _url =$("#table").attr("data-url");
+    	if(url==null){
+    		url=_url;
+    	}
+    	
+    	$("#table").bootstrapTable("removeAll");
+    	$("#table").bootstrapTable('refresh',{
+    		url:url
+    	},{
+    		query:$('#form').serialize()
+    	})
+    }
+    /*分页查询*/
+    function queryParams(params) {
+    	return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+
+    }
+
+
+</script>
+

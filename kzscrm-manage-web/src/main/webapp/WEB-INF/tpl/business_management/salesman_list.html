@@ -1,0 +1,210 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">业务员列表</span>
+    </div>
+    	#if($!userType==1)
+	    <ul class="nav nav-tabs nav-self">
+	        <li><span>职业状态</span></li>
+	        <li class="active"><a href="#all"  data-toggle="tab" onclick="findBusiness('jobStatus','')">全部（<span id="index2">0</span>）</a></li>
+	        <li class="mt10">|</li>
+	        <li><a href="#work"  data-toggle="tab" onclick="findBusiness('jobStatus',1)">在职（<span id="index1">0</span>）</a></li>
+	        <li class="mt10">|</li>
+	        <li><a href="#departure"  data-toggle="tab" onclick="findBusiness('jobStatus',0)">离职（<span id="index0">0</span>）</a></li>
+	    </ul>
+	    #end
+    <div class="form-box">
+        <form class="form-inline" id="form">
+        	<input name="jobStatus" id="jobStatus" type="hidden" value=""/>
+            #if($!userType==1|| ($!userType==4 && $!oneTeamFlag != 1))
+            <div class="form-group">
+                <label class="control-label">所属团队</label>
+                <div class="has-feedback" style="display: inline-block">
+	                <select class="form-control" name="teamId">
+	                    <option value="">请选择</option>
+						#foreach($!team in $!teamPOs)                    
+	                    	<option value="$!team.id">$!team.name</option>
+	                	#end
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>                
+            </div>
+            #end
+            <div class="form-group">
+                <label class="control-label">姓名</label>
+                <input class="form-control" placeholder="请输入业务员姓名..." name="nameLike">
+            </div>
+            <div class="form-group">
+                <a class="btn btn-default crmBusinessSaleman" href="javascript:void(0);"  onclick="query();">
+                    <span class="glyphicon glyphicon-search"></span>搜索
+                </a>
+                <a class="btn btn-default crmBusinessreset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmbusiness/salesmanListInit');">重置</a>
+            </div>
+        </form>
+    </div>														
+    <table
+            id="table"
+            data-classes="table table-public"
+            data-toggle="table"
+        	data-url="$!rc.contextPath/crmbusiness/salesmanListDetail"
+            data-pagination="true"
+            data-pagination-v-align="both"
+            data-page-size="20"
+            data-side-pagination="server"
+            data-query-params="queryParams"
+            data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">姓名</th>
+            #if($!userType==1 ||$!userType==0|| ($!userType==4 && $!oneTeamFlag != 1))<th data-field="teamName" data-align="center">所属团队</th>#end
+            <th data-field="positionName" data-align="center" >岗位职务 </th>
+            #if($!userType==1)<th data-field="jobStatus" data-align="center" data-formatter="jobStatus">职业状态</th>#end
+            <th data-field="mobilephone"  data-align="center">联系电话</th>
+            <th data-field="weixin"  data-align="center">微信号码</th>
+            <th data-field="workTime" data-align="center" data-formatter="dateFormatter">入职时间</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+    #if($!userType==1||$!userType==2)
+    <div class="mt10">
+        <a class="btn btn-warning crmBusinessDownlown" href="javascript:void(0);" onclick="downloadData('','$!rc.contextPath/crmbusiness/excelOut?businessIds=')">
+        	<i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+    #end
+</div>
+<script src="$!rc.contextPath/static/js/business/findBusiness.js"></script>
+<script type="text/javascript">
+#if($!userType==1)
+	occupationStatus()
+#end
+
+$(function(){
+	$('#table').bootstrapTable();
+	$("#table").on('load-success.bs.table',function(e,data){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+			#if(!$!cSourcesVO.check)
+				$('$!cSourcesVO.frontContrlName').remove();
+			#end
+		#end
+	});
+});
+
+   	/*  操作 */
+    function operateFormatter(value, row, index) {
+   		var jiegu = '<li><a class="crmBusinessWorkFire" href="javascript:void(0);" onclick="workFire(\'解雇\',\'确定要和该业务员解除合同吗?\',\'/crmbusiness/updataStatus?businessId='+row.id+'\')">解雇</a></li>'+
+   	   				'</ul></div>';
+    	
+   		var ruzhi =   '<li><a class="crmBusinessWorkFire1" href="javascript:void(0);" onclick="workFire(\'入职\',\'确定接受该业务经理立即入职本公司吗?\',\'/crmbusiness/updataStatus1?businessId='+row.id+'\')">入职</a></li>'+
+   	   				  '</ul></div>';
+   		var str = '<div class=tddiv>'+
+			        '<span class=settingtda>请选择</span>'+
+			        '<ul class=settingtdmenu>'+
+		                '<li><a class="crmBusinessEdit" href=crmbusiness/seeInit?businessId='+row.id+' target=_blanck>查看资料</a></li>'+
+		                '<li><a class="crmBusinessEdit" href="javascript:void(0);" onclick="editData(\'编辑\',\'/crmbusiness/viewInit?businessId='+row.id+'\',\'768px\',\'550px\')">编辑资料</a></li>'+
+		                /* '<li><a class="crmBusinessAdjustRoot" href="javascript:void(0);" onclick="adjustRoot(id='+row.id+');">调整客保权限</a></li>'+ */
+		                '<li><a class="crmBusinessMonthGoals" href=crmagent/monthGoals?businessId=' +row.id+  ' target=_blank>当月工作目标</a></li>'+
+		                '<li><a class="crmBusinessClientListInit" href=/crmclientresource/businessClientList?businessId='+row.id+' target=_blank>客户列表</a></li>'+
+		                '<li><a class="crmBusinessViewInfoInit" href=crmbusinesssplitdetail/viewInfoInit?businessId='+row.id+' target=_blank>分账明细</a></li>';
+		if(row.jobStatus==1){
+			return str+jiegu;
+		}else if(row.jobStatus==0){
+			return str+ruzhi;
+		}        
+		return str;
+    }
+    
+    function jobStatus(value, row, index){
+    	 if(value == 1){
+    		 return "在职";
+    	 }else if(value == 0){
+    		 return "离职";
+    	 }else{
+    		 return "-";
+    	 }
+    }
+    
+   	/*  入职、离职 */
+   	function workFire(title,content,url){
+		layer.open({
+		    title: title,
+		    content: content,
+		    icon:"3",
+		    btn: ["确定","取消"],
+		    yes: function(index, layero) {
+		    	$.ajax({
+		    		type:"POST",
+		    		url:url,
+		    		dataType:"json",
+		    		success:function(data){
+		    			if(data.code!=0){
+		    				layer.close("操作失败");//关闭弹窗
+		    			}
+		    			//按钮【按钮一】的回调
+		    			layer.msg(data.desc); 
+						$('#table').bootstrapTable('refresh');  //刷新table
+						#if($!userType==1)
+							occupationStatus()
+						#end
+						layer.close(index);//关闭弹窗
+		    		}
+		    	});              
+		    }
+		})
+	}
+   	
+   	/* 调整客保权限 */
+   	function adjustRoot(id){
+   		var _html="";
+   		_html+='<form class=form-horizational id="form1">';
+   		_html+='<div class=form-group>';
+   		_html+='<input id="id" name="id" type="hidden" value='+id+' />';
+   		_html+='<div class="col-xs-5 text-right" style="line-height: 34px;"><label class=control-label>保护时间延长到</label></div>';
+   		_html+='<div class="col-xs-7"><input class="Wdate input-date" id="d4311" name="protectDeadline" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:\'yyyy年MM月\'})"></div>';
+ 		_html+='</div>';
+   		_html+='</form>';
+   		layer.open({
+		    title: "调整客保权限",
+		    area:['460px','200px'],
+		    content: _html,
+		    area:['确定','取消'],
+		    yes: function(index, layero) {
+		    	$.ajax({
+		    		type:"POST",
+		    		url:"/crmclientresource/updataStatus",
+		    		data:$("#form1").serialize(),
+		    		dataType:"json",
+		    		success:function(){
+		    			//按钮【按钮一】的回调
+		    			layer.msg(msg); 
+						$('#table').bootstrapTable('refresh');  //刷新table
+						layer.close(index);//关闭弹窗
+		    		}
+		    	});            
+		    }
+		})
+   	}
+   	//统计在职状态
+   	function occupationStatus(){
+   		$.ajax({
+   			url:"$!rc.contextPath/crmbusiness/occupationStatus",
+   			dataType:'json',
+   			cache:false, 
+   			success:function(data){
+   				//console.log(data);
+   				if(data.code == 0){
+   					$.each(data.rows,function(index,item){
+   						//console.log(index);
+   						//console.log(item);
+   						$("#index"+index).text(item);
+   					})
+   				}
+   			}
+   		})
+   	} 	
+   	
+   	
+</script>
+

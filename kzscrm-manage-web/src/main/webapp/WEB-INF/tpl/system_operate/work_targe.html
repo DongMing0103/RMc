@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>当月工作目标</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+            <h2><a href="">筷子说CRM</a></h2>
+            <h3>当月工作目标</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+        <form class="form-inline" action="" id="form">
+	        <input id="agentId" name="agentId"  type="hidden"  value="$!agentId"/>
+	        <input id="workMonth" name="workMonth"  type="hidden"  value="$!workMonth"/>
+    	    <input id="businessId" name="businessId"  type="hidden" value ="$!businessId"/>
+        </form>
+            <div class="">
+            	<span class="">工作月</span>
+            	<span class="">$!workMonth</span>
+            </div>
+            <table
+                id="table"
+       		    data-classes="table table-public"
+  			    data-toggle="table"
+  			    data-url="$!rc.contextPath/crmagent/monthGoalsList"
+    			data-pagination="true"
+   			    data-pagination-v-align="both"
+    		    data-side-pagination="server"
+    		    data-query-params="queryParams"
+    		    data-page-size="20"
+     		   data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-field="creatTime" data-align="center" data-formatter="dateFormatter">申报时间</th>
+                    <th data-field="agentNum" data-align="center">发展代理商数量</th>
+                    <th data-field="canteenNum" data-align="center">发展食堂数量</th>
+                    <th data-field="orderMoney" data-align="center">订单金额（￥）</th>
+                </tr>
+                </thead>
+            </table>           
+        </div>
+    </div>
+
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/app/app.js"></script>
+	<script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/jquerycookie/jquery.cookie.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/ValidForm/Validform_v5.3.2.js"></script>
+    <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/jquerycookie/jquery.cookie.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    <script src="$!rc.contextPath/static/js/administrator/agent_list.js"></script>
+    <script type="text/javascript">
+ 	 //查询
+    	function qurery(url){
+    		var _url =$("#table").attr("data-url");
+    		if(url==null){
+    			url=_url;
+    		}
+    	
+    		$("#table").bootstrapTable("removeAll");
+    		$("#table").bootstrapTable('refresh',{
+    			url:url
+    		},{
+    			query:$('#form').serialize()
+    		})
+  		  }
+   	 /*分页查询*/
+  	  function queryParams(params) {
+    		return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+   	 }
+
+   </script> 
+   
+</body>
+</html>
+
+
+
+
+
+
+
+

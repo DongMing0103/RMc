@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmBusinessOrderPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmBusinessOrderPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="ORDER_ID" property="orderId" jdbcType="BIGINT"/>
+                    <result column="ORDER_NO" property="orderNo" jdbcType="VARCHAR"/>
+                    <result column="order_real_money" property="orderRealMoney" />
+                    <result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT"/>
+                    <result column="CANTEEN_ID" property="canteenId" jdbcType="BIGINT"/>
+                    <result column="CANTEEN_NO" property="canteenNo" jdbcType="VARCHAR"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmbusinessorder.id as id,
+	                	        	           crmbusinessorder.order_id as orderId,
+	                	        	           crmbusinessorder.business_id as businessId,
+	                	        	           crmbusinessorder.canteen_id as canteenId,
+	                	        	           crmbusinessorder.canteen_no as canteenNo,
+	                	        	           crmbusinessorder.order_real_money as orderRealMoney,
+	                	        	           crmbusinessorder.create_time as createTime,
+	                	        	           crmbusinessorder.create_uid as createUid,
+	                	        	           crmbusinessorder.del_flag as delFlag,
+	                	        	           crmbusinessorder.update_time as updateTime,
+	                	        	           crmbusinessorder.update_uid as updateUid
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmbusinessorder.id = #{id}</if>
+                                               <if test="orderId != null and orderId != ''"> AND crmbusinessorder.order_id = #{orderId}</if>
+                                               <if test="businessId != null and businessId != ''"> AND crmbusinessorder.business_id = #{businessId}</if>
+                                               <if test="canteenId != null and canteenId != ''"> AND crmbusinessorder.canteen_id = #{canteenId}</if>
+                                      <if test="canteenNo != null and canteenNo != ''"> AND crmbusinessorder.canteen_no = #{canteenNo}</if>
+                                               <if test="createTime != null and createTime != ''"> AND crmbusinessorder.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmbusinessorder.create_uid = #{createUid}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmbusinessorder.del_flag = #{delFlag}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmbusinessorder.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmbusinessorder.update_uid = #{updateUid}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_business_order crmbusinessorder
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+
+	
+	<!-- 统计订单数量 -->
+	<select id="sumOrderRealMoney" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		select sum(real_money) from crm_business_order 
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and business_id in
+				<foreach collection="businessIds" item="businessId" index="index" open="(" separator="," close=")">#{businessId}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(applyMonth)">
+				and date_format(create_time,'%Y-%m') = date_format(#{applyMonth},'%Y-%m') 
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据businessID统计订单数量 -->
+	<select id="countOrderId" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT COUNT(business_id) FROM crm_business_order WHERE business_id = #{businessId}
+	</select>
+	<!-- findByBusinessId 根据businessId查询对象 -->
+	<select id="findByBusinessId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_order
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(businessId)"> and BUSINESS_ID=#{businessId}</if>
+		</where>
+		
+	</select>
+	
+		<!-- findByBusinessId 根据businessId查询对象 -->
+	<select id="findLikeByOrderId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business_order
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(condition)"> and order_no like "%"#{condition}"%"</if>
+		</where>
+		
+	</select>
+	
+	</mapper>
+
+
+

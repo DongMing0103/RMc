@@ -1,0 +1,134 @@
+<!-- main${table.tableNameOut} -->
+
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">角色列表</span>
+        <div class="pull-right"> 
+            <a class="btn btn-warning role_newAdd" href="javascript:void(0);" onclick="editData('新增角色','$!rc.contextPath/permRole/addPermRole','800px','90%')">
+                <span class="glyphicon glyphicon-plus"></span> 新增
+            </a>
+        </div>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+	        <div class="form-group has-feedback">
+		    <select class="form-control" name="permType">
+		       <option value="">请选择</option>
+               <option value="1">食堂</option>
+               <option value="2">企业</option>
+               <option value="3">后台</option>
+		    </select>
+		    <span class="glyphicon glyphicon-triangle-bottom form-control-feedback caret-self" aria-hidden="true"></span>
+		</div>
+        <div class="form-group">
+	        <input class="form-control" name="name" id="name" placeholder="请输入角色名称...">
+	    </div>
+	    <div class="form-group">
+       		<a class="btn btn-default role_search" href="javascript:void(0);" onclick="selectInfo()"><span class="glyphicon glyphicon-search"></span>搜索</a>
+        	<a class="btn btn-default role_reset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/permRole/init')">重置</a>
+        </div>
+    </form>
+    
+     <table 
+        id="table"
+        data-classes="table table-bill" 
+        data-toggle="table"
+        data-url="$!rc.contextPath/permRole/queryPage"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+		<thead>
+		   
+			<tr>
+<!-- 				<th data-field="code" data-align="center" data-width="10%">角色编号</th> -->
+				<th data-field="name" data-align="center" data-width="10%">角色名称</th>
+				<th data-field="permType" data-align="center" data-formatter="permType" data-width="10%">类型</th>
+				<th data-field="deleteFlag" data-align="center" data-width="10%" data-formatter="statusNum">启用状态</th>
+				<th data-field="operation" data-align="center" data-width="10%" data-formatter="operateFormatter" class="selecttd">操作</th> 
+			 
+			</tr>
+		</thead>
+	</table>	
+     
+    
+</div>	
+
+<script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+<script type="text/javascript">
+  
+
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+ 
+   /* 操作 */
+    function operateFormatter(value, row, index) {	
+    	if(row.deleteFlag==0){
+			return [
+				'<a class="pl15 role_edit" href="javascript:void(0);" onclick="editData(\'编辑\',\'$!rc.contextPath/permRole/editPermRole?id='+row.id+'\',\'768px\',\'80%\')">编辑</a>'
+		    ].join('');				
+		}else{
+			return [
+	            '<a href="javascript:void(0); role_cancellation" onclick="operate('+row.id+',\'注销\',\'3\',\'确定要注销吗\',\'$!rc.contextPath/permRole/doDelete?id='+row.id+'\',\'注销成功\')">注销</a>&nbsp;'+
+	            '<a class="pl15 role_edit" href="javascript:void(0);" onclick="editData(\'编辑\',\'$!rc.contextPath/permRole/editPermRole?id='+row.id+'\',\'70%\',\'90%\')">编辑</a>'
+	        ].join('');
+		}
+    }
+        
+   	function selectInfo(){
+   		$("#table").bootstrapTable('refresh',{
+   			url:"permRole/queryPage?"+$("#form").serialize()
+   		})
+   	}
+    
+   	function statusNum(value,row,index){
+   		if(value==1){
+   			return "启用";
+   		}else if(value==0){
+   			return "<a style='color:red'>注销</a>";
+   		}
+   	}
+  	function permType(value,row,index){
+  		if(value==1){
+  			return "食堂";
+  		}else if(value==2){
+  			return "企业";
+  		}else if(value==3){
+  			return "后台";
+  		}
+  	}
+	    
+  	//注销
+  	function operate(id, title, icon, content, url, msg){
+		var index=layer.open({
+			title: title,
+			icon: icon,
+			content: content,
+			btn: ['确定','取消'],
+			yes: function(){
+				$.ajax({
+		      		url:url,
+		      		type:"post",
+		      		dataType:"json",
+		      		data:"id="+id,
+		      		success:function(data){
+		      			console.log(data);
+		      			if(data.code==0){
+		      				$('#table').bootstrapTable('refresh');	
+							layer.close(index);
+		   				}
+		      			layer.msg(data.desc); 
+		      		}
+		      	})
+			}
+		})
+	}
+    </script>
+
+
+ 
+</body>
+</html>

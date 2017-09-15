@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPayCanteenCashflowPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.canteen.CrmPayCanteenCashflowPO" id="BaseResultMap">
+                    <result column="id" property="id" />
+                    <result column="cash_flow_no" property="cashFlowNo" />
+                    <result column="user_id" property="userId" />
+                    <result column="create_time" property="createTime" />
+                    <result column="cash_flow_nature" property="cashFlowNature" />
+                    <result column="cash_flow_money" property="cashFlowMoney" />
+                    <result column="balance" property="balance" />
+                    <result column="canteen_id" property="canteenId" />
+                    <result column="canteen_order_id" property="canteenOrderId" />
+                    <result column="cash_flow_status" property="cashFlowStatus" />
+                    <result column="user_type" property="userType" />
+                    <result column="cashflow_type" property="cashflowType" />
+                    <result column="pay_model" property="payModel" />
+                    <result column="refund_type" property="refundType" />
+                    <result column="pay_timestamp" property="payTimestamp" />
+                    <result column="order_no" property="orderNo" />
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           			   crmpaycanteencashflow.id as id,
+	                	        	           crmpaycanteencashflow.cash_flow_no as cashFlowNo,
+	                	        	           crmpaycanteencashflow.user_id as userId,
+	                	        	           crmpaycanteencashflow.create_time as createTime,
+	                	        	           crmpaycanteencashflow.cash_flow_nature as cashFlowNature,
+	                	        	           crmpaycanteencashflow.cash_flow_money as cashFlowMoney,
+	                	        	           crmpaycanteencashflow.balance as balance,
+	                	        	           crmpaycanteencashflow.canteen_id as  canteenId,
+	                	        	           crmpaycanteencashflow.canteen_order_id as  canteenOrderId,
+	                	        	           crmpaycanteencashflow.cash_flow_status as  cashFlowStatus,
+	                	        	           crmpaycanteencashflow.user_type as  userType,
+	                	        	           crmpaycanteencashflow.cashflow_type as  cashflowType,
+	                	        	           crmpaycanteencashflow.pay_model as  payModel,
+	                	        	           crmpaycanteencashflow.refund_type as  refundType,
+	                	        	           crmpaycanteencashflow.pay_timestamp as payTimestamp
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="@Ognl@isNotEmpty(id)"> AND crmpaycanteencashflow.id = #{id}</if>
+                                      <if test="@Ognl@isNotEmpty(cash_flow_no)"> AND crmpaycanteencashflow.cash_flow_no = #{cashFlowNo}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_pay_canteen_cashflow crmpaycanteencashflow
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+<!-- 判断订单是否存在 -->
+	<select id="queryPayCanteenCashflow" resultType="java.lang.Integer" parameterType="com.hd.wolverine.util.ParamMap">
+		 select count(1) from crm_pay_canteen_cashflow where order_no = #{orderNo} and user_id=#{userId}
+	</select>
+	
+	<!-- 根据userId查询食堂流水信息 -->
+	<select id="findByUserId" resultType="java.lang.Integer" parameterType="com.hd.wolverine.util.ParamMap">
+		 select * 
+		 from crm_pay_canteen_cashflow 
+		 <where>
+		  del_flag = 1
+		  <if test="@Ognl@isNotEmpty(userId)">and user_id = #{userId}</if>
+		 </where>
+	</select>
+	
+	</mapper>
+
+
+

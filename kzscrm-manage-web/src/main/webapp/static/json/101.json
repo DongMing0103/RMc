@@ -1,0 +1,45 @@
+{
+  "total":5,
+  "rows":[
+    {
+      "teamName": "商务一部",
+      "teamLevel": "三级团队",
+      "setTime": "2017-12-12 12:30",
+      "competent": "华东区 浙江省总队 杭州市业务团",
+      "businessScope": "浙江 杭州 拱墅",
+      "operate": "操作"
+    },
+    {
+      "teamName": "商务一部",
+      "teamLevel": "三级团队",
+      "setTime": "2017-12-12 12:30",
+      "competent": "华东区 浙江省总队 杭州市业务团",
+      "businessScope": "浙江 杭州 拱墅",
+      "operate": "操作"
+    },
+    {
+      "teamName": "商务一部",
+      "teamLevel": "三级团队",
+      "setTime": "2017-12-12 12:30",
+      "competent": "华东区 浙江省总队 杭州市业务团",
+      "businessScope": "浙江 杭州 拱墅",
+      "operate": "操作"
+    },
+    {
+      "teamName": "商务一部",
+      "teamLevel": "三级团队",
+      "setTime": "2017-12-12 12:30",
+      "competent": "华东区 浙江省总队 杭州市业务团",
+      "businessScope": "浙江 杭州 拱墅",
+      "operate": "操作"
+    },
+    {
+      "teamName": "商务一部",
+      "teamLevel": "三级团队",
+      "setTime": "2017-12-12 12:30",
+      "competent": "华东区 浙江省总队 杭州市业务团",
+      "businessScope": "浙江 杭州 拱墅",
+      "operate": "操作"
+    }
+  ]
+}

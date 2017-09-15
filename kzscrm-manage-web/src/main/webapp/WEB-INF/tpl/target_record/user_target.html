@@ -1,0 +1,85 @@
+<!-- 个人目标 -->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">个人目标</span>
+    </div>
+    <div class="form-box">
+    	<form class="form-inline" id="form">
+	        <div class="form-group">
+	            <label class="control-label">工作月</label>
+	            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">所属团队</label>
+		        <div class="has-feedback" style="display: inline-block">
+		            <select class="form-control selectarrow" name="status">
+		            	<option value="">请选择</option>
+		            	#foreach($!crmTeamPO in $!crmTeamPOs)
+		            	<option value="$!crmTeamPO.id">$!crmTeamPO.name</option>
+		            	#end
+		                <!-- <option value="">请选择</option>
+		                <option>商务一部</option>
+		                <option>商务二部</option> -->
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+		    </div>
+		    <div class="form-group">
+	            <label class="control-label">业务员检索</label>
+	            <input class="form-control" placeholder="请输入业务员姓名">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+	        </div>
+	    </form>
+    </div>
+    
+    <table
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="$!rc.contextPath/crmworktarget/getPersonalTargetDetails"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="businessName" data-align="center">业务员姓名</th>
+            <th data-field="applyMonth" data-align="center" data-formatter="applyMonthFormatter">工作月</th>
+            <th data-field="teamName" data-align="center">所属团队</th>
+            <th data-field="agentNum" data-align="right">发展代理商数量</th>
+            <th data-field="completeAgentNum" data-align="right">完成量</th>
+            <th data-field="canteenNum" data-align="right">发展食堂数量</th>
+            <th data-field="completeCanteenNum" data-align="right">完成量</th>
+            <th data-field="orderMoney" data-align="right">订单总金额（￥）</th>
+            <th data-field="completeOrderMoney" data-align="right">完成量</th>
+            <th data-field="percentageCompletion" data-align="right">完成度（%）</th>
+            <th data-field="operate" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+	<div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+</div>
+<!-- <script type="text/javascript" src="$!rc.contextPath/static/js/target_record/team_target.js"></script> -->
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str="<a href=/static/html/system_operate/customer_list.html target=_blank>查看</a>";
+        return str;
+    }
+</script>

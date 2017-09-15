@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+	name="viewport">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title></title>
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+<link rel="stylesheet"
+	href="/static/css/font-awesome/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/fileinput.css">
+<link rel="stylesheet" href="/static/css/jquery.Jcrop.min.css">
+<link rel="stylesheet" href="/static/css/scojs.css">
+<link rel="stylesheet" href="/static/css/sco.message.css">
+<link rel="stylesheet" href="/static/css/common.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/style2.css">
+</head>
+<body>
+	<form class="form-horizontal add-merchants" id="form" name="form"
+		enctype="multipart/form-data" action="" method="post">
+		<input type="hidden" name="clientId" value="$!clientId" id="clientId"> 
+		<input type="hidden" name="id" id="id" value="$!id"> 
+		<input type="hidden" name="agentId" id="agentId" value="$!agentId">
+		<div class="form-group">
+			<div class="col-sm-3 text-right">
+				<label class="control-label">代理区域</label> 
+			</div>
+			<!-- <div class="col-sm-9">
+				<input id="areaCode"
+					name="areaCode" value="$!crmAgentApplyVO.areaName"
+					class="form-control" />
+			</div> -->
+
+			 <div class="col-sm-9">
+					<div class="city-select" id="city">
+		                <div class="has-feedback" style="display: inline-block;">
+		                    <select class="form-control prov selectarrow"></select>
+		                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		                </div>
+		                <div class="has-feedback" style="display: inline-block;">
+		                    <select class="form-control city" disabled="disabled" style="display: none;"></select>
+		                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+		                </div>
+		                <div class="has-feedback" style="display: inline-block;">
+		                    <select class="form-control dist" disabled="disabled" style="display: none;" name="areaCode"></select>
+		                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+		                </div>
+		            </div>
+				</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-3 text-right">
+				<label class="control-label">合作时间</label>
+			</div>
+			<div class="col-sm-9">
+				<input class="Wdate input-date" id="d4311"
+					name="cooperationStartTimeStr"
+					value="$!dateTool.format('yyyy-MM-dd',$!crmAgentApplyPO.cooperationStartTime)"
+					type="text" placeholder="请选择日期"
+					onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+				&nbsp;至&nbsp; <input class="Wdate input-date" id="d4312"
+					name="cooperationEndTimeStr"
+					value="$!dateTool.format('yyyy-MM-dd',$!crmAgentApplyPO.cooperationEndTime)"
+					type="text" placeholder="请选择日期"
+					onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-3 text-right">
+				<label class="control-label" for="cname">加盟合同</label>
+			</div>
+			<div class="col-sm-4">
+				<input type="hidden" datatype="*"
+					value="$!imgViewAddress$!crmAgentApplyPO.contractImgPath"
+					id="contractImgPath" name="contractImgPath"
+					class="img contractImgPath">
+			</div>
+			<div class="col-sm-3 pt4">
+				<div class="Validform_checktip"></div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-8 col-sm-offset-3">
+				<div class="img-box1 imgsbox3"></div>
+			</div>
+		</div>
+		<div class="text-center mt40 pr">
+			<div class="shade-save"></div>
+			<a class="btn btn-warning save" href="javascript:void(0);"
+				onclick="audit(1)">审核通过</a> 
+				<!-- <a class="btn btn-warning save"
+				href="javascript:void(0);" onclick="audit(2)">审核不通过</a> <a
+				class="btn btn-warning save" href="javascript:void(0);"
+				onclick="closeThis()">关闭</a> -->
+		</div>
+	</form>
+
+	<script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+	<script src="/static/js/bootstrap/bootstrap.min.js"></script>
+	<script src="/static/js/layer/layer.js"></script>
+	<script src="/static/js/cityselect/jquery.cityselect.js"></script>
+	<script src="/static/js/ValidForm/Validform_v5.3.2.js"></script>
+	<script src="/static/js/fileinput.js" type="text/javascript"></script>
+	<script src="/static/js/zh.js" type="text/javascript"></script>
+	<script src="/static/js/jquery.Jcrop.min.js"></script>
+	<script src="/static/js/sco.modal.js"></script>
+	<script src="/static/js/template.js"></script>
+	<script src="/static/js/portrait2.js?v1"></script>
+	<script src="/static/js/cityselect/jquery.cityselect.js"></script>
+	<script src="/static/js/DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript">
+		/**
+		 * 审核
+		 */
+		function audit(flag) {
+			var checkStatus;
+			var message = "您确定";
+			if (flag == 1) {
+				checkStatus = 1;
+				message += "通过审核吗?";
+			} else {
+				checkStatus = 2;
+				message += "不通过审核吗?";
+				parent.layer.closeAll();
+			}
+			var data = {
+				id : $("#id").val(),
+				agentId : $("#agentId").val(),
+				areaCode : $("[name=areaCode]").val(),
+				clientId : $("#clientId").val()
+			};
+
+			layer.confirm(message, function() {
+				$.ajax({
+					cache : true,
+					type : "POST",
+					url : "/crmagent/auditing",
+					data : data,
+					dataType : "json",
+					success : function(data) {
+						if (data && data.code == 0) {
+							layer.msg("操作成功", {
+								time : 1000
+							}, function() {
+								parent.$('#table').bootstrapTable('refresh');
+								parent.layer.closeAll();
+							});
+						} else {
+							layer.msg(data.desc, {
+								time : 2000
+							})
+						}
+					}
+				})
+			})
+		}
+
+		/**
+		 * 关闭窗口
+		 */
+		function closeThis() {
+			parent.layer.closeAll();
+		}
+		var i = 0;
+		//图片上传
+		var imageViewShow = '$!imgViewAddress';
+		var contractImgPathPic = '$!crmAgentApplyPO.contractImgPath';
+
+		//身份证，营业执照上传
+		function Filerectangle() {
+			this.portrait = function(target, uploadUrl, data) {
+				target
+						.fileinput({
+							language : 'zh', //设置语言
+							uploadUrl : '/file/upload_Resize_file', //上传的地址
+							dropZoneEnabled : false,//是否显示拖拽区域
+							uploadExtraData : data,//上传时除了文件以外的其他额外数据
+							allowedPreviewTypes : [ 'image' ],
+							allowedFileTypes : [ 'image' ],
+							allowedFileExtensions : [ 'gif', 'jpg', 'png' ],
+							showRemove : false,
+							showCancel : false,
+							showUpload : true, //是否显示上传按钮
+							showCaption : false,//是否显示标题
+							maxFileSize : 8192,
+							maxFileCount : 1,
+							browseClass : "btn btn-primary"
+						})
+						.on(
+								"fileuploaded",
+								function(event, data) {
+									i = $(".imgsbox4").size();
+									if (data && data.response
+											&& data.response.code == 0) {
+										//添加图片
+										var val = data.response.rows;
+										var _html = '<img class="delimg" src="../static/images/delimg.png"><img class="upimg" src="'+imageViewShow+data.response.rows+'">';
+										var $imgdiv = $btn.parents(
+												".form-group").next().find(
+												".img-box1");
+										$imgdiv.append(_html);
+										if ($imgdiv.html() == null
+												|| $imgdiv.html().length == 0) {
+											$imgdiv.append(_html);
+										} else {
+											$imgdiv.find("img").remove();
+											$imgdiv.append(_html);
+										}
+
+										$btn.parents(".form-group")
+												.find(".img").val(val);
+
+										for (var j = 0; j < i; j++) {
+											var _hy = $(".hygiene")[j];
+											$(_hy)
+													.find(".imgsbox4 input")
+													.attr(
+															"name",
+															"canteenHealthPicList["
+																	+ j
+																	+ "].businessHealthPic")
+										}
+										/* var _htmlbox4='<img class="delimgbox4" src="../static/images/delimg.png"><img class="upimg" src="'+imageViewShow+data.response.rows+'"> <input type="hidden" name="canteenHealthPicList['+i+'].businessHealthPic" value="'+val+'">'; */
+										var _htmlbox4l = '<div class="form-group hygiene"><div class="col-sm-8 col-sm-offset-3"><div class="imgsbox4"><img class="delimgbox4" src="../static/images/delimg.png"><img class="upimg" src="'+imageViewShow+data.response.rows+'"> <input type="hidden" name="canteenHealthPicList['+i+'].businessHealthPic" value="'+val+'">  </div></div></div>';
+										var $imgsbox4 = $btn.parents(
+												".form-group").next().find(
+												".imgsbox4");
+										if ($imgsbox4.html() == null
+												|| $imgsbox4.html().length == 0) {
+											i = 0;
+											var _htmlbox4 = '<img class="delimgbox4" src="../static/images/delimg.png"><img class="upimg" src="'+imageViewShow+data.response.rows+'"> <input type="hidden" name="canteenHealthPicList['+i+'].businessHealthPic" value="'+val+'">';
+											$imgsbox4.append(_htmlbox4);
+										} else {
+											$(".licence4").before(_htmlbox4l);
+										}
+									} else {
+										alert(data.response.desc);
+									}
+									var modal = $.scojs_modal({
+										keyboard : true
+									});
+									modal.close();
+
+								});
+			}
+		}
+		
+		$(function(){
+			if(!isNotNull($!prov)){
+				$('#city').citySelect({
+			        url:"/static/js/cityselect/city.min.js",
+			        prov:"", //省
+			        city:"", //市	
+			        dist:"", //区
+			        nodata:"none", //当子集无数据时，隐藏select
+			        required:false
+			    }); 
+			}else{
+				$('#city').citySelect({
+					url : "$!rc.contextPath/static/js/cityselect/city.min.js",
+					prov : "$!prov", //省份
+					city : "$!city", //城市
+					dist : "$!dist", //区县
+					nodata : "none" //当子集无数据时，隐藏select
+				});
+			}
+		});
+
+		//展示
+		if (contractImgPathPic != null && contractImgPathPic != '') {
+			var _html = '<div class="tiem foodimg"><img src="'+imageViewShow+contractImgPathPic+'" class="upimg"></div>';
+			var _img = $("[name=contractImgPathPic]").parents(".form-group")
+					.next().find(".img-box1");
+			if (_img.html() == null || _img.html().length == 0) {
+				_img.append(_html);
+			}
+			$("[name=contractImgPathPic]").val(contractImgPathPic);
+		}
+
+		function isNotNull(str) {
+			if (str && str != undefined && str != null && str != '') {
+				return true;
+			}
+		}
+
+		if (isNotNull(contractImgPathPic)) {
+			//添加图片
+			var _html2 = '<div class="item foodimg"><img src="'+imageViewShow+contractImgPathPic+'" class="upimg" id="contractImgPathPic1"></div>';
+			if ($(".imgsbox3").html() == null
+					|| $(".imgsbox3").html().length == 0) {
+				$(".imgsbox3").append(_html2);
+			} else {
+				$(".imgsbox3").find(".foodimg").remove();
+				$(".imgsbox3").append(_html2);
+			}
+
+		}
+	</script>
+</body>
+</html>
+
+
+
+
+

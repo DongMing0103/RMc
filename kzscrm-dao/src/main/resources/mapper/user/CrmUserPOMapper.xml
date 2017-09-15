@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmUserPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.user.CrmUserPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+                    <result column="SEX" property="sex" jdbcType="BIGINT"/>
+                    <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+                    <result column="CONSUME_CODE" property="consumeCode" jdbcType="VARCHAR"/>
+                    <result column="REGISER_TIME" property="regiserTime" jdbcType="TIMESTAMP"/>
+                    <result column="MOBILEPHONE" property="mobilephone" jdbcType="VARCHAR"/>
+                    <result column="AREA_CODE" property="areaCode" jdbcType="BIGINT"/>
+                    <result column="USER_TYPE" property="userType" jdbcType="BIGINT"/>
+                    <result column="USER_STATUS" property="userStatus" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="NICK_NAME" property="nickName" jdbcType="VARCHAR"/>
+                    <result column="ACCOUNT" property="account" jdbcType="VARCHAR"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="DATE"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="DATE"/>
+                    <result column="CREATE_ID" property="createId" jdbcType="BIGINT"/>
+                    <result column="UPDATE_ID" property="updateId" jdbcType="BIGINT"/>
+                    <result column="HEAD_IMG" property="headImg" jdbcType="VARCHAR"/>
+                    <result column="LAST_LOGIN" property="lastLogin" jdbcType="DATE"/>
+                    <result column="IS_RECEIVE_MSG" property="isReceiveMsg" jdbcType="BIGINT"/>
+                    <result column="MAIL" property="mail" jdbcType="VARCHAR"/>
+                    <result column="QQ" property="qq" jdbcType="VARCHAR"/>
+                    <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+                    <result column="BIRTHDAY" property="birthday" jdbcType="DATE"/>
+                    <result column="USER_NO" property="userNo" jdbcType="VARCHAR"/>
+                    <result column="AUTHENTICATION_STATUS" property="authenticationStatus" jdbcType="BIGINT"/>
+                    <result column="agent_id" property="agentId" jdbcType="BIGINT"/>
+                    
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmuser.id as id,
+        	        	           crmuser.agent_id as agentId,
+	                	        	           crmuser.user_name as userName,
+	                	        	           crmuser.sex as sex,
+	                	        	           crmuser.update_time as updateTime,
+	                	        	           crmuser.password as password,
+	                	        	           crmuser.consume_code as consumeCode,
+	                	        	           crmuser.regiser_time as regiserTime,
+	                	        	           crmuser.mobilephone as mobilephone,
+	                	        	           crmuser.area_code as areaCode,
+	                	        	           crmuser.user_type as userType,
+	                	        	           crmuser.user_status as userStatus,
+	                	        	           crmuser.del_flag as delFlag,
+	                	        	           crmuser.nick_name as nickName,
+	                	        	           crmuser.account as account,
+	                	        	           crmuser.create_time as createTime,
+	                	        	           crmuser.create_id as createId,
+	                	        	           crmuser.update_id as updateId,
+	                	        	           crmuser.head_img as headImg,
+	                	        	           crmuser.last_login as lastLogin,
+	                	        	           crmuser.is_receive_msg as isReceiveMsg,
+	                	        	           crmuser.mail as mail,
+	                	        	           crmuser.qq as qq,
+	                	        	           crmuser.address as address,
+	                	        	           crmuser.birthday as birthday,
+	                	        	           crmuser.user_no as userNo,
+	                	        	           crmuser.authentication_status as authenticationStatus
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    <!-- 修改密码 -->
+    <update id="modifyPassword" parameterType="com.hd.wolverine.util.ParamMap">
+    	update crm_user set password=#{password}
+    	<where>
+    		<if test="@Ognl@isNotEmpty(userType) and @Ognl@isNotEmpty(mobilephone)">
+    			and user_type=#{userType} and mobilephone=#{mobilephone}
+    		</if>
+    		<if test="@Ognl@isNotEmpty(id)">
+    			and id=#{id}
+    		</if>
+    	</where>
+    </update>
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+								    	<choose>
+								    		<when test="@Ognl@isNotEmpty(delFlag)">AND crmuser.del_flag = #{delFlag}</when>
+								    		<when test="@Ognl@isNotEmpty(delFlagAll)">AND crmuser.del_flag in(0,1)</when>
+								    		<otherwise>AND crmuser.del_flag=1</otherwise>
+								    	</choose>
+                                      <if test="@Ognl@isNotEmpty(id)"> AND crmuser.id = #{id}</if>
+                                      <if test="@Ognl@isNotEmpty(agentId)"> AND crmuser.agent_id = #{agentId}</if>
+                                      <if test="userName != null and userName != ''"> AND crmuser.user_name = #{userName}</if>
+                                                        <if test="sex != null and sex != ''"> AND crmuser.sex = #{sex}</if>
+                                      <if test="password != null and password != ''"> AND crmuser.password = #{password}</if>
+                                               <if test="consumeCode != null and consumeCode != ''"> AND crmuser.consume_code = #{consumeCode}</if>
+                                               <if test="regiserTime != null and regiserTime != ''"> AND crmuser.regiser_time = #{regiserTime}</if>
+                                               <if test="mobilephone != null and mobilephone != ''"> AND crmuser.mobilephone = #{mobilephone}</if>
+                                                        <if test="areaCode != null and areaCode != ''"> AND crmuser.area_code = #{areaCode}</if>
+                                               <if test="@Ognl@isNotEmpty(userType)"> AND crmuser.user_type = #{userType}</if>
+                                               <if test="userStatus != null and userStatus != ''"> AND crmuser.user_status = #{userStatus}</if>
+                                      <if test="nickName != null and nickName != ''"> AND crmuser.nick_name = #{nickName}</if>
+                                               <if test="account != null and account != ''"> AND crmuser.account like CONCAT('%',#{account},'%') </if>
+                                               <if test="createTime != null and createTime != ''"> AND crmuser.create_time = #{createTime}</if>
+                                                        <if test="createId != null and createId != ''"> AND crmuser.create_id = #{createId}</if>
+                                               <if test="updateId != null and updateId != ''"> AND crmuser.update_id = #{updateId}</if>
+                                      <if test="headImg != null and headImg != ''"> AND crmuser.head_img = #{headImg}</if>
+                                               <if test="lastLogin != null and lastLogin != ''"> AND crmuser.last_login = #{lastLogin}</if>
+                                                        <if test="isReceiveMsg != null and isReceiveMsg != ''"> AND crmuser.is_receive_msg = #{isReceiveMsg}</if>
+                                      <if test="mail != null and mail != ''"> AND crmuser.mail = #{mail}</if>
+                                               <if test="qq != null and qq != ''"> AND crmuser.qq = #{qq}</if>
+                                               <if test="address != null and address != ''"> AND crmuser.address = #{address}</if>
+                                               <if test="birthday != null and birthday != ''"> AND crmuser.birthday = #{birthday}</if>
+                                               <if test="userNo != null and userNo != ''"> AND crmuser.user_no = #{userNo}</if>
+                                                        <if test="authenticationStatus != null and authenticationStatus != ''"> AND crmuser.authentication_status = #{authenticationStatus}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_user crmuser
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where 1=1 and id>0
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+	<!-- 逻辑删除 -->
+	<update  id="deleteById" parameterType="com.hd.wolverine.util.ParamMap">
+		update   crm_user 
+		set del_flag=0 
+		<where>
+			<if test="@Ognl@isNotEmpty(id)"> id=#{id}</if>
+		</where>	
+	</update>
+	
+
+	</mapper>
+
+
+

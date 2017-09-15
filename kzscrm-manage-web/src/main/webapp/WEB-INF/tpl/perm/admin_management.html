@@ -1,0 +1,122 @@
+<div class="main-content">
+	<div class="content-cap">
+		<span class="cap-name">用户列表</span>
+		<div class="pull-right">
+			<a class="btn btn-warning role_newAdd  crmPermUserNewAdd" href="javascript:void(0);" onclick="editData('新增用户','$!rc.contextPath/crmUser/addPermAccount','800px','90%')">
+				<i class="fa fa-plus"></i> 新增
+			</a>
+		</div>
+	</div>
+	<div class="form-box">
+		<form class="form-inline" id="form" role="form">
+			<div class="form-group">
+				<label class="control-label">状态</label>
+				<div class="has-feedback" style="display: inline-block">
+					<select class="form-control" name="delFlag">
+						<option value="">请选择</option>
+						<option value="1">已启用</option>
+						<option value="0">已注销</option>
+					</select>
+					<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label">用户账号</label>
+				<input class="form-control" name="account" placeholder="请输入管理员账号">
+			</div>
+			<div class="form-group ml15">
+				<a class="btn btn-default role_search crmPermUserSearch" href="javascript:void(0);" onclick="adminManagement.searchClick()"><span class="glyphicon glyphicon-search"></span>搜索</a>
+				<a class="btn btn-default role_reset crmPermUserReset" href="javascript:void(0);" onclick="adminManagement.reset()">重置</a>
+			</div>
+		</form>
+	</div>
+	
+
+	<table 
+		id="table"
+	    data-classes="table table-public" 
+		data-toggle="table" 
+		data-url="$!rc.contextPath/crmUser/queryPage"
+		data-pagination="true" 
+		data-pagination-v-align="both"
+		data-side-pagination="server" 
+		data-cache="false"
+		data-query-params="adminManagement.queryParams" 
+		data-page-size="20"
+		data-page-list="[10,20,50]">
+		<thead>
+
+			<tr>
+				<th data-formatter="adminManagementFormatter.indexFormatter" data-align="center">序号</th>
+				<th class="span2" data-field="userName" data-align="center">用户名</th>
+				<th class="span2" data-field="account" data-align="center">帐号</th>
+				<th class="span2" data-field="delFlag" data-align="center" data-formatter="adminManagementFormatter.delFalgFormatter">状态</th>
+				<th class="span2" data-field="mobilephone" data-align="center">电话号码</th>
+				<th class="span2" data-field="mail" data-align="center">邮箱</th>
+				<th class="span2" data-field="createTime" data-align="center" data-formatter="adminManagementFormatter.createTimeFormatter">创建时间</th>
+				<th class="span2 selecttd" data-field="enabled" data-align="center" data-formatter="adminManagementFormatter.operationFormatter">操作</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+
+<script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+<script src="$!rc.contextPath/static/js/util/dateUtils.js"></script>
+<script type="text/javascript" src="$!rc.contextPath/static/js/perm/adminManagement/adminManagement.js"></script>
+<script type="text/javascript" src="$!rc.contextPath/static/js/perm/adminManagement/adminManagementFormatter.js"></script>
+<script type="text/javascript">
+		$("#table").bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+		//注销
+		function operate(id, title, icon, content, url, msg){
+			var index=layer.open({
+				title: title,
+				icon: icon,
+				content: content,
+				btn: ['确定','取消'],
+				yes: function(){
+					$.ajax({
+			      		url:url,
+			      		type:"post",
+			      		dataType:"json",
+			      		data:"id="+id,
+			      		success:function(data){
+			      			if(data.code==0){
+			      				$('#table').bootstrapTable('refresh');	
+								layer.close(index);
+			   				}
+			      			layer.msg(msg); 
+			      		}
+			      	})
+				}
+			})
+		}
+		
+		function resetPassword(id){
+			var index=layer.open({
+				title: "重置密码",
+// 				icon: icon,
+				content: "确定重置密码吗?",
+				btn: ['确定','取消'],
+				yes: function(){
+					$.ajax({
+			      		url:"$!rc.contextPath/crmUser/resetPassword",
+			      		type:"POST",
+			      		dataType:"json",
+			      		data:{id:id},
+			      		success:function(data){
+ 			      			layer.closeAll();
+			      			layer.alert(data.desc);
+			      			
+			      		}
+			      	})
+				}
+			})
+		}
+	</script>

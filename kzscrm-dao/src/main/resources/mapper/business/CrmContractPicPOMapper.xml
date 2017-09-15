@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmContractPicPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmContractPicPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="AGENT_ENTER_ID" property="agentEnterId" jdbcType="BIGINT"/>
+                    <result column="TYPE" property="type" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmcontractpic.id as id,
+	                	        	           crmcontractpic.agent_enter_id as agentEnterId,
+	                	        	           crmcontractpic.type as type,
+	                	        	           crmcontractpic.del_flag as delFlag,
+	                	        	           crmcontractpic.create_time as createTime,
+	                	        	           crmcontractpic.create_uid as createUid,
+	                	        	           crmcontractpic.update_time as updateTime,
+	                	        	           crmcontractpic.update_uid as updateUid
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmcontractpic.id = #{id}</if>
+                                               <if test="agentEnterId != null and agentEnterId != ''"> AND crmcontractpic.agent_enter_id = #{agentEnterId}</if>
+                                               <if test="type != null and type != ''"> AND crmcontractpic.type = #{type}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmcontractpic.del_flag = #{delFlag}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmcontractpic.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmcontractpic.create_uid = #{createUid}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmcontractpic.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmcontractpic.update_uid = #{updateUid}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_contract_pic crmcontractpic
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+
+	
+	
+		
+	
+	</mapper>
+
+
+

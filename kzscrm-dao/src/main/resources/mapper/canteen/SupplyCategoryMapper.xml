@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="SupplyCategoryMapper">
+<resultMap  id="SuppluCategory"  type="com.hd.kzscrm.dao.entity.canteen.SupplyCategoryPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="time_name" jdbcType="VARCHAR" property="timeName" />
+    <result column="source_type" jdbcType="BIGINT" property="sourceType" />
+    <result column="eat_starttime" jdbcType="TIMESTAMP" property="eatStarttime"/>
+    <result column="eat_endtime" jdbcType="TIMESTAMP" property="eatEndtime"/>
+    <result column="order_endtime" jdbcType="TIMESTAMP" property="orderEndtime"/>
+    <result column="canteen_id" jdbcType="BIGINT" property="canteenId" />
+    <result column="create_time" jdbcType="DATE" property="createTime"/>
+  <result column="del_flag" jdbcType="BIGINT" property="delFlag" />
+  <result column="sys_time_category_id" jdbcType="BIGINT" property="sysTimeCategoryId" />
+</resultMap>
+	
+	<!-- 查詢 --> 
+   <select id="findAllSupply" parameterType="com.hd.wolverine.util.ParamMap" resultMap="SuppluCategory">
+ 		SELECT 
+		g.id ,s.time_name,g.source_type,g.canteen_id,g.sys_time_category_id
+		from canteen_time_category as g 
+		left join sys_time_category s on g.sys_time_category_id = s.id
+		<where>
+			g.del_flag = 1
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and g.canteen_id=#{canteenId}
+			</if>
+		</where>
+	</select>
+
+	
+	<select id="getAllList" resultMap="SuppluCategory" parameterType="com.hd.wolverine.util.ParamMap">
+		select c.id,s.time_name,c.source_type,c.del_flag,c.sys_time_category_id, c.eat_starttime, c.eat_endtime, c.order_endtime,c.canteen_id
+		from canteen_time_category c
+		left join sys_time_category s on c.sys_time_category_id = s.id
+		<where>
+			c.del_flag = 1 
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and c.canteen_id=#{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(sysTimeCategoryId)">
+				and c.sys_time_category_id = #{sysTimeCategoryId}
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and c.canteen_id in
+				<foreach collection="canteenIds" index="index" item="canteenId" open="(" close=")" separator=",">
+					#{canteenId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+		<select id="findByCanteenId" parameterType="java.lang.Long" resultMap="SuppluCategory">
+		select 
+		 c.id,s.time_name,c.canteen_id,c.source_type,c.eat_starttime,c.eat_endtime,c.order_endtime
+		from canteen_time_category c
+		left join sys_time_category s on c.sys_time_category_id = s.id
+		where 
+			s.del_flag = 1 
+			and c.del_flag = 1 
+		<if test="canteenId !=null and canteenId!='' ">
+			and c.canteen_id=#{canteenId}
+		</if>
+	</select>
+	<select id="findByTimeName" resultMap="SuppluCategory" parameterType="java.lang.String">
+		select 
+		c.id,c.canteen_id
+		from canteen_time_category c
+		left join sys_time_category s on c.sys_time_category_id = s.id
+		<where>
+			c.del_flag = 1
+			<if test="timeName!=null and timeName!='' ">
+				and s.time_name = #{timeName}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 删除类目 -->	
+	<update id="deleteCategoryById" parameterType="com.hd.wolverine.util.ParamMap">
+		update canteen_time_category set del_flag = 0 where id=#{id}
+	</update>
+	
+	<!-- 根据 supplyId 查询 对应名字 -->	
+	<select id="findBySupplyId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="SuppluCategory">
+		select 
+		 c.id,s.time_name,c.canteen_id,c.source_type,c.eat_starttime,c.eat_endtime,c.order_endtime,c.sys_time_category_id
+		from canteen_time_category c
+		left join sys_time_category s on c.sys_time_category_id = s.id
+		where c.del_flag = 1 
+		<if test="@Ognl@isNotEmpty(supplyId)">
+			and c.sys_time_category_id=#{supplyId}
+		</if>
+	</select>
+	
+	<!-- 用于【寻找食堂】  根据类目id 查询商家id 过滤重复   【jyt】-->
+	<select id="queryCanteenIdBySysTimeCateGoryId" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Long">
+		select canteen_id from canteen_time_category 
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(sysTimeCateGoryIds)">
+				and sys_time_category_id in 
+				<foreach collection="sysTimeCateGoryIds" item="sysTimeCateGoryId" index="index"  open="(" separator="," close=")" >
+		        	#{sysTimeCateGoryId}      
+		        </foreach>
+			</if>
+		</where>
+		GROUP BY canteen_id
+	</select>
+	
+	
+</mapper> 

@@ -1,0 +1,54 @@
+[
+    {
+      "id":"20365986",
+      "name": "浙江惠点",
+      "customer": "代理商",
+      "cooperate": "散客",
+      "address": "浙江 杭州 拱墅",
+      "date": "2017-04-26 ",
+      "proportion":"--",
+      "contactName":"奥巴马",
+      "salesman":"马克龙",
+      "contactTele":"13000000000",
+      "operate":"操作"
+    },
+    {
+      "id":"20365987",
+      "name": "浙江惠点",
+      "customer": "厂内食堂",
+      "cooperate": "散客",
+      "address": "浙江 杭州 拱墅",
+      "date": "2017-04-26 ",
+      "proportion":"--",
+      "contactName":"奥巴马",
+      "salesman":"马克龙",
+      "contactTele":"13000000000",
+      "operate":"操作"
+    },
+    {
+      "id":"20365988",
+      "name": "浙江惠点",
+      "customer": "校内食堂",
+      "cooperate": "保护客户",
+      "address": "浙江 杭州 拱墅",
+      "date": "2017-04-26 ",
+      "proportion":"2",
+      "contactName":"奥巴马",
+      "salesman":"马克龙",
+      "contactTele":"13000000000",
+      "operate":"操作"
+    },
+    {
+      "id":"20365989",
+      "name": "浙江惠点",
+      "customer": "独立食堂",
+      "cooperate": "正式客户",
+      "address": "浙江 杭州 拱墅",
+      "date": "2017-04-26 ",
+      "proportion":"2",
+      "contactName":"奥巴马",
+      "salesman":"马克龙",
+      "contactTele":"13000000000",
+      "operate":"操作"
+    }
+  ]

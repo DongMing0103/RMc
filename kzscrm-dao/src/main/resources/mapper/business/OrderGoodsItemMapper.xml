@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="OrderGoodsItemMapper">
+	<resultMap type="com.hd.kzscrm.dao.entity.business.OrderGoodsItemPO" id="orderGoodsItemMap">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="canteen_order_id" jdbcType="BIGINT" property="canteenOrderId"/>
+		<result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+		<result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+		<result column="package_price" jdbcType="DECIMAL" property="packagePrice"/>
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+		<result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+		<result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+		<result column="goods_no" jdbcType="VARCHAR" property="goodsNo"/>
+		
+	</resultMap>
+	<resultMap type="com.hd.kzscrm.service.vo.business.OrderDTO" id="orderGoodsItemDTO">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="canteen_order_id" jdbcType="BIGINT" property="canteenOrderId"/>
+		<result column="goods_num" jdbcType="INTEGER" property="goodsNum"/>
+		<result column="goods_price" jdbcType="DECIMAL" property="goodsPrice"/>
+		<result column="package_price" jdbcType="DECIMAL" property="packagePrice"/>
+		<result column="goods_name" jdbcType="VARCHAR" property="goodsName"/>
+		<result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+		<result column="goods_id" jdbcType="BIGINT" property="goodsId"/>
+		<result column="goods_no" jdbcType="VARCHAR" property="goodsNo"/>
+		
+	</resultMap>
+	<sql id="allField">
+		id,canteen_order_id,goods_num,goods_price,package_price,goods_name,del_flag,goods_id,goods_no
+	</sql>
+	
+	<insert id="batchInsert" parameterType="com.hd.wolverine.util.ParamMap">
+		insert into order_goods_item(id,canteen_order_id,goods_num,goods_price,package_price,goods_name,del_flag,goods_id,goods_no)
+		<foreach collection="orderGoodsItems" index="index" item="orderGoodsItem" open="values" close=";" separator=",">
+			(#{orderGoodsItem.id},#{orderGoodsItem.canteenOrderId},#{orderGoodsItem.goodsNum},#{orderGoodsItem.goodsPrice},#{orderGoodsItem.packagePrice},
+			#{orderGoodsItem.goodsName},1,#{orderGoodsItem.goodsId},#{orderGoodsItem.goodsNo})	
+		</foreach> 
+	</insert>
+	
+	<select id="findByGoodsId" resultMap="orderGoodsItemMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id,canteen_order_id,goods_num,goods_price,goods_name,goods_id,goods_no
+		from order_goods_item
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(goodsId)">
+				and goods_id = #{goodsId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findAll" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderGoodsItemMap">
+		select <include refid="allField"/> from order_goods_item
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenOrderId)">
+				and canteen_order_id=#{canteenOrderId}
+			</if>
+			<if test="@Ognl@isNotEmpty(goodsNum)">
+				and goods_num=#{goodsNum}
+			</if>
+			<if test="@Ognl@isNotEmpty(goodsId)">
+				and goods_id=#{goodsId}
+			</if>
+			<if test="@Ognl@isNotEmpty(goodsNo)">
+				and goods_no=#{goodsNo}
+			</if>
+			<choose>
+				<when test="@Ognl@isEmpty(delFlag)">and del_flag=1</when>
+				<otherwise>and del_flag=#{delFlag}</otherwise>
+			</choose>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and canteen_order_id in
+				<foreach collection="orderIds" item="orderId" index="index" open="(" separator="," close=")"> 
+					#{orderId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(goodsIds)">
+				and goods_id in 
+				<foreach item="goodsId" index="index" collection="goodsIds"  open="(" separator="," close=")">
+	 				#{goodsId}
+				</foreach>
+			</if>
+		</where>
+		order by canteen_order_id desc
+	</select>
+	
+	<select id="count" parameterType="java.lang.Integer">
+		select count(*) from order_goods_item 
+		<where>
+			del_flg = 1
+			<if test="id!=null and id != '' ">
+				and goods_id = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByCantennIdAndEatTimeAndSupplyCategoryId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderGoodsItemMap">
+		select
+		i.goods_num ,i.goods_id 
+		from order_goods_item as i 
+		right join `order` as o on i.canteen_order_id = o.id 
+		<where>
+			o.status = "2" 
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and o.canteen_id = #{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTime)">
+				and date_format(o.eat_time,'%Y-%m-%d') = substring(date_add(#{eatTime}, INTERVAL 0 day),1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(supplyCategoryId)">
+				and o.supply_category_id = #{supplyCategoryId}
+			</if>
+		</where>
+	</select>
+	<select id="findByOrderIdList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderGoodsItemMap">
+		select 
+			sum(goods_num) as goods_num,goods_id,goods_name,goods_no  
+		 from order_goods_item
+		<where>
+			del_flag= "1"
+			<if test="@Ognl@isNotEmpty(goodsNum)">
+				and goods_num=#{goodsNum}
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTime)">
+				and date_format(o.eat_time,'%Y-%m-%d') = substring(date_add(#{eatTime}, INTERVAL 0 day),1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(goodsNo)">
+				and goods_no=#{goodsNo}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and canteen_order_id in 
+				<foreach item="id" index="index" collection="orderIds"  open="(" separator="," close=")">
+	 				#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(idBatch)">
+				and goods_id in 
+				<foreach item="id" index="index" collection="idBatch"  open="(" separator="," close=")">
+	 				#{id}
+				</foreach>
+			</if>
+		</where>
+		group by goods_id order by goods_id desc
+	</select>
+
+	<select id="findByOrderIds" parameterType="com.hd.wolverine.util.ParamMap" resultType="com.hd.kzscrm.service.vo.business.OrderDTO">
+		select material.name as materialName ,sum(item.goods_num) as materialNum ,sum(item.goods_num*material.amount) as materialPurchase
+		from order_goods_item as item
+		left join goods_material as material
+		on material.goods_id = item.goods_id
+		<where>
+			item.del_flag = 1 
+			and material.del_flag = 1 
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and item.canteen_order_id in 
+				<foreach item="id" index="index" collection="orderIds"  open="(" separator="," close=")">
+	 				#{id}
+				</foreach>
+			</if>
+		</where>
+		group by material.name
+	</select>
+
+	<select id="findByOrderId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderGoodsItemMap">
+		select <include refid="allField"/> from order_goods_item
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(orderId)">and canteen_order_id=#{orderId}</if>
+			<if test="@Ognl@isNotEmpty(canteenOrderId)">and canteen_order_id=#{canteenOrderId}</if>
+		</where>
+		order by goods_id desc
+	</select>
+	<!-- 获取本月该商品的销售量[苏] -->
+	<select id="sumNumByTimeGoodId" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+		   select Ifnull(sum(goods_num),0) num from `order` a, order_goods_item b 
+		   where b.goods_id=#{goodsId} and date_format(a.pay_time,'%Y-%m')=date_format(now(),'%Y-%m')
+	</select>
+		
+	<select id="findGoods"  resultMap="orderGoodsItemDTO">
+		select e1.canteen_id canteenId,e1.canteen_id enterpriseId,sum(e.goods_num) goodsNum,(sum(e.goods_num)*total_money) goodsMoney,e.goods_id goodsId,  
+		sum(e3.sanitation_star+e3.taste_star+e3.volume_star)/sum(e.goods_num)/3 starSum
+		from order_goods_item e,`order` e1,order_goods_comments e3
+		<where>
+		 	e.canteen_order_id=e1.id and  e1.del_flag=1 and status=5 and e3.goods_id=e.goods_id  group by e.goods_id asc 
+		 	<choose>
+		 		<when test="@Ognl@isEmpty(sortDesc)">
+		 		order by  goodsNum desc
+		 		</when> 
+		 		<when test="sortDesc == 1 and @Ognl@isNotEmpty(sortDesc)">
+		 		order by  starSum desc
+		 		</when>
+		 		<when test="sortDesc == 2 and @Ognl@isNotEmpty(sortDesc)">
+		 		order by  goodsMoney desc
+		 		</when>
+		 	</choose>
+		</where>
+	</select>
+	
+	<select id="findGoodsNum" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+		select
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(a.pay_time) time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(a.pay_time,'%Y-%m') time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(a.pay_time,'%Y') time,
+	        </when>
+	        <otherwise>
+	            date_format(a.pay_time,'%Y-%m-%d') time,
+	        </otherwise>
+    	</choose>
+		sum(b.goods_num) num 
+		from `order` a,order_goods_item b
+		<where>
+			a.id=b.canteen_order_id
+			<if test="@Ognl@isNotEmpty(daysArray)">
+				and date_format(a.pay_time,'%Y-%m-%d') in
+				<foreach collection="daysArray" item="day" index="index" open="(" separator="," close=")">
+					#{day}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(weeksArray)">
+				and YEARWEEK(a.pay_time) in 
+				<foreach collection="weeksArray" item="week" index="index" open="(" separator="," close=")">
+					#{week}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(monthsArray)">
+				and date_format(a.pay_time,'%Y-%m') in
+				<foreach collection="monthsArray" item="month" index="index" open="(" separator="," close=")">
+					#{month}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(yearsArray)">
+				 and date_format(a.pay_time,'%Y') in
+				<foreach collection="yearsArray" item="year" index="index" open="(" separator="," close=")">
+					#{year}
+				</foreach>
+			</if>		
+		</where>
+		GROUP BY
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(a.pay_time)
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(a.pay_time,'%Y-%m')
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(a.pay_time,'%Y')
+	        </when>
+	        <otherwise>
+	            date_format(a.pay_time,'%Y-%m-%d')
+	        </otherwise>
+    	</choose>
+	
+	</select>
+	<!-- 根据商品id查询销量 -->
+	<select id="findGoodsNumByGoodsId" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+	SELECT Ifnull(sum(goods_num), 0) num FROM order_goods_item WHERE del_flag = 1 and goods_id = #{goodsId}
+	</select>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPermRolePOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.perm.CrmPermRolePO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+                    <result column="type" property="type"/>
+                    <result column="CODE" property="code" jdbcType="VARCHAR"/>
+                    <result column="DESCRIPTION" property="description" jdbcType="VARCHAR"/>
+                    <result column="STATUS" property="status" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_ID" property="createId" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_ID" property="updateId" jdbcType="BIGINT"/>
+                    <result column="user_type" property="userType" />
+                    <result column="agent_id" property="agentId" />
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmpermrole.id as id,
+        	        	           crmpermrole.user_type as userType,
+        	        	           crmpermrole.agent_id as agentId,
+        	        	           crmpermrole.type as type,
+	                	        	           crmpermrole.name as name,
+	                	        	           crmpermrole.code as code,
+	                	        	           crmpermrole.description as description,
+	                	        	           crmpermrole.status as status,
+	                	        	           crmpermrole.del_flag as delFlag,
+	                	        	           crmpermrole.create_time as createTime,
+	                	        	           crmpermrole.create_id as createId,
+	                	        	           crmpermrole.update_time as updateTime,
+	                	        	           crmpermrole.update_id as updateId
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <update id="deleteById" parameterType="java.lang.Long">
+    	update crm_perm_role set del_flag=0 where id=#{id}
+    </update>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="@Ognl@isNotEmpty(id)"> AND crmpermrole.id = #{id}</if>
+                                      <if test="@Ognl@isNotEmpty(userType)"> AND crmpermrole.user_type= #{userType}</if>
+                                      <if test="@Ognl@isNotEmpty(agentId)"> AND crmpermrole.agent_id= #{agentId}</if>
+                                      <if test="@Ognl@isNotEmpty(name)"> AND crmpermrole.name = #{name}</if>
+                                      <if test="@Ognl@isNotEmpty(code)"> AND crmpermrole.code = #{code}</if>
+                                      <if test="@Ognl@isNotEmpty(description)"> AND crmpermrole.description = #{description}</if>
+                                      <if test="@Ognl@isNotEmpty(status)"> AND crmpermrole.status = #{status}</if>
+                                      <if test="@Ognl@isNotEmpty(delFlag)"> AND crmpermrole.del_flag = #{delFlag}</if>
+                                      <if test="@Ognl@isNotEmpty(createTime)"> AND crmpermrole.create_time = #{createTime}</if>
+                                      <if test="@Ognl@isNotEmpty(createId)"> AND crmpermrole.create_id = #{createId}</if>
+                                      <if test="@Ognl@isNotEmpty(updateTime)"> AND crmpermrole.update_time = #{updateTime}</if>
+                                      <if test="@Ognl@isNotEmpty(updateId)"> AND crmpermrole.update_id = #{updateId}</if>
+                                      <if test="@Ognl@isNotEmpty(type)"> AND crmpermrole.type = #{type}</if>
+                                      <if test="@Ognl@isNotEmpty(nameLike)">and name like '${nameLike}'</if>
+                                      <choose>
+                                      	<when test="@Ognl@isNotEmpty(delFlagAll)">and del_flag in (0,1)</when>
+                                      	<when test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</when>
+                                      	<otherwise>and del_flag=1</otherwise>
+                                      </choose>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_perm_role crmpermrole
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        <where>
+	        <include refid="queryOptions"/>
+        </where>
+        <include refid="orderControl"/>
+    </select>
+
+
+	
+	
+		
+	
+	</mapper>
+
+
+

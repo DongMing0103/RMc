@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="EnterpriseEmployeesLinkMapper">
+	<resultMap type="com.hd.kzscrm.dao.entity.enterprise.EnterpriseEmployeesLinkPO" id="EnterpriseEmployeesLinkMap">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="real_name" property="realName"/>
+		<result column="user_id" jdbcType="BIGINT" property="userId"/>
+		<result column="mobilephone" property="mobilephone"/>
+		<result column="enterprise_id" property="enterpriseId"/>
+		<result column="department_id" property="departmentId"/>
+		<result column="position_id" property="positionId"/>
+		<result column="position_level_id" property="positionLevelId"/>
+		<result column="id_card" property="idCard"/>
+		<result column="id_type" property="idType"/>
+		<result column="authentication_status" property="authenticationStatus"/>
+		<result column="authentication_time" property="authenticationTime"/>
+		<result column="create_time" property="createTime"/>
+		<result column="operate_uid" property="operateUid"/>
+		<result column="del_flag" property="delFlag"/>
+	</resultMap>
+	<sql id="allField">id,real_name,user_id,mobilephone,enterprise_id,department_id,position_id,position_level_id,id_card,id_type,authentication_status,authentication_time,create_time,operate_uid,del_flag
+	</sql>
+	<select id="findAll" resultMap="EnterpriseEmployeesLinkMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/> from enterprise_employees_link
+		<where>
+			
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(realName)">
+				and real_name like "%"#{realName}"%" 
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(mobilephone)">
+				and mobilephone=#{mobilephone}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id=#{enterpriseId}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseIds)">
+				and enterprise_id in 
+				<foreach collection="enterpriseIds" item="eid" index="index" open="(" separator="," close=")" >#{eid}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(departmentId)">
+				and department_id=#{departmentId}
+			</if>
+			<if test="@Ognl@isNotEmpty(positionId)">
+				and position_id=#{positionId}
+			</if>
+			<if test="@Ognl@isNotEmpty(positionLevelId)">
+				and position_level_id=#{positionLevelId}
+			</if>
+			<if test="@Ognl@isNotEmpty(idCard)">
+				and id_card=#{idCard}
+			</if>
+			<if test="@Ognl@isNotEmpty(idType)">
+				and id_type=#{idType}
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus)">
+				and authentication_status=#{authenticationStatus}
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationTime)">
+				and authentication_time=#{authenticationTime}
+			</if>
+			<if test="@Ognl@isNotEmpty(operateUid)">
+				and operate_uid=#{operateUid}
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				and del_flag=#{delFlag}
+			</if>
+			<if test="@Ognl@isEmpty(delFlag)">
+				and del_flag=1
+			</if>
+			<if test="userIds!=null">
+				and user_id in
+				<foreach collection="userIds" index="index" item="userId" open="(" close=")" separator=",">
+					#{userId}
+				</foreach>	
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByUserId" resultMap="EnterpriseEmployeesLinkMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select <include refid="allField"/>
+		from enterprise_employees_link
+		<where>
+			<choose>
+				<when test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</when>
+				<otherwise>and del_flag=1</otherwise>
+			</choose>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+		</where>
+		order by authentication_time desc
+	</select>
+	
+	<!-- 忽略删除条件(del_flag) -->
+	<select id="findByUserIdNormalDelFlag" resultMap="EnterpriseEmployeesLinkMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select <include refid="allField"/>
+		from enterprise_employees_link
+		<where>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findIdByName" resultMap="EnterpriseEmployeesLinkMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select id,real_name,mobilephone
+		from enterprise_employees_link
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(userName)">
+				and real_name=#{userName}
+			</if>
+		</where>
+	</select>
+	<insert id="commonInsert" parameterType="com.hd.wolverine.util.ParamMap">
+		insert into enterprise_employees_link(id,real_name,user_id,mobilephone,enterprise_id,department_id,position_id,position_level_id,id_card,authentication_status,authentication_time,operate_uid,create_time,del_flag) values(
+			#{id},#{realName},#{userId},#{mobilephone},#{enterpriseId},#{departmentId},#{positionId},#{positionLevelId},#{idCard},0,#{authenticationTime},#{operateUid},now(),1
+		)		
+	</insert>
+	<!-- 撤销认证 -->
+	<update id="repealApprove" parameterType="com.hd.wolverine.util.ParamMap">
+		update enterprise_employees_link set department_id=null,enterprise_id=null,position_id=null,position_level_id=null,authentication_time=null,code_update_time=null,authentication_status=null,employee_code_url=null,del_flag=0
+		where user_id=#{userId}
+	</update>
+	<!-- 通用更新语句 -->
+	<update id="commonUpdate" parameterType="com.hd.wolverine.util.ParamMap">
+		update   
+		<set>
+			<choose>
+				<when test="@Ognl@isNotEmpty(createTime)">
+					create_time=#{createTime},
+				</when>
+				<otherwise>
+					create_time=now(),
+				</otherwise>
+			</choose>
+			<if test="@Ognl@isNotEmpty(realName)">
+				real_name=#{realName},
+			</if>
+			<if test="@Ognl@isNotEmpty(mobilephone)">
+				mobilephone=#{mobilephone},
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				enterprise_id=#{enterpriseId},
+			</if>
+			<if test="@Ognl@isNotEmpty(departmentId)">
+				department_id=#{departmentId},
+			</if>
+			<if test="@Ognl@isNotEmpty(positionId)">
+				position_id=#{positionId},
+			</if>
+			<if test="@Ognl@isNotEmpty(positionLevelId)">
+				position_level_id=#{positionLevelId},
+			</if>
+			<if test="@Ognl@isNotEmpty(idCard)">
+				id_card=#{idCard},
+			</if>
+			<if test="@Ognl@isNotEmpty(idType)">
+				id_type=#{idType},
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus)">
+				authentication_status=#{authenticationStatus},
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationTime)">
+				authentication_time=#{authenticationTime},
+			</if>
+			<if test="@Ognl@isNotEmpty(operateUid)">
+				operate_uid=#{operateUid},
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				del_flag=#{delFlag},
+			</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+		</where>
+	</update>
+	<!-- 根据商家id统计员工人数 -->
+	<select id="findByEnterpriseId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="EnterpriseEmployeesLinkMap">
+		select <include refid="allField"/> 
+	    from enterprise_employees_link
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(enterpriseId)">and enterprise_id=#{enterpriseId}</if>
+		</where>
+	
+	</select>
+	
+	<select id="countByEnterpriseIds" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+		select enterprise_id `key`, count(id) `value`  
+		from enterprise_employees_link 
+		<where>
+			del_flag = 1 and authentication_status = 1
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+			and enterprise_id=#{enterpriseId}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseIds)">
+			and enterprise_id in
+			<foreach collection="enterpriseIds" item="enterpriseId" index="index" open="(" separator="," close=")">
+				#{enterpriseId}
+			</foreach>
+			</if>
+		</where>
+		group by `key` 
+	</select>
+	<!-- 根据uid删除 -->
+	<delete id="deleteByUid">
+	update enterprise_employees_link set del_flag=0 where user_id = #{userId}
+	</delete>
+	<!-- 根据uid查 -->
+	<select id="findByUid" resultMap="EnterpriseEmployeesLinkMap">
+		select id from enterprise_employees_link where user_id = #{userId}
+	</select>
+	<!--  根据状态查询所有uid -->
+	<select id="findByStatus" resultMap="EnterpriseEmployeesLinkMap">
+		select user_id from enterprise_employees_link where authentication_status=#{authenticationStatus} 
+		
+	</select>
+	
+	<select id="countEmployeesNum" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer">
+		select count(id) from enterprise_employees_link 
+		<where>
+			<if test="@Ognl@isNotEmpty(departmentId)">
+			 	and department_id = #{departmentId}
+			</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				and del_flag = #{delFlag}
+			</if>
+			<if test="@Ognl@isNotEmpty(positionId)">
+				and position_id = #{positionId}
+			</if>
+			<if test="@Ognl@isNotEmpty(positionLevelId)">
+				and position_level_id = #{positionLevelId}
+			</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">
+				and enterprise_id=#{enterpriseId}
+			</if>
+		</where>
+	</select>
+</mapper>

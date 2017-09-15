@@ -1,0 +1,102 @@
+<!--代理商分账-->
+<div class="main-content agent-fashinable">
+    <div class="content-cap">
+        <span class="cap-name">代理商分账</span>
+    </div>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+            <div class="form-group">
+            	<label class="control-label">分账时间</label>
+	            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	            <input type="hidden" value="2" name="leixing">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">代理区域</label>
+	            <div class="city-select" id="city">
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control prov"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control city"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control dist"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	        	<div class="has-feedback" style="display: inline-block;">
+		        	<select class="form-control selectarrow" name="status">
+		                <option value="">请选择搜索条件</option>
+		                <option>代理商名称</option>
+		                <option>代理商编号</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	            <input class="form-control" name="" id="" placeholder="请输入文字">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+	        </div>
+        </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="../static/json/10.json"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="a" data-align="center">ID</th>
+            <th data-field="b" data-align="center">名称</th>
+            <th data-field="c" data-align="center">代理区域</th>
+            <th data-field="d" data-align="center">加盟时间</th>
+            <th data-field="e" data-align="center">客户数量</th>
+            <th data-field="f" data-align="center">抽成金额（￥）</th>
+            <th data-field="g" data-align="center">分账金额（￥）</th>
+            <th data-field="h" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str='<a href="/static/html/system_operate/fashionable_detail.html" target="_blank">查看</a>';
+        return str;
+    }
+    /*地理联动*/
+    $("#city").citySelect({
+        url:"/static/js/cityselect/city.min.js",
+        prov:"",//省份
+        city:"",//城市
+        dist:"",//区县
+        nodata:"none",//当子集无数据时，隐藏select
+        required:false
+    });
+</script>
+

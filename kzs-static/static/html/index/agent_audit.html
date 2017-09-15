@@ -1,0 +1,57 @@
+<!--代理商审核-->
+<div class="m-content" style="min-width: 990px;">
+    <div class="content-cap">
+        <span class="cap-name">代理商审核</span>
+    </div>
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill"
+           data-toggle="table"
+           data-url="../static/json/3.json"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-field="o" data-align="center">代理商名称</th>
+            <th data-field="a" data-align="center">地理信息</th>
+            <th data-field="b" data-align="center">代理区域</th>
+            <th data-field="c" data-align="center">申请时间</th>
+            <th data-field="d" data-align="center">业务员</th>
+            <th data-field="e" data-align="center">所属团队</th>
+            <th data-field="f" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+
+    /* 操作 */
+    function operationFormatter(value, row, index) {
+        var str = "<div class=tddiv>"+
+            "<span class=settingtda>请选择</span>"+
+            "<ul class=settingtdmenu style='width:130px'>"+
+            "<li><a href= target=_blank>查看代理商资料</a></li>"+
+            "<li><a href=>审核</a></li>"+
+            "</ul></div>";
+        return str;
+
+    }
+
+
+
+
+
+</script>
+
+

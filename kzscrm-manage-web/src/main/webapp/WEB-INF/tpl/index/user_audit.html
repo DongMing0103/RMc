@@ -1,0 +1,38 @@
+<script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+<script type="text/javascript" src="../../static/js/index/userAudit/userAudit.js"></script>
+<script type="text/javascript" src="../../static/js/index/userAudit/userAuditFormatter.js"></script>
+<!--新用户审核-->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">新用户审核</span>
+    </div>
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="crmcanteenapply/newClientApply"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-method='post'
+           data-cache="false"
+           data-query-params="userAudit.queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-field="crmClientResourceVO.name" data-align="center">客户名称</th>
+            <th data-field="crmClientResourceVO.clientType" data-align="center" data-formatter="userAuditFormatter.clientTypeFormatter">客户类别</th>
+            <th data-field="crmClientResourceVO.address" data-align="center">地理信息</th>
+            <th data-field="applyTime" data-align="center" data-formatter="userAuditFormatter.applyTimeFormatter">申请时间</th>
+            <th data-field="crmClientResourceVO.businessName" data-align="center">业务员</th>
+            <th data-field="crmClientResourceVO.teamName" data-align="center">所属团队</th>
+            <th data-field="f" data-formatter="userAuditFormatter.operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+</div>
+
+

@@ -1,0 +1,93 @@
+<!--我的财富-->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">我的财富</span>
+    </div>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+            <div class="form-group">
+	            <label class="control-label">时间查询</label>
+	            <input class="Wdate input-date" id="d4311" name="startTime" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="endTime" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	        </div>
+	        <div class="form-group">
+	        	<div class="has-feedback" style="display: inline-block;">
+		        	<select class="form-control selectarrow" name="selectNum">
+		                <option value="0">请选择搜索条件</option>
+		                <option value="1">食堂名称</option>
+		                <option value="2">订单编号</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	            <input class="form-control" name="condition" id="enterNoName" placeholder="请输入文字">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmOrder/myWealthyListInit');">重置</a>
+	        </div>
+        </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="$!rc.contextPath/crmOrder/queryPage"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-field="orderNo" data-align="center">订单编号</th>
+            <th data-field="canteenName" data-align="center">食堂名称</th>
+            <th data-field="orderFlowNo" data-align="center">现金流水号</th>
+            <th data-field="generalLedgerDate" data-align="center" data-formatter="dateNoMinFormatter">分账时间</th>
+            <th data-field="realMoney" data-align="center">订单金额（￥）</th>
+            <th data-field="businessSplitPercent" data-align="center">分账比例（%）</th>
+            <th data-field="splitMoney" data-align="center">分账金额（￥）</th>
+            <th data-field="h" data-align="center" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+    	console.log(row);
+        var str="<a href=/crmbusinesssplitdetail/orderView/"+row.id+" target=_blank>查看</a>";
+        return str;
+    }
+    
+    function commit(){
+    	query();
+    }
+    
+    //根据条件查询
+    function query(url){
+    	var _url=$('#table').attr("data-url");
+    	if(url==null){
+    		url=_url;
+    	}
+    	$('#table').bootstrapTable('removeAll'); 
+		$('#table').bootstrapTable('refresh', {
+			url : url
+		},{
+			params : $('#form').serialize()
+		});
+    }
+    
+      /* 表格分页 */
+      function queryParams(params) {
+		return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+	}
+</script>
+

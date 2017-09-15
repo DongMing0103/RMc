@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/js/FlexBox/css/jquery.flexbox.css" />
+    </head>
+	<body>
+		<form class="form-horizontal add-resource p50" id="form" name="form" action="$!rc.contextPath/permmenu/add" method="post">
+		<input type="hidden" id="stairId" name="stairId"><!-- 一级菜单id -->
+		<input type="hidden" id="secondId" name="secondId"><!-- 二级菜单id -->
+<!-- 		<input type="hidden" id="sourceId" name="sourceId">资源id  -->
+			
+			<div class="form-group">
+				<div class="col-sm-12">
+					 <p class="gray">一级菜单</p>
+                     <table class="foodke" id="foodke">
+                        <thead>
+                            <tr>
+                                <th>资源名称</th>
+                                <th>链接地址</th>
+                                <th>图标</th> 
+                            </tr>
+                        </thead>
+                        <tbody id="sctbody">
+	                          <tr>
+	                              <td class="pr">
+									<input class="secondlevel" name="name1" type="hidden" datatype="*" nullmsg="请输入资源名称" sucmsg=" ">
+									<div id="secondlevel"></div>
+	                              </td>
+	                              <td class="pr">
+	                              	<input class="" type="text" name="url1" id="url1" datatype="*" nullmsg="请输入链接地址" sucmsg=" ">
+	                              </td>
+	                              <td class="pr">
+	                              	<input class="" type="text" name="icon1" id="icon1" datatype="*" nullmsg="请输入图标" sucmsg=" ">
+	                              </td>
+	                              <td class="validfood"><div class="Validform_checktip"></div></td>
+	                          </tr>
+                         </tbody>
+                     </table>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12">
+					 <p class="gray">二级菜单</p>
+                     <table class="foodke" id="foodke">
+                        <thead>
+                            <tr>
+                                <th>资源名称</th>
+                                <th>链接地址</th>
+                                <th>图标</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sctbody">
+	                          <tr>
+	                              <td class="pr leveltd" >
+	                                <input class="onelevel" type="hidden" name="name2" datatype="*" nullmsg="请输入资源名称" sucmsg=" ">
+	                                <div id="onelevel"></div>
+	                              </td>
+	                              <td class="pr" >
+	                              	<input class="" type="text" datatype="*" name="url2" id="url2" nullmsg="请输入链接地址" sucmsg=" ">
+	                              </td>
+	                              <td class="pr" >
+	                              	<input class="" type="text" name="icon2" id="icon2" datatype="*" nullmsg="请输入图标" sucmsg=" ">
+	                              </td>
+	                              <td class="validfood"><div class="Validform_checktip"></div></td>
+	                          </tr>
+                         </tbody>
+                     </table>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12">
+					 <p class="gray">功能按钮</p>
+                     <table class="foodke funbtn" id="foodke">
+                        <thead>
+                            <tr>
+                                <th>按钮名称</th>
+                                <th>链接地址</th>
+                                <th>图标</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sctbody" class="functionbutton">
+                         </tbody>
+                     </table>
+                     <div class="clearfix">
+                         <p class="addtable mr15" onclick="addfunbtn()">+</p>
+                         <div class="Validform_checktip pull-left" id="foodError"></div>
+                     </div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<div class="pull-left">
+						<label class="control-label gray">资源类型</label>
+					</div>
+					<div class="pull-left resouce-type">
+						<label><input type="radio" name="permType">单位</label>
+						<label><input type="radio" name="permType">食堂</label>
+						<label><input type="radio" name="permType">用户</label>
+					</div>
+				</div>
+			</div>
+			<div class="text-center mt30 pr">
+           		<div class="shade-save"></div>
+           		<a class="btn btn-warning save" href="javascript:void(0);">确定</a>
+			</div>
+		</form>
+        <script src="$!rc.contextPath/static/js/jquery/jquery-1.12.0.min.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+        <script src="$!rc.contextPath/static/dep/ValidForm/Validform_v5.3.2.js"></script>
+        <script src="$!rc.contextPath/static/js/FlexBox/js/jquery.flexbox.js"></script>
+		<script>
+		
+		var validForm = $('.form-horizontal').Validform({
+			btnSubmit : ".save",
+			tiptype : 2,
+			datatype : {
+				"zh2-10" : /^[\u4E00-\u9FA5\uf900-\ufa2d]{2,10}$/,
+				"zn" : /^[\u4E00-\u9FA50-9]+$/,
+				"n11" : /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|17[3|7]|18[0|1|2|3|5|6|7|8|9])\d{8}$/,
+				"dn11" : /^\d{3}-\d{8}|\d{4}-\d{7}$/,
+				"nd":/^[0-9-]{8,}$/,
+				"wn" : /^[a-zA-Z\d_]{5,}$/,
+				"n15-18":/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/
+			},
+			postonce : true,
+			ajaxPost : true,
+			beforeCheck:function(curform){
+				var _onelevel=$("#onelevel_input").val();
+				var _secondlevel=$("#secondlevel_input").val();
+				$(".onelevel").val(_onelevel);
+				$(".secondlevel").val(_secondlevel);
+				//在表单提交执行验证之前执行的函数，curform参数是当前表单对象。
+				//这里明确return false的话将不会继续执行验证操作;
+				
+				//自己的验证
+			},
+			callback : function(data) {
+				//请求
+				layer.msg("添加成功");
+				parent.layer.closeAll();
+// 				$("#foodke").bootstrapTable('refresh');
+				
+			}
+		});
+		var postData=$("#from").serialize();
+		validForm.config({
+			showAllError:true,
+			url:"",
+			ajaxPost:{
+				data:postData
+			}
+		});
+		 var listSize = 1;
+	     
+		function addfunbtn(data){
+			if(data!=null ){
+				var list =eval(data); 
+				console.log(list);
+				for(var i=0;i<list.length;i++){
+					var _htmlid = '<input type="hidden" name="sourcesName['+listSize+'].id" value="'+list[i].id+'">';
+					var _html='<tr>'+
+		            '<td class="pr" >'+
+		          	'<input class="" type="text" datatype="*" name="sourcesName['+listSize+'].sourcesName" value="'+list[i].sourcesName+'" nullmsg="请输入按钮名称" sucmsg=" ">'+
+		            '</td>'+
+		            '<td class="pr">'+
+		          	'<input class="" type="text" datatype="*" name="sourcesName['+listSize+'].sourcesUrl1" value="'+list[i].sourcesUrl1+'" nullmsg="请输入链接地址" sucmsg=" ">'+
+		            '</td>'+
+		            '<td class="pr">'+
+		          	'<input class="" type="text">'+
+		          	'<span class="reducetab" onclick="reducefood($(this))">–</span>'+
+		            '</td>'+
+		            '<td class="validfood"><div class="Validform_checktip"></div></td>'+
+		      	    '</tr>';
+		      	    $(".functionbutton").append(_html+_htmlid);
+					
+					listSize ++ ;
+				}
+			}
+			else{
+				var _html='<tr>'+
+	            '<td class="pr" >'+
+	          	'<input class="" type="text" datatype="*" name="sourcesName['+listSize+'].sourcesName" nullmsg="请输入按钮名称" sucmsg=" ">'+
+	            '</td>'+
+	            '<td class="pr">'+
+	          	'<input class="" type="text" datatype="*" name="sourcesName['+listSize+'].sourcesUrl1" nullmsg="请输入链接地址" sucmsg=" ">'+
+	            '</td>'+
+	            '<td class="pr">'+
+	          	'<input class="" type="text">'+
+	          	'<span class="reducetab" onclick="reducefood($(this))">–</span>'+
+	            '</td>'+
+	            '<td class="validfood"><div class="Validform_checktip"></div></td>'+
+	      	    '</tr>';
+				$(".functionbutton").append(_html);
+				listSize ++ ;
+			}
+		}
+		//输入下拉框
+		var countries = {};
+		
+		countries.results=$.parseJSON('$!countries1');
+		console.log('$!countries1');
+		countries.total = countries.results.length;
+		$('#secondlevel').flexbox(countries, {
+			watermark: '',
+			paging: false,
+			maxVisibleRows: 10
+		});
+		var menu1={};
+		$('#onelevel').flexbox(menu1, {
+			watermark: '',
+			paging: false,
+			maxVisibleRows: 10
+		});
+		$("#secondlevel_input").blur(function(){
+			var _secondlevel=$("#secondlevel_input").val();
+			$(".secondlevel").val(_secondlevel);
+			$(".secondlevel").blur();
+		})
+		$("#onelevel_input").blur(function(){
+			var _onelevel=$("#onelevel_input").val();
+			$(".onelevel").val(_onelevel);
+			$(".onelevel").blur();
+		})
+		//一级菜单动态查询
+		var menu={};
+		var srouceId="";
+		$("#secondlevel_input").blur(function(){
+		var postData ={}; 
+			for(var s in countries.results){
+				if(countries.results[s].name==$("#secondlevel_input").val()){
+					postData.parentId=countries.results[s].id;
+					$("#stairId").val(countries.results[s].id);
+					$("#url1").val(countries.results[s].url);
+					$("#icon1").val(countries.results[s].icon);
+					break;
+				}
+			}
+			console.log(postData.parentId);
+			
+			$.ajax({
+				type:"POST",
+				data:postData,
+				dataType:"json",
+				url:"findByParentId",
+				success:function(data){
+					
+					var _html="<div id='onelevel'></div>";
+					
+					$("#onelevel").remove();
+					$(".leveltd").append(_html);
+					menu.results=data;
+					menu.total = menu.results.length;
+					$('#onelevel').flexbox(menu, {
+						watermark: '',
+						paging: false,
+						maxVisibleRows: 10
+					});
+				}
+			})
+			
+		})
+		
+		$(".leveltd").on("blur","#onelevel_input",function(){
+			for(var o in menu.results){
+				if(menu.results[o].name==$("#onelevel_input").val()){
+					break;
+				}
+			}
+			if(!$("#onelevel_input").val()==""){
+				$("#secondId").val(menu.results[o].id);
+				$("#secondId").val(menu.results[o].id);
+				$("#url2").val(menu.results[o].url);
+				$("#icon2").val(menu.results[o].icon);
+// 				$("#")
+				//资源渲染
+				var postData= {};
+				postData.secondId=menu.results[o].id;
+				$.ajax({
+					type:"POST",
+					data:postData,
+					dataType:"json",
+					url:"findByMenuId",
+					success:function(data){
+						addfunbtn(data);
+					}
+				})
+			}
+		});
+		
+		 // 删除添加食材
+        function reducefood(del) {
+        	del.parents("tr").remove();
+        }
+		</script>
+	</body>
+</html>
+
+
+
+
+

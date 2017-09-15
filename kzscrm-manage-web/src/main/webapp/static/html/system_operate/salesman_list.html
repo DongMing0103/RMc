@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>业务员列表</title>
+    <link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap-table.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">业务员列表</span>
+    </div>
+    <ul class="nav nav-tabs nav-self">
+        <li><span>职业状态</span></li>
+        <li class="active"><a href="#all" data-toggle="tab" onclick="">全部（0）</a></li>
+        <li class="mt10">|</li>
+        <li><a href="#work" data-toggle="tab" onclick="">在职（0）</a></li>
+        <li class="mt10">|</li>
+        <li><a href="#departure" data-toggle="tab" onclick="">离职（0）</a></li>
+    </ul>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+            <div class="form-group">
+                <label class="control-label">所属团队</label>
+                <select class="form-control">
+                    <option value="">请选择</option>
+                    <option value="">商务一部</option>
+                    <option value="">商务二部</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select class="form-control">
+                    <option value="">请选择搜索条件</option>
+                    <option value="">姓名</option>
+                    <option value="">编号</option>
+                </select>
+                <input class="form-control" placeholder="请输入...">
+            </div>
+            <div class="form-group">
+                <a class="btn btn-default" href="javascript:void(0);"  onclick="query();">
+                    <span class="glyphicon glyphicon-search"></span>搜索
+                </a>
+                <a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv();">重置</a>
+            </div>
+        </form>
+    </div>
+    <table
+            id="table"
+            data-classes="table table-public"
+            data-toggle="table"
+            data-url="$!rc.contextPath/crmbusiness/queryPage"
+            data-pagination="true"
+            data-pagination-v-align="both"
+            data-side-pagination="server"
+            data-page-size="20"
+            data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="workTime" data-align="center" data-formatter="dateFormatter">入职时间</th>
+            <th data-field="belongTeam" data-align="center">所属团队</th>
+            <th data-field="position" data-align="center">岗位职务 </th>
+            <th data-field="workStatus " data-align="center">职业状态</th>
+            <th data-field="contactTele"  data-align="center">联系电话</th>
+            <th data-field="weChat"  data-align="center">微信号码</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" >操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+</div>
+    
+    <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="/static/js/layer/layer.js"></script>
+    <script src="/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="/static/js/DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript">
+	    $(function(){
+	        $('#table').bootstrapTable();
+	    });
+	
+	    /* 操作 */
+	    function operateFormatter(value, row, index) {
+	    	return [
+	                '<a href="customer_list.html" target="_blank">客户列表</a>',
+	            ].join('');
+	    }
+	    
+	    /*地理联动*/
+	    $("#city").citySelect({
+	        url:"/static/js/cityselect/city.min.js",
+	        prov:"",//省份
+	        city:"",//城市
+	        dist:"",//区县
+	        nodata:"none",//当子集无数据时，隐藏select
+	        required:false
+	    });
+	</script>
+</body>
+</html>
+
+

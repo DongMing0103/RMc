@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PayWithdrawMapper">
+<resultMap  type="com.hd.kzscrm.dao.entity.split.PayWithdrawPO" id="PayWithdraw">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="pay_canteen_cashflow_id" jdbcType="VARCHAR" property="payCanteenCashFlowId" />
+    <result column="withdrawals_flow_no" jdbcType="VARCHAR" property="withdrawalsFlowNo" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="initial_money" jdbcType="DECIMAL" property="initialMoney" />
+    <result column="poundage_money" jdbcType="DECIMAL" property="poundageMoney" />
+    <result column="commission_money" jdbcType="DECIMAL" property="commissionMoney" />
+    <result column="real_money" jdbcType="DECIMAL" property="realMoney" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="operation_user_name" jdbcType="INTEGER" property="operationUserName" />
+    <result column="operation_time" jdbcType="TIMESTAMP" property="operationTime"/>
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="bank_cards_id" property="bankCardsId" />
+    <result column="cause" property="cause" />
+</resultMap>
+
+   <!-- 显示的记录对应的列 -->
+   <sql id="Base_Column_List">
+		payWithdraw.id as id,
+		payWithdraw.pay_canteen_cashflow_id as payCanteenCashflowId,
+		payWithdraw.withdrawals_flow_no as withdrawalsFlowNo,
+		payWithdraw.user_id as userId,
+		payWithdraw.create_time as createTime,
+		payWithdraw.initial_money as initialMoney,
+		payWithdraw.poundage_money as poundageMoney,
+		payWithdraw.commission_money as commissionMoney,
+		payWithdraw.real_money as realMoney,
+		payWithdraw.status as status,
+		payWithdraw.del_falg as delFlag,
+		payWithdraw.operation_user_name as operationUserName,
+		payWithdraw.operation_time as oprationTIme,
+		payWithdraw.user_type as userType,
+		payWithdraw.bank_cards_id as bankCardsId,
+		payWithdraw.cause as cause
+	</sql>
+
+
+	<select id="findAll"  resultMap="PayWithdraw">
+		select * 
+		from pay_withdraw 
+		<where>
+		   user_type  <![CDATA[ > ]]> 3 and del_flag = 1
+		</where>
+	</select>
+	
+	<!-- 查询列表 -->
+	<select id="findByParam" parameterType="com.hd.wolverine.util.ParamMap" resultMap="PayWithdraw">
+	  select * from pay_withdraw
+	  <where>
+	  		del_flag =1
+	  	  <choose>
+	  	  		<when test="@Ognl@isNotEmpty(status)">
+	  	  			and status=#{status}
+	  	  		</when>
+	  	  		<when test="@Ognl@isEmpty(status)"> 
+					and status in (1,2,3,4)
+				</when>
+	  	  
+	  	  </choose>
+
+	  	  <if test="@Ognl@isNotEmpty(balance)">and status=#{balance}</if>
+	      <if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+	      <if test="@Ognl@isNotEmpty(userType)">
+				and user_type =  #{userType}
+		  </if>
+	      <if test="@Ognl@isNotEmpty(teamIds) and selectNum==4">and team_id in
+	      	<foreach collection="teamIds" index="index" item="teamId" open="(" close=")" separator=",">
+	      		#{teamId}
+	      	</foreach>
+	      
+	      </if>
+	       <if test="@Ognl@isNotEmpty(ids) ">and id in
+	      	<foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+	      		#{id}
+	      	</foreach>
+	      </if>
+	      <if test="@Ognl@isNotEmpty(userIds) and selectNum==5">and user_id in
+	      	<foreach collection="userIds" index="index" item="userId" open="(" close=")" separator=",">
+	      		#{userId}
+	      	</foreach>
+	      </if>
+	      <if test="@Ognl@isNotEmpty(userIds) and selectNum==6">and user_id in
+	      	<foreach collection="userIds" index="index" item="userId" open="(" close=")" separator=",">
+	      		#{userId}
+	      	</foreach>
+	      </if>
+	       <if test="@Ognl@isNotEmpty(starTime)">and date_format(operation_time,'%Y-%m-%d')<![CDATA[>=]]> #{starTime}</if>
+	        <if test="@Ognl@isNotEmpty(endTime)">and date_format(operation_time,'%Y-%m-%d')<![CDATA[<=]]> #{endTime}</if>
+	      and user_type  <![CDATA[ > ]]> 3  
+	  </where>	
+	  order by   operation_time desc
+	</select>
+	
+	
+	
+	<!-- 根据时间短查询金额 -->
+	<select id="findPeriodTime" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal">
+		select SUM(initial_money) as cashFlowMoney from pay_withdraw
+		<where>
+			<if test="@Ognl@isNotEmpty(starTime)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTime}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTime)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTime}]]>
+			</if>
+			<if test="userId != null and userId != null ">
+				and user_id = #{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				and status = #{status}
+			</if>
+			<if test="month == 1">
+				<![CDATA[ and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(create_time)]]>
+			</if>
+			<if test="canteenId != null and canteenId != null ">
+				and canteen_id = #{canteenId}
+			</if>
+			</where>
+	</select>	
+	
+	
+	<select id="findByTimeSlot" parameterType="com.hd.wolverine.util.ParamMap" resultMap="PayWithdraw">
+		select 
+		id,withdrawals_flow_no,operation_time,create_time,initial_money,poundage_money,commission_money,real_money,status,bank_cards_id
+		from pay_withdraw 
+		where
+			del_flag =1  
+			<if test="starTime != null and starTime !='' and endTime != null and endTime != ''">
+				and date_format(create_time,'%Y-%m-%d') between #{starTime} and #{endTime}
+			</if>
+	</select>
+	
+	<!-- 根据商家的用户id查询商家的提现记录 -->
+	<select id="findByUserId" parameterType="com.hd.wolverine.util.ParamMap"  resultType="Map">
+		select *
+		from pay_withdraw 
+		<where>
+			user_type  <![CDATA[ > ]]> 3 
+			<if test="@Ognl@isNotEmpty(userId)"> and user_id =#{userId} </if>		
+		</where>
+		group by status 
+	</select>
+	
+	<select id="findPayByUserId"  parameterType="com.hd.wolverine.util.ParamMap" resultMap="PayWithdraw">
+		select 
+		id,withdrawals_flow_no,operation_time,create_time,initial_money,poundage_money,commission_money,real_money,status,bank_cards_id
+		from pay_withdraw 
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(userId)">anduser_id =#{userId}</if>
+		</where>
+		
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,91 @@
+<!-- 团队目标 -->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">#if($!teamCheckTitle) $!teamCheckTitle #else 团队目标 #end</span>
+    </div>
+       <div class="form-box">
+    	<form class="form-inline" id="form">
+       	<input type="hidden" name="teamIdsStr" value="$!teamIds">
+	        <div class="form-group">
+	            <label class="control-label">工作月</label>
+	            <input class="Wdate input-date" id="d4311" name="applyMonthStr" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">团队检索</label>
+		        <div class="has-feedback" style="display: inline-block">
+		            <select class="form-control selectarrow" name="teamId">
+		            	<option value="">请选择</option>
+		            	#foreach($!crmTeamPO in $!crmTeamPOs)
+		            	<option value="$!crmTeamPO.id">$!crmTeamPO.name</option>
+		            	#end
+		                <!-- <option value="">请选择</option>
+		                <option>商务一部</option>
+		                <option>商务二部</option> -->
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+		    </div>
+	        <div class="form-group">
+	            <a class="btn btn-default crmWorkTargetSearch" href="javascript:void(0);" onclick="query()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default crmWorkTargetReset" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/teamTargetInit')">重置</a>
+	        </div>
+	    </form>
+    </div>
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public tabledown"
+           data-toggle="table"
+           data-url="$!rc.contextPath/crmworktarget/getTeamTargetDetails"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="teamName" data-align="center">团队名称</th>
+            <th data-field="applyMonth" data-align="center" data-formatter="applyMonthFormatter">工作月</th>
+            <th data-field="agentNum" data-align="right">发展代理商数量</th>
+            <th data-field="completeAgentNum" data-align="right">完成量</th>
+            <th data-field="canteenNum" data-align="right">发展食堂数量</th>
+            <th data-field="completeCanteenNum" data-align="right">完成量</th>
+            <th data-field="orderMoney" data-align="right">订单总金额（￥）</th>
+            <th data-field="completeOrderMoney" data-align="right">完成量</th>
+            <th data-field="percentageCompletion" data-align="right">完成度（%）</th>
+            <th data-field=operate data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+	<div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="tabledown('crmworktarget/teamTargetDetailsExcelOut?Ids=')">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="$!rc.contextPath/static/js/target_record/team_target.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#table').bootstrapTable();
+	$("#table").on('load-success.bs.table',function(e,data){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+			#if(!$!cSourcesVO.check)
+				$('$!cSourcesVO.frontContrlName').remove();
+			#end
+		#end
+	})
+});
+
+    //操作
+    function operationFormatter(value, row, index) {
+    	//console.log(row);
+        var str='<a class="crmWorkTargetClientList" href="$!rc.contextPath/crmclientresource/clientListInit?teamId='+row.teamId+'&applyMonth='+row.applyMonth+'" target=_blank>查看</a>';
+        return str;
+    }
+
+
+
+</script>

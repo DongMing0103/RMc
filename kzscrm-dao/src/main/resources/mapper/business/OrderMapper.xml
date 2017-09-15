@@ -1,0 +1,1432 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="OrderMapper">
+	<resultMap type="com.hd.kzscrm.dao.entity.business.OrderPO" id="orderMap">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="order_no"  jdbcType="VARCHAR" property="orderNo"/>
+		<result column="user_id" jdbcType="BIGINT" property="userId"/>
+		<result column="canteen_id" jdbcType="BIGINT" property="canteenId"/>
+		<result column="tableware_num" jdbcType="INTEGER" property="tablewareNum"/>
+		<result column="eat_time" jdbcType="TIMESTAMP" property="eatTime"/>
+		<result column="supply_category_id" jdbcType="BIGINT" property="supplyCategoryId"/>
+		<result column="total_money" jdbcType="DECIMAL" property="totalMoney"/>
+		<result column="need_send_flag" jdbcType="INTEGER" property="needSendFlag"/>
+		<result column="user_receive_address_id" jdbcType="INTEGER" property="userReceiveAddressId"/>
+		<result column="remark" jdbcType="VARCHAR" property="remark"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
+		<result column="accept_time" jdbcType="TIMESTAMP" property="acceptTime"/>
+		<result column="sent_time" jdbcType="TIMESTAMP" property="sentTime"/>
+		<result column="comment_time" jdbcType="TIMESTAMP" property="commentTime"/>
+		<result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+		<result column="status" jdbcType="VARCHAR" property="status"/>
+		<result column="consume_status" jdbcType="VARCHAR" property="consumeStatus"/>
+		<result column="discount_money" jdbcType="VARCHAR" property="discountMoney"/>
+		<result column="cut_money" jdbcType="VARCHAR" property="cutMoney"/>
+		<result column="real_money" jdbcType="VARCHAR" property="realMoney"/>
+		<result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+		<result column="combine_order_no" property="combineOrderNo"/>
+		<result column="order_flow_no" property="orderFlowNo"/>
+		<result column="cut_percent" property="cutPercent"/>
+		<result column="channel_money" property="channelMoney"/>
+		<result column="order_real_money" property="orderRealMoney"/>
+		<result column="general_ledger_date" property="generalLedgerDate"/>
+		<result column="general_ledger_status" property="generalLedgerStatus"/>
+		<result column="pay_model" property="payModel"/>
+		
+		
+	</resultMap>
+	
+	<resultMap type="com.hd.kzscrm.service.vo.business.OrderDTO" id="orderDTOMap">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="canteen_id" property="canteenId"/>
+		<result column="canteenName" jdbcType="VARCHAR" property="canteenName"/>
+		<result column="turnover" jdbcType="DOUBLE" property="turnover"/>
+		<result column="goods_month_amount" property="goodsMonthAmount"/>
+		<result column="canteen_month_amount" property="canteenMonthAmount"/>
+		<result column="canteen_order_amount" property="canteenOrderAmount"/>
+		<result column="goods_id" property="goodsId"/>
+		<result column="total_money" property="	totalMoney"/>
+		<result column="discount_money" property="discountMoney"/>
+		<result column="order_ids_str" property="orderIdsStr"/>
+		
+	</resultMap>
+	
+	<insert id="batchInsert" parameterType="com.hd.wolverine.util.ParamMap">
+		insert into `order`(id,order_no,user_id,canteen_id,tableware_num,eat_time,supply_category_id,
+		total_money,need_send_flag,user_receive_address_id,remark,consume_status,create_time,pay_time,
+		accept_time,sent_time,comment_time,end_time,status,discount_money,cut_money,real_money,del_flag,combine_order_no,
+		cut_percent,channel_money,general_ledger_date,general_ledger_status,order_real_money)
+		<foreach collection="orders" index="index" item="order" open="values" close=";" separator=",">
+			(#{order.id},#{order.orderNo},#{order.userId},#{order.canteenId},#{order.tablewareNum},#{order.eatTime},#{order.supplyCategoryId},
+			#{order.totalMoney},#{order.needSendFlag},#{order.userReceiveAddressId},#{order.remark},#{order.consumeStatus},now(),#{order.payTime},
+			#{order.acceptTime},#{order.sentTime},#{order.commentTime},#{order.endTime},1,#{order.discountMoney},#{order.cutMoney},#{order.realMoney},1,#{order.combineOrderNo},
+			#{order.cutPercent},#{order.channelMoney},#{order.generalLedgerDate},#{order.generalLedgerStatus},#{order.orderRealMoney})	
+		</foreach> 
+	</insert>
+	
+	<!-- 大后台提现审核统计时用到 -->
+	<select id="findAllByPayTime" resultMap="orderMap">
+		select * from `order` 
+			where del_flag=1 and status not in (1,9)
+			<if test="@Ognl@isNotEmpty(startPayTime)">
+				and pay_time <![CDATA[>=]]> #{startPayTime} 
+			</if>
+			<if test="@Ognl@isNotEmpty(endPayTime)">
+				and pay_time <![CDATA[<=]]> #{endPayTime} 
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id=#{canteenId}
+			</if>
+	</select>
+	
+	
+	
+	<!-- 获取30天内待评价的数据 -->
+	<select id="getPendingEvaluation" resultMap="orderMap">
+		select * from `order` where status=8 and DATE_ADD(eat_time,INTERVAL 1 month)<![CDATA[<=]]>now() and del_flag=1
+	</select>
+	
+	<!-- 获取待取餐数据,已支付的，并且在用餐时间区间的 -->
+	<select id="getWaitingMeal" resultMap="orderMap">
+		select* from `order` where status=2 and del_flag=1
+	</select>
+	
+	<!-- 更新抽成信息 -->
+	<update id="updateGeneralLedgetInfo" parameterType="com.hd.wolverine.util.ParamMap">
+		update `order` 
+		<set>
+			<if test="@Ognl@isNotEmpty(cutMoney)">
+				cut_money=#{cutMoney}, 
+				real_money=total_money-cut_money, 
+			</if>
+			<if test="@Ognl@isNotEmpty(cutPercent)">
+				cut_percent=#{cutPercent}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(generalLedgerStatus)">
+				general_ledger_status=#{generalLedgerStatus}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(generalLedgerDate)">
+				general_ledger_date=#{generalLedgerDate}, 
+			</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(orderId)">
+				id=#{orderId}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">
+				order_no=#{orderNo}
+			</if>
+			
+		</where>
+	</update>
+	<!-- 根据订单ID取消订单 -->
+	<update id="cancelOrder" parameterType="com.hd.wolverine.util.ParamMap">
+		<if test="@Ognl@isNotEmpty(id)">
+			update `order` set status=7 where del_flag=1 and status=1 and id=#{id}
+		</if>
+		 
+	</update>
+	<update id="batchLogicDelete" parameterType="com.hd.wolverine.util.ParamMap">
+		update `order` set del_flag=0
+		<where>
+			<if test="@Ognl@isNotEmpty(ids)">
+					and id in
+					<foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+						#{id}
+					</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNos)">
+				and order_no in
+				<foreach collection="orderNos" index="index" item="orderNo" open="(" close=")" separator=",">
+					#{orderNo}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	<!-- 某月销量统计 从某月第1天到最后1天 -->
+	<!-- <select id="monthAmountCount" resultMap="orderDTOMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select goods_id,if(goods_id is null,null,count(1)) goods_month_amount from order_goods_item 
+		<where>
+			<if test="@Ognl@isNotEmpty(goodsIds)">
+				and goods_id in
+				<foreach collection="goodsIds" item="goodsId" index="index" open="(" close=")" separator=",">
+					#{goodsId}
+				</foreach>
+			</if>
+			 <![CDATA[and canteen_order_id in(select id from `order` where `status`=2 and pay_time>=date_add(DATE_SUB(last_day(substring(#{payTime},1,20)),INTERVAL 1 month),INTERVAL 1 day) and pay_time<=DATE_add(last_day(substring(#{payTime},1,20)),interval 1 day)) group by goods_id]]>
+		</where>
+	</select> -->
+	
+	<!-- 获取某月的订单 -->
+	<select id="getOrderIdsByCanteenids" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select *  from `order` 
+		<where>
+		<!-- 状态不等于已下单和已取消 -->
+		del_flag=1 and `status` not in(1,7) and  <![CDATA[pay_time>=date_add(DATE_SUB(last_day(#{payTime}),interval 1 YEAR_MONTH),INTERVAL 1 day) and pay_time<=DATE_add(last_day(#{payTime}),interval 1 day)]]>
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" close=")" separator=",">
+					#{canteenId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据食堂IDS获取对应的订单IDS集合,月订单总数 -->
+	<!-- <select id="orderNumByCanteenIds" resultMap="orderDTOMap" parameterType="com.hd.wolverine.util.ParamMap">
+			select GROUP_CONCAT(id)order_ids_str,count(id) canteen_order_amount,canteen_id  from `order` 
+		<where>
+		状态不等于已下单和已取消
+		del_flag=1 and `status` not in(1,7) and  <![CDATA[pay_time>=date_add(DATE_SUB(last_day(#{payTime}),interval 1 YEAR_MONTH),INTERVAL 1 day) and pay_time<=DATE_add(last_day(#{payTime}),interval 1 day)]]>
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" close=")" separator=",">
+					#{canteenId}
+				</foreach>
+			</if>
+		</where>
+		 group by canteen_id
+	</select> -->
+	
+	<!-- 食堂月销量 与orderNumByCanteenIds搭配使用，先使用orderNumByCanteenIds-->
+	<select id="canteenMonthAmountByOrderIdsStr" resultMap="orderDTOMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select count(1) canteen_month_amount from order_goods_item a where find_in_set(canteen_order_id,#{orderIdsStr}) and del_flag=1
+	</select>
+	
+	<sql id="allField">
+		id,order_no,user_id,canteen_id,tableware_num,eat_time,supply_category_id,total_money,need_send_flag,user_receive_address_id,remark,consume_status,create_time,pay_time,accept_time,sent_time,comment_time,end_time,status,discount_money,cut_money,real_money,del_flag,order_flow_no,combine_order_no,cut_percent,channel_money,general_ledger_date,general_ledger_status,order_real_money,pay_model
+	</sql>
+	<select id="findTodayOrder" resultMap="orderMap">
+		select order_no,canteen_id,supply_category_id
+		from `order`
+		where eat_time = substring(now(),1,10)
+	</select>
+	
+	<!-- 获取多个订单的总金额 -->
+	<select id="getTotalMoneyByOrderNos" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		select sum(total_money) from `order`
+		<if test="@Ognl@isNotEmpty(orderNos)"> 
+				and order_no in 
+				<foreach collection="orderNos" item="orderNo" index="index" open="(" separator="," close=")">
+					#{orderNo}
+				</foreach>
+			</if>
+	</select>
+	
+	<!-- 查询过期或未过期的订单 -->
+	<select id="findOrderIsPast" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/>
+		from `order` 
+		<where>
+			del_flag=1
+			<choose>
+				<!-- 已过期 不包括已支付的订单都算已过期-->
+				<when test="isPast==true">
+					and eat_time <![CDATA[ <= ]]>now()
+				</when>
+				<!-- 未过期 -->
+				<otherwise>
+					and eat_time <![CDATA[ > ]]>now()
+				</otherwise>
+			</choose>
+			<!-- 排除不等于某个状态的数据 -->
+			<if test="@Ognl@isNotEmpty(status)">
+				and status !=#{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+		</where>
+		order by create_time desc
+	</select>
+	
+	<!-- 查询可取餐的订单，订单结束时间在循环中找到商家再去判断用餐结束时间-->
+	<select id="findCanTakeFoodOrder" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/>
+		from `order` 
+		<where>
+			del_flag=1 and status=2
+			
+			<if test="@Ognl@isNotEmpty(eatTimeStart) and @Ognl@isNotEmpty(userId)">
+				and eat_time <![CDATA[ <= ]]>#{eatTimeStart} and user_id=#{userId}
+			</if>
+		</where>
+		order by eat_time desc
+	</select>
+	
+	<select id="findByIdAndStatus" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select <include refid="allField"/>
+		from `order` 
+		where id = #{id}
+	</select>
+	
+	<!-- 根据订单Id查询订单数据信息 -->
+	<select id="findById" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select *
+		from `order` 
+		where id = #{id}
+	</select>
+	
+	<select id="findAll" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select *
+		from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(combineOrderNo)">
+				and combine_order_no=#{combineOrderNo}
+			</if>
+			 <if test="idBatch!=null and idBatch !=''"> 
+				and id in 
+				<foreach collection="idBatch" item="id" index="index" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(ids)"> 
+				and id in 
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				and status=#{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">
+				and order_no like CONCAT('%',#{orderNo},'%')
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNos)"> 
+				and order_no in 
+				<foreach collection="orderNos" item="orderNo" index="index" open="(" separator="," close=")">
+					#{orderNo}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id=#{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(tablewareNum)">
+				and tableware_num=#{tablewareNum}
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTime)">
+				and DATE_FORMAT(eat_time,'%Y-%m-%d')=substring(date_add(#{eatTime}, INTERVAL 0 day),1,10)
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(consumeStatus)">
+				and consume_status=#{consumeStatus}
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTimeStart)">
+				and eat_time <![CDATA[ >= ]]>substring(#{eatTimeStart},1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTimeEnd)">
+				and eat_time <![CDATA[ <= ]]>substring(date_add(#{eatTimeEnd},INTERVAL 1 day),1,10)
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(createTimeStart)">
+				and create_time<![CDATA[ >= ]]>substring(#{createTimeStart},1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(createTimeEnd)">
+				and create_time<![CDATA[ <= ]]>substring(date_add(#{createTimeEnd}, INTERVAL 1 day),1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(supplyCategoryId)">
+				and supply_category_id=#{supplyCategoryId}
+			</if>
+			<if test="@Ognl@isNotEmpty(totalMoneyGreaterOrEqual)">
+				and total_money <![CDATA[ >= ]]>#{totalMoney}
+			</if>
+			<if test="@Ognl@isNotEmpty(totalMoneyLessOrEqual)">
+				and total_money <![CDATA[ <= ]]>#{totalMoney}
+			</if>
+			<if test="@Ognl@isNotEmpty(flag)">
+				<choose>
+					<when test="1 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]> substring(date_add(now(), INTERVAL 0 day),1,10) and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]> substring(date_add(now(), INTERVAL -1 day),1,10)
+					</when>
+					<when test="2 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]> subdate(curdate(),date_format(curdate(),'%w')-1) and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]> subdate(curdate()-7,date_format(curdate()-7,'%w')-1)
+					</when>
+					<when test="3 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]>date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(day from now())-1 day),interval 0 month)
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]>date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(day from now())-1 day),interval 1 month)
+					</when>
+				</choose>
+			</if>
+			<if test="@Ognl@isNotEmpty(payTime)">
+				and date_format(pay_time,'%Y-%m')=date_format(#{payTime},'%Y-%m')
+			</if>
+			<if test="@Ognl@isNotEmpty(statusNotInOneOrSeven)">
+				and status not in (1,7)
+			</if>
+			<if test="@Ognl@isNotEmpty(searchName)">
+				and  (order_no = #{searchName} 
+					<if test="@Ognl@isNotEmpty(userIds)">
+						or user_id in 
+						<foreach collection="userIds" item="userId" index="index" open="(" separator="," close=")">
+							#{userId}
+						</foreach>
+					</if>
+				)
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(payModel)">
+				and pay_model =#{payModel}
+			</if>
+			<if test="stratTimes !=null and stratTimes != ''">
+				and general_ledger_date >= #{stratTimes}
+			</if>
+			<if test="endTimes != null and endTimes != ''">
+				<![CDATA[ and general_ledger_date <= #{endTimes}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(idS)">and id in (${idS})</if>
+			
+		</where>
+		<if test="@Ognl@isEmpty(orders)">
+			order by eat_time desc ,id desc
+		</if>
+		<if test="@Ognl@isNotEmpty(orders)">
+	      <foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+	        ${key} ${orders[key]}
+	      </foreach>
+	    </if>
+		
+	</select>
+	
+	<!-- 初始化近日订单 -->
+	
+	<select id="findOrderAll" resultMap="orderMap">
+		select total_money,discount_money,order_real_money,id,user_id,canteen_id,supply_category_id,order_no,create_time,status,consume_status from `order` 
+		<where>
+		 del_flag=1
+		<!-- 订单，类目，用户查 -->
+<!-- 	<if test="selectId == 1 and @Ognl@isNotEmpty(selectValue)"> -->
+<!-- 		and e1.user_name like "%"#{selectValue}"%" -->
+<!-- 	</if> -->
+		<if test="@Ognl@isNotEmpty(selectValue)">
+			and order_no like "%"#{selectValue}"%"
+		</if>
+<!-- 	<if test="selectId == 3 and @Ognl@isNotEmpty(selectValue)"> -->
+<!-- 		and e2.name like "%"#{selectValue}"%" -->
+<!-- 	</if> -->
+	 	<!-- 时间 --> 
+    	<if test="createTime != null and createTime != ''"> 
+			and DATE_FORMAT(eat_time,'%Y-%m-%d')=#{createTime}
+	    </if> 
+		<!-- 根据订单状态,类目，消费状态 -->
+		<if test="@Ognl@isNotEmpty(status)">
+			and status=#{status}
+		</if>
+		<if test="supplyCategoryId != null and supplyCategoryId != ''">
+			 and supply_category_id=#{supplyCategoryId}
+		</if>
+		<if test="consumeStatus != null and consumeStatus !=''">
+			and consume_status=#{consumeStatus}
+		</if>
+		<if test="@Ognl@isNotEmpty(canteenIds1)">
+		 and canteen_id in (${canteenIds1})
+		</if>
+		<if test="@Ognl@isNotEmpty(userIds1)">
+		and user_id in (${userIds1})
+		</if>
+		<if test="@Ognl@isNotEmpty(orderNo)">
+		and order_no like "%"#{orderNo}"%"
+		</if>
+	<!-- excel yyy --> 
+		<if test="@Ognl@isNotEmpty(orderId)">
+			and id in (${orderId})
+		</if>
+		
+		
+		</where>
+		order by create_time desc
+		
+	</select>
+	
+	<!-- 查询 -->
+	<select id="findByParam"  resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/>
+		from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(stratTimes)"> and  date_format(create_time,'%Y-%m-%d') <![CDATA[ >= ]]>  #{stratTimes} </if>
+			<if test="@Ognl@isNotEmpty(endTimes)"> and date_format(create_time,'%Y-%m-%d')<![CDATA[<=]]> #{endTimes}</if>
+			<if test="@Ognl@isNotEmpty(createTimeStart)"> and  date_format(create_time,'%Y-%m-%d') <![CDATA[ >= ]]>  #{createTimeStart} </if>
+			<if test="@Ognl@isNotEmpty(createTimeEnd)"> and date_format(create_time,'%Y-%m-%d')<![CDATA[<=]]> #{createTimeEnd}</if>
+			<if test="supplyCategoryId !=null and supplyCategoryId != ''">and supply_category_id=#{supplyCategoryId}</if>
+			<if test="@Ognl@isNotEmpty(status)">and status=#{status}</if>
+			<if test="@Ognl@isNotEmpty(consumeStatus)">and consume_status=#{consumeStatus}</if>
+			<if test="@Ognl@isNotEmpty(userIds)">
+				and user_id in 
+				<foreach collection="userIds" item="userId" index="index" open="(" separator="," close=")">
+					#{userId}
+				</foreach>				
+			</if>
+			<if test="leixing == 2 and @Ognl@isNotEmpty(inputContent)">and order_no like CONCAT('%',#{inputContent},'%')</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id = #{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+					and canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" separator="," close=")">
+				 	#{canteenId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(orderId)">
+				and id in (${orderId})
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNoLike)">
+				and order_no like "%"#{orderNoLike}"%"
+			</if>
+		</where>
+		order by create_time desc
+	</select>
+	
+	<select id="findOrderById" resultMap="orderMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/>
+		from `order` 
+		where <if test="id!=null and id !=''"> id=#{id}</if>
+	</select>
+	
+	<select id="findByParams" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select o.id , o.order_no ,o.create_time,o.consume_status
+		from `order` as o
+		left join order_goods_item as i on o.id = i.canteen_order_id
+		<where>
+			<!-- o.status between 2 and 6  -->
+			<if test="@Ognl@isNotEmpty(status)">
+				and o.status=#{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and o.status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTime)">
+				and date_format(o.eat_time,'%Y-%m-%d') = substring(date_add(#{eatTime}, INTERVAL 0 day),1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and o.canteen_id = #{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(supplyCategoryId)">
+				and o.supply_category_id = #{supplyCategoryId}
+			</if>
+			<if test="@Ognl@isNotEmpty(consumeStatus)">
+				and o.consume_status = #{consumeStatus}
+			</if>
+			<if test="@Ognl@isNotEmpty(goodsId)">
+				and i.goods_id = #{goodsId}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and o.id in
+				<foreach collection="orderIds" item="id" index="index" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+		order by o.id desc
+	</select>
+
+	<!-- 统计就餐人数相关信息 -->
+	<!-- <select id="getMsgByParams" parameterType="com.hd.wolverine.util.ParamMap" resultType="com.hd.qzs.service.dto.BusinessInfoDTO">
+		select 
+		l.enterprise_id as enterpriseId,date_format(o.eat_time,'%Y%m%d') as days,o.eat_time as eatTime, o.supply_category_id as supplyCategoryId, count(distinct o.user_id) as totalPeop, count(o.id) as orderNumber,sum(o.total_money) as orderTotalMoney ,i.canteen_id as canteenId,i.cooperation_type as cooperationType 
+		from `order` as o 
+		left join enterprise_employees_link as l on o.user_id = l.user_id  
+		left join business_info as i on o.canteen_id = i.canteen_id and i.enterprise_id = l.enterprise_id 
+		<where>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and o.status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and o.canteen_id = #{canteenId} 
+			</if>
+			<if test="@Ognl@isNotEmpty(supplyCategoryId)">
+				and o.supply_category_id = #{supplyCategoryId}
+			</if>
+		</where> 
+		group by days, o.supply_category_id,i.enterprise_id 
+		order by days desc
+	</select> -->
+	<!-- <select id="sumMaterial" parameterType="com.hd.wolverine.util.ParamMap" resultType="com.hd.qzs.service.dto.order.OrderGoodsItemDTO">
+		select
+		date_format(o.eat_time,'%Y-%m-%d') as eatTimedays,m.`name` as materialName ,o.eat_time as eatTime,o.supply_category_id as supplyCategoryId,sum(i.goods_num) as materialNum,sum(i.goods_num*m.amount) as materialPurchase
+		from
+		`order` as o 
+		left join order_goods_item as i on o.id = i.canteen_order_id 
+		left join goods_material as m on m.goods_id=i.goods_id
+		<where>
+			o.status between 2 and 6
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and o.status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and o.canteen_id = #{canteenId} 
+			</if>
+			<if test="@Ognl@isNotEmpty(supplyCategoryId)">
+				and o.supply_category_id = #{supplyCategoryId} 
+			</if>
+			<if test="@Ognl@isNotEmpty(materialName1)">
+				and m.`name` like "%"#{materialName1}"%"
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTime)">
+				and date_format(o.eat_time,'%Y-%m-%d')=substring(date_add(#{eatTime}, INTERVAL 0 day),1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTimeStart)">
+				and date_format(o.eat_time,'%Y-%m-%d') <![CDATA[ >= ]]>substring(#{eatTimeStart},1,10)
+			</if>
+			<if test="@Ognl@isNotEmpty(eatTimeEnd)">
+				and date_format(o.eat_time,'%Y-%m-%d') <![CDATA[ <= ]]>substring(date_add(#{eatTimeEnd},INTERVAL 0 day),1,10)
+			</if>
+		</where>
+		group by days  ,supplyCategoryId eatTime,materialName
+		order by eatTime desc
+	</select>
+ -->
+	<!-- 当年总消费量 -->
+	<select id="givenYearConsume" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal">
+		select sum(order_real_money) yearConsume from `order` 
+		<where>
+		user_id=#{userId} and status not in(1,7) and eat_time<![CDATA[>=]]>date_format(now(),'%Y') and eat_time<![CDATA[<=]]>date_format(DATE_ADD(now(), INTERVAL 1 YEAR),'%Y')  
+			<if test="@Ognl@isNotEmpty(orderIdsNotIn)">
+					and id not in
+				<foreach collection="orderIdsNotIn" index="index" item="orderIdNotIn" separator="," open="(" close=")">
+					#{orderIdNotIn}
+				</foreach>
+			</if>
+		</where>
+		group by user_id
+	</select>
+	<!-- 用户已支持的订单总金额 -->
+	<select id="givenTotalOrders" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer">
+		select count(1) totalOrders from `order` where user_id=#{userId} and status not in(1,7) group by user_id;
+	</select>
+	
+	<!-- 将已过用餐开始时间，并且状态为2的订单，改成待取餐 -->
+	<update id="updateWaitMealStatus" parameterType="com.hd.wolverine.util.ParamMap" >
+		update `order` set status=9 where eat_time<![CDATA[<]]>now() and status=2;
+	</update>
+	<!-- 修改订单状态 -->
+	<update id="updateOrderStatus" parameterType="com.hd.wolverine.util.ParamMap" >
+		update `order`  
+		<set>
+			<if test="@Ognl@isNotEmpty(status)">
+				status=#{status}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(payModel)">
+				pay_model =#{payModel}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(combineOrderNo)">
+				combine_order_no=#{combineOrderNo}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(orderFlowNo)">
+				order_flow_no=#{orderFlowNo}, 
+			</if>
+			<if test="@Ognl@isNotEmpty(payTime)">
+				pay_time=#{payTime}, 
+			</if>
+			<!-- 如果状态等于已完成，设置订单结束时间 -->
+			<if test="@Ognl@isNotEmpty(status) and status==5">
+				end_time=now(), 
+			</if>
+			<!-- 如果等于已评价，设置评价时间 -->
+			<if test="@Ognl@isNotEmpty(status) and status==6">
+				comment_time=now(), 
+			</if>
+			
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(user_id)">
+				and user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">
+				and order_no=#{orderNo}
+			</if>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNos)">
+				and order_no in
+				<foreach collection="orderNos" index="index" item="orderNo" open="(" close=")" separator=",">
+					#{orderNo}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(statuses)">
+					and status in
+				<foreach collection="statuses" item="statusItem" index="index" open="(" close=")" separator=",">
+					#{statusItem}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	
+	<!-- 支付成功后更新的相关信息 -->
+	<update id="updateOrderPayInfo" parameterType="com.hd.wolverine.util.ParamMap" >
+		update `order` set status=2,pay_time=now()
+		<where>
+			<if test="@Ognl@isNotEmpty(user_id)">
+				and user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">
+				and order_no=#{orderNo}
+			</if>
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(orderNos)">
+				and order_no in
+				<foreach collection="orderNos" index="index" item="orderNo" open="(" close=")" separator=",">
+					#{orderNo}
+				</foreach>
+			</if>
+		</where>
+	</update>
+	
+	
+	
+	<!-- 订单统计 -->
+	<select id="canteenOrderCount" resultType="Map"  parameterType="com.hd.wolverine.util.ParamMap" >
+		select
+		 <choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(pay_time) time
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(pay_time,'%Y-%m') time
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(pay_time,'%Y') time
+	        </when>
+	        <otherwise>
+	            date_format(pay_time,'%Y-%m-%d') time
+	        </otherwise>
+    	</choose>
+		,sum(real_money) money from `order`
+		<where>
+			status=2 and canteen_id=#{canteenId}
+			
+			<if test="@Ognl@isNotEmpty(daysArray)">
+				and date_format(pay_time,'%Y-%m-%d') in
+				<foreach collection="daysArray" item="day" index="index" open="(" separator="," close=")">
+					#{day}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(weeksArray)">
+				and YEARWEEK(pay_time) in 
+				<foreach collection="weeksArray" item="week" index="index" open="(" separator="," close=")">
+					#{week}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(monthsArray)">
+				and date_format(pay_time,'%Y-%m') in
+				<foreach collection="monthsArray" item="month" index="index" open="(" separator="," close=")">
+					#{month}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(yearsArray)">
+				 and date_format(pay_time,'%Y') in
+				<foreach collection="yearsArray" item="year" index="index" open="(" separator="," close=")">
+					#{year}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(startTime)">
+				and  date_format(pay_time,'%Y-%m-%d')<![CDATA[ >= ]]>#{startTime}
+			</if>
+			<if test="@Ognl@isNotEmpty(endTime)">
+				and  date_format(pay_time,'%Y-%m-%d')<![CDATA[ <= ]]>#{endTime}
+			</if>
+		</where>
+		group by  
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(pay_time)
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(pay_time,'%Y-%m')
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(pay_time,'%Y')
+	        </when>
+	        <otherwise>
+	            date_format(pay_time,'%Y-%m-%d')
+	        </otherwise>
+    	</choose>
+	</select>
+	<!-- 通过时间段 统计查询营业统计 -->
+	<select id="findByStartTimeAndEndTime" resultType="Map"  parameterType="com.hd.wolverine.util.ParamMap">
+		select sum(real_money) money 
+		from `order`
+		<where>
+			status=2 
+			<if test="@Ognl@isNotEmpty(canteenId)"> and canteen_id=#{canteenId}</if>
+			<if test="@Ognl@isNotEmpty(startTime) and @Ognl@isNotEmpty(endTime)"> and pay_time #{startTime} and #{endTime} </if>
+		</where>
+	
+	</select>
+	
+	
+	
+	<!-- 【在售菜品统计】 -->
+	<select id="goodsCount" resultType="Map"  parameterType="com.hd.wolverine.util.ParamMap" >
+		select
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(a.pay_time) time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(a.pay_time,'%Y-%m') time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(a.pay_time,'%Y') time,
+	        </when>
+	        <otherwise>
+	            date_format(a.pay_time,'%Y-%m-%d') time,
+	        </otherwise>
+    	</choose>
+		sum(b.goods_num * b.goods_price) money,sum(b.goods_num) num 
+		from `order` a,order_goods_item b
+		<where>
+			a.id=b.canteen_order_id and b.goods_id=#{goodsId} and a.canteen_id=#{canteenId} and a.status=2 	
+			<if test="@Ognl@isNotEmpty(daysArray)">
+				and date_format(a.pay_time,'%Y-%m-%d') in
+				<foreach collection="daysArray" item="day" index="index" open="(" separator="," close=")">
+					#{day}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(weeksArray)">
+				and YEARWEEK(a.pay_time) in 
+				<foreach collection="weeksArray" item="week" index="index" open="(" separator="," close=")">
+					#{week}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(monthsArray)">
+				and date_format(a.pay_time,'%Y-%m') in
+				<foreach collection="monthsArray" item="month" index="index" open="(" separator="," close=")">
+					#{month}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(yearsArray)">
+				 and date_format(a.pay_time,'%Y') in
+				<foreach collection="yearsArray" item="year" index="index" open="(" separator="," close=")">
+					#{year}
+				</foreach>
+			</if>		
+		</where>
+		GROUP BY
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(a.pay_time)
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(a.pay_time,'%Y-%m')
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(a.pay_time,'%Y')
+	        </when>
+	        <otherwise>
+	            date_format(a.pay_time,'%Y-%m-%d')
+	        </otherwise>
+    	</choose>
+	</select>
+	<!--获取昨日订单总金额 -->
+	<select id="totalMoneyCount" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal">
+		select sum(total_money) totalMoney 
+		from `order` 
+		<where>
+				<!-- and `status` between 2 and 6   -->
+				and date_format(eat_time,'%Y-%m-%d') = substring(date_add(now(), INTERVAL -1 day),1,10) 
+			<if test="@Ognl@isNotEmpty(status)">
+				and status=#{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id = #{canteenId}
+			</if>
+		</where>
+		group by canteen_id
+	</select>
+	<!-- 统计今日订单量,就餐人数(	暂时默认一个订单对应一个人) -->
+	<select id="totalOrderNumCount" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer" >
+	select count(1) totalOrders from `order` 
+	<where>
+			<!-- and `status` between 2 and 6 --> 
+			and date_format(eat_time,'%Y-%m-%d') = substring(date_add(now(), INTERVAL 0 day),1,10)
+		<if test="@Ognl@isNotEmpty(status)">
+			and status=#{status}
+		</if>
+		<if test="@Ognl@isNotEmpty(statusList)">
+			and status in 
+			<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+				#{status}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(canteenId)">
+			and canteen_id = #{canteenId}
+		</if>
+	</where> 
+		group by canteen_id
+	</select>
+	<!-- 昨天1/上周2/上月3:就餐人数统计 -->
+	<select id="present" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+		select supply_category_id as `key` , count(1) as `value` 
+		from `order`
+		<where>
+			<!-- del_flag = 1
+			and `status` between 2 and 6  -->
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				and del_flag = #{delFlag}
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				and status=#{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id = #{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(flag)">
+				<choose>
+					<when test="1 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]> substring(date_add(now(), INTERVAL 0 day),1,10) and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]> substring(date_add(now(), INTERVAL -1 day),1,10)
+					</when>
+					<when test="2 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]> subdate(curdate(),date_format(curdate(),'%w')-1) and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]> subdate(curdate()-7,date_format(curdate()-7,'%w')-1)
+					</when>
+					<when test="3 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]>date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(day from now())-1 day),interval 0 month)
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]>date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(day from now())-1 day),interval 1 month)
+					</when>
+					<otherwise>
+						and eat_time = null 
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+		group by supply_category_id 
+	</select>
+	<!-- 前天1/上上周2/上上月3:就餐人数统计 -->
+	<select id="previous" parameterType="com.hd.wolverine.util.ParamMap" resultType="Map">
+		select supply_category_id as `key` , count(1) as `value` 
+		from `order`
+		<where>
+			<!-- del_flag = 1
+			and `status` between 2 and 6 -->
+			<if test="@Ognl@isNotEmpty(delFlag)">
+				and del_flag = #{delFlag}
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				and status=#{status}
+			</if>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id = #{canteenId}
+			</if>
+			<if test="@Ognl@isNotEmpty(flag)">
+				<choose>
+					<when test="1 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]> substring(date_add(now(), INTERVAL -1 day),1,10) and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]> substring(date_add(now(), INTERVAL -2 day),1,10)
+					</when>
+					<when test="2 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]> subdate(curdate()-7,date_format(curdate()-7,'%w')-1) and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]> subdate(curdate()-14,date_format(curdate()-14,'%w')-1)
+					</when>
+					<when test="3 == flag">
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ < ]]>date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(day from now())-1 day),interval 1 month)
+						and date_format(eat_time,'%Y-%m-%d') <![CDATA[ >= ]]>date_sub(date_sub(date_format(now(),'%y-%m-%d'),interval extract(day from now())-1 day),interval 2 month)
+					</when>
+					<otherwise>
+						and eat_time = null 
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+		group by supply_category_id 
+	</select>
+	<!-- 根据订单id 模糊查询 -->
+	<select id="findAllIds" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select id,order_no,user_id,canteen_id
+		from `order` 
+		<where>
+			<choose>
+				<when test="@Ognl@isNotEmpty(delFlag)"> del_flag in (0,1)</when>
+				<otherwise>del_flag = 1</otherwise>
+			</choose>
+			
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id = #{canteenId}
+			</if>
+			<if test="select==2 and @Ognl@isNotEmpty(selectName)">
+				and order_no like "%"#{selectName}"%"
+			</if>
+			<!-- excel yyy -->
+			<if test="@Ognl@isNotEmpty(commplanIds)">
+				and id in (${commplanIds})
+			</if>
+			
+		</where>
+	</select>
+	
+	
+	<!-- 统计 商家营业额 -->
+	<select id="sumTotalMoney" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderDTOMap">
+		select canteen_id,sum(total_money) turnover
+		from `order`
+		<where>
+			del_flag =1
+			and `status` in(2,5,6)
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" separator="," close=")">
+					#{canteenId}
+				</foreach>
+			</if>
+			group by canteen_id 
+			<choose>
+			<when test="sortDesc==''">
+				order by turnover desc
+			</when>
+			</choose>
+		</where>
+		
+	</select>
+	<!-- 营业额分析统计 -->
+	<select id="findStatisticsNum" resultType="Map"  parameterType="com.hd.wolverine.util.ParamMap" >
+		select 
+		<choose>
+			<when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(pay_time) time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(pay_time,'%Y-%m') time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(pay_time,'%Y') time,
+	        </when>
+	        <otherwise>
+	            date_format(pay_time,'%Y-%m-%d') time,
+	        </otherwise>
+		
+		
+		</choose>
+		sum(total_money) num
+		from `order`
+		
+		<where>
+			status in(2,5,6)
+			<if test="@Ognl@isNotEmpty(daysArray)">
+				and date_format(pay_time,'%Y-%m-%d') in
+				<foreach collection="daysArray" item="day" index="index" open="(" separator="," close=")">
+					#{day}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(weeksArray)">
+				and YEARWEEK(pay_time) in 
+				<foreach collection="weeksArray" item="week" index="index" open="(" separator="," close=")">
+					#{week}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(monthsArray)">
+				and date_format(pay_time,'%Y-%m') in
+				<foreach collection="monthsArray" item="month" index="index" open="(" separator="," close=")">
+					#{month}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(yearsArray)">
+				 and date_format(pay_time,'%Y') in
+				<foreach collection="yearsArray" item="year" index="index" open="(" separator="," close=")">
+					#{year}
+				</foreach>
+			</if>		
+		</where>
+		GROUP BY
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(pay_time)
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(pay_time,'%Y-%m')
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(pay_time,'%Y')
+	        </when>
+	        <otherwise>
+	            date_format(pay_time,'%Y-%m-%d')
+	        </otherwise>
+    	</choose>
+	</select>
+	
+	
+	<!-- 用户订单统计图（苏）userOrderCount -->
+	<select id="userOrderCount" parameterType="com.hd.wolverine.util.ParamMap"  resultType="Map">
+		select
+		<choose>
+
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(create_time) time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(create_time,'%Y-%m') time,
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(create_time,'%Y') time,
+	        </when>
+	        <otherwise>
+	            date_format(create_time,'%Y-%m-%d') time,
+	        </otherwise>
+    	</choose>
+		count(1) num 
+		from `order`
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(daysArray)">
+				and date_format(create_time,'%Y-%m-%d') in
+				<foreach collection="daysArray" item="day" index="index" open="(" separator="," close=")">
+					#{day}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(weeksArray)">
+				and YEARWEEK(create_time) in 
+				<foreach collection="weeksArray" item="week" index="index" open="(" separator="," close=")">
+					#{week}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(monthsArray)">
+				and date_format(create_time,'%Y-%m') in
+				<foreach collection="monthsArray" item="month" index="index" open="(" separator="," close=")">
+					#{month}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(yearsArray)">
+				 and date_format(create_time,'%Y') in
+				<foreach collection="yearsArray" item="year" index="index" open="(" separator="," close=")">
+					#{year}
+				</foreach>
+			</if>		
+		</where>
+		GROUP BY
+		<choose>
+	        <when test="@Ognl@isNotEmpty(weeksArray)">
+	             YEARWEEK(create_time)
+	        </when>
+	        <when test="@Ognl@isNotEmpty(monthsArray)">
+	             date_format(create_time,'%Y-%m')
+	        </when>
+	        <when test="@Ognl@isNotEmpty(yearsArray)">
+	             date_format(create_time,'%Y')
+	        </when>
+	        <otherwise>
+	            date_format(create_time,'%Y-%m-%d')
+	        </otherwise>
+    	</choose>
+	</select>
+	
+	
+	<!-- 口味分析 -->
+	<select id="orderTasteCount"  parameterType="com.hd.wolverine.util.ParamMap"  resultType="Map">
+		select sum(b.goods_num) num from `order` a ,order_goods_item b
+		<where>
+			a.id=b.canteen_order_id 
+			<choose>
+		        <when test="@Ognl@isNotEmpty(weeks)">
+		             and YEARWEEK(a.pay_time) <![CDATA[ > ]]> YEARWEEK(now())-7
+		        </when>
+		        <when test="@Ognl@isNotEmpty(months)">
+		             and PERIOD_DIFF( date_format( now( ) , '%Y%m' ) , date_format(a.pay_time, '%Y%m' ) ) <![CDATA[ < ]]> 7
+		        </when>
+		        <when test="@Ognl@isNotEmpty(years)">
+		             and year(a.pay_time)>year(date_sub(now(),interval 7 year))
+		        </when>
+		        <otherwise>
+		            and  date_format(a.pay_time,'%Y-%m-%d')>date_format(DATE_SUB(CURDATE(), INTERVAL 7 DAY),'%Y-%m-%d')
+		        </otherwise>
+	    	</choose>
+	    	<if test="@Ognl@isNotEmpty(goodsIds)">
+	    		b.goods_id in
+		    	<foreach collection="goodsIds" item="goodsId" index="index" open="(" separator="," close=")">
+					#{goodsId}
+				</foreach>
+			</if> 
+		</where> 
+	</select>
+	
+	<!-- 根据id集合查询信息  -->
+	<select id="findByPay" resultMap="orderMap">
+		select id,status,pay_time from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">
+			 id in (${id})
+			</if>
+			<if test="@Ognl@isNotEmpty(payTimeStart)">
+			 and date_format(pay_time,'%Y-%m-%d') <![CDATA[>=]]> #{payTimeStart} 
+			</if>
+			<if test="@Ognl@isNotEmpty(payTimeEnd)">
+			and date_format(pay_time,'%Y-%m-%d')<![CDATA[<=]]> #{payTimeEnd}
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+			and status =#{status}
+			</if>
+			<if test="status==null or status==''">
+			and (status in (11,2))
+			</if>
+		</where>
+		order by pay_time desc
+	</select>
+	<!-- 计算已支付和已付款个数 -->
+	<select id="findNumber" resultType="Map" parameterType="com.hd.wolverine.util.ParamMap">
+		select count(0) countNum,status status from `order` where id in (${orderId}) group by status 
+	</select>
+	
+	<!-- 昨日订单数量 -->
+	
+		<select id="totalOrderNum" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer">
+		select count(1) totalMoney 
+		from `order` 
+		<where>
+				  `status` between 2 and 6
+				and date_format(eat_time,'%Y-%m-%d') = substring(date_add(now(), INTERVAL -1 day),1,10) 
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id = #{canteenId}
+			</if>
+		</where>
+		group by canteen_id
+	</select>
+	
+	
+	<!-- 在售菜品  销售额  -->
+	<select id="findBySell" resultMap="orderDTOMap">
+	select ifNull(sum(b.goods_num*b.goods_price),0) sellMoney from `order` a,order_goods_item b where a.canteen_id =#{canteenId} and a.status=2 and b.goods_id = #{goodsId} and a.id=b.canteen_order_id
+	</select>
+	<!-- 在售菜品  评价 -->
+	<select id ="findBySellMoney" resultMap="orderDTOMap">
+	select ifNull((sanitation_star+taste_star+volume_star)/3,0) grade from `order` a,order_goods_comments b where a.id=b.order_id and b.goods_id = #{goodsId}
+	</select>
+	<!-- 销售量 -->
+	<select id="findBySell1" resultMap="orderDTOMap">
+	select ifNull(sum(b.goods_num),0) sell from `order` a,order_goods_item b where a.canteen_id = #{canteenId} and a.status=2 and b.goods_id = #{goodsId} and a.id=b.canteen_order_id
+	</select>
+	
+	<!-- 退款状态修改 -->
+	<update id="updateByStatus">
+		update `order` set status=#{status} where id=#{id}
+	</update>
+	
+	<select id="findByOrderId" resultMap="orderMap">
+	select * from `order` where id =#{id}
+	</select>
+	<!-- 计算所有费用 -->
+	<select id="findByMoneyOrderId" resultMap="orderDTOMap">
+	select sum(channel_money) channelMoney,sum(real_money) realMoney,sum(cut_money) cutMoney from `order` where id in (${orderIdsStr})
+	</select>
+	
+	<!-- 根据用户id查询支付总金额 -->
+	<select id="findPeriodByUsreIdParam" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal" >
+		select sum(if(status=7 and status=1 and real_money>0, real_money*-1,real_money)) realMoney
+		from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(userId)"> user_id =#{userId}</if>
+			<if test="@Ognl@isNotEmpty(status)  and status!=0">and status =#{status}</if>
+			<if test="@Ognl@isNotEmpty(payModel) and payModel!=0">and pay_model =#{payModel}</if>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and id in
+				<foreach collection="orderIds" item="id" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+					
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(starTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTimes}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTimes}]]>
+			</if>
+		</where>
+		
+	</select>
+	<select id="findPeriodByUsreIdParam1" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal" >
+		select sum(real_money) realMoney
+		from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(userId)"> user_id =#{userId}</if>
+			<if test="@Ognl@isNotEmpty(status)  and status!=0">and status =#{status}</if>
+			<if test="@Ognl@isNotEmpty(payModel) and payModel!=0">and pay_model =#{payModel}</if>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and id in
+				<foreach collection="orderIds" item="id" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+					
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(starTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTimes}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTimes}]]>
+			</if>
+		</where>
+		
+	</select>
+	
+	<select id="findPeriodByUsreIdParam2" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal" >
+		select count(*) 
+		from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(userId)"> user_id =#{userId}</if>
+			<if test="@Ognl@isNotEmpty(status)  and status!=0">and status =#{status}</if>
+			<if test="@Ognl@isNotEmpty(payModel) and payModel!=0">and pay_model =#{payModel}</if>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and id in
+				<foreach collection="orderIds" item="id" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+					
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(starTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTimes}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTimes}]]>
+			</if>
+		</where>
+		
+	</select>
+	
+	
+	
+	<select id="findAllByParam"  parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select * from `order` 
+		<where>
+			<if test="@Ognl@isNotEmpty(userId)"> user_id =#{userId}</if>
+			<if test="@Ognl@isNotEmpty(status) and status!=0">and status =#{status}</if>
+			<if test="@Ognl@isNotEmpty(payModel) and payModel!=0">and pay_model =#{payModel}</if>
+			<if test="@Ognl@isNotEmpty(orderIds)">
+				and id in
+				<foreach collection="orderIds" item="id" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+					
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(starTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTimes}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTimes)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTimes}]]>
+			</if>
+		</where>
+	</select>
+	<select id="findListByParam" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select * 
+		from `order`
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id =#{canteenId} </if>
+		</where>
+	</select>
+	<!-- findByCanteendId -->
+	<select id="findByCanteendId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select * from `order` 
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(clientId)">and  canteen_id= #{clientId}</if>
+		</where>
+	
+	</select>
+	
+	<!-- findPageByCanteenId -->
+	<select id="findPageByCanteenId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select * from `order` 
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(canteenId)">and  canteen_id= #{canteenId}</if>
+			<if test="@Ognl@isNotEmpty(startTime)">
+				<![CDATA[ and date_format(general_ledger_date,'%Y-%m-%d') >= #{startTime}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTime)">
+				<![CDATA[ and date_format(general_ledger_date,'%Y-%m-%d') <= #{endTime}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(payModel) and payModel!=0">and pay_model =#{payModel}</if>
+			<if test="@Ognl@isNotEmpty(orderNo)">and order_no =#{orderNo}</if>
+			<if test="@Ognl@isNotEmpty(ids)"> and id in (#{ids}) </if>
+		</where>
+	</select>
+	
+	<!-- findByCanteenId -->
+	<select id="findByCanteenId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="orderMap">
+		select *
+		from
+		`order` orders 
+		left join crm_split_assign_set assignSet
+		on	orders.id = assignSet.order_id
+		<where>
+			 orders.del_flag=1
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and orders.canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" close=")" separator=",">
+					#{canteenId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(condition) and selectNum==2"> and orders.order_no like CONCAT('%',#{condition},'%')</if>
+	        <if test="@Ognl@isNotEmpty(startTime)">
+	       		 and date_format(orders.general_ledger_date,"%Y-%m-%d") <![CDATA[>=]]> #{startTime}
+	        </if>
+	        <if test="@Ognl@isNotEmpty(endTime) ">
+	       		 and date_format(orders.general_ledger_date,"%Y-%m-%d") <![CDATA[<=]]> #{endTime}
+	        </if>
+			
+		</where>
+	</select>
+	
+	<select id="statisticsOrderTotalNumAndOrderTotalMoney" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.util.Map">
+		select canteen_id as canteenId , count(id) as orderNum , ifnull(sum(order_real_money),0) as orderTotalMoney
+		from `order`
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(canteenIds)">
+				and canteen_id in
+				<foreach collection="canteenIds" item="canteenId" index="index" open="(" close=")" separator=",">
+					#{canteenId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(statusList)">
+				and status in 
+				<foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(applyMonth)">and date_format(eat_time,'%Y-%m') = date_format(#{applyMonth},'%Y-%m')</if>
+		</where>
+		group by canteen_id
+	</select>
+</mapper>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
+	<title>登录页面</title>
+	<link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="$!rc.contextPath/static/css/style.css">
+	<link rel="stylesheet" type="text/css" href="$!rc.contextPath/static/css/style2.css">
+    <script type="text/javascript">
+    //项目根路径 ,可放在公共的comm内
+    var GlobAppContextPath="$!rc.contextPath";
+    </script>
+</head>
+<body>
+	<div class="login-bg">
+		<header class="login-header">
+			<!-- 遮罩层 -->
+			<div class="shade"></div>
+			<div class="container pr" style="min-width: 1170px;">
+				<!-- logo -->
+				<div class="pull-left">
+					<a class="login-logo" href="$!rc.contextPath/login"></a>
+				</div>
+			</div>
+		</header>
+		<div class="container" style="min-width: 1170px;">
+			<section class="login-content">
+				<div class="cn-right">
+					<h4>欢迎登录筷子说CRM系统</h4>
+					<div class="error-msg"></div>
+					<form class="form">
+						<div class="form-group">
+			                <select class="form-control jurisdiction" id="roleSelect">
+			                    <option value=-1>请选择权限</option>
+			                    <option value=1>管理员</option>
+			                    <option value=2>代理商</option>
+			                    <option value=3>业务员</option>
+			                    <option value=4>业务经理</option>
+			                </select>
+			            </div>
+			            <div class="form-group pr">
+		                    <input class="form-control pl30" id="userId" name="userId" placeholder="请输入登录账号" />
+		                    <i class="fa fa-user"></i>
+			            </div>
+			            <div class="form-group pr">
+		                    <input class="form-control pl30" id="password" name="password" type="password" placeholder="请输入登录密码" />
+		                    <i class="fa fa-lock"></i>
+			            </div>
+			            <div class="form-group clearfix">
+		                    <input class="form-control pull-left verification" id="imgCode" name="imgCode" placeholder="验证码"/>
+		                	<img id="refreshImgCode" class="pull-left valid-img" src="$!rc.contextPath/nl/getVerifyCode" onclick="this.src='$!rc.contextPath/nl/getVerifyCode?t='+new Date().getTime()">
+		                	<a class="pull-left ver-info" onclick="$(this).prev().attr('src', '$!rc.contextPath/nl/getVerifyCode?t='+new Date().getTime())">看不清换一张</a>
+			            </div>
+			            <div class="form-group">
+			                <div class="checkbox">
+			                    <label>
+			                        <input id="traderLogin" name="traderLogin" type="checkbox" value="1"/>记录账号和密码
+			                    </label>
+			                </div>
+			            </div>
+		            </form>
+		            <div class="mt20">
+			             	<a class="btn btn-block btn-login" href="javascript:void(0);" onclick="login();" >登录</a>
+			            </div>
+			            <div class="clearfix mt20">
+				            <a class="pull-right" href="$!rc.contextPath/crmUser/modifyPasswordShow" target="_blank">修改密码</a>
+			            </div>
+					</div> 
+				</div>
+			</section>
+		<footer class="login-footer">
+			<p>
+				<span>Copyright © 2017 kuaizs.com Inc. 保留所有权利。浙公网安备 11010802022978号</span>
+				<span>商务合作邮箱 name@kuaizs.com</span>
+			</p>
+			<p>
+				<a href="#">帮助中心 </a>
+				<a href="#">服务支持</a>
+				<a href="#">联系我们</a>
+				<a href="#">诚聘英才</a>
+				<a href="#">意见和建议</a>
+			</p>
+			<p>
+				<b>400 117 1717</b>（周一至周日：7:00 - 24:00）
+			</p>
+		</footer>
+	</div>
+
+	<script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js?v=1$!GlobVersion"></script>
+	<script type="text/javascript" src="$!rc.contextPath/static/js/jquerycookie/jquery.cookie.js?v=1$!GlobVersion"></script>
+    <script type="text/javascript" src="$!rc.contextPath/static/js/dep/md5.js?v=1$!GlobVersion"></script>
+    <script src="$!rc.contextPath/static/js/placeholder.js?v=1$!GlobVersion"></script>
+    <script src="$!rc.contextPath/static/js/crmadmin/login/adminCrmLogin.js?v=1$!GlobAppVersion"></script>
+</body>
+</html>

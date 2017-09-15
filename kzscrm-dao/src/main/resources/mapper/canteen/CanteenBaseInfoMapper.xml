@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="canteenBaseInfoMapper">
+	<resultMap type="com.hd.kzscrm.dao.entity.canteen.CanteenBaseInfoPO" id="canteenMap">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="user_id" jdbcType="BIGINT" property="userId"/>
+		<result column="level" jdbcType="INTEGER" property="level"/>
+		<result column="canteen_no" jdbcType="VARCHAR" property="canteenNo"/>
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="canteen_category_id" jdbcType="BIGINT" property="canteenCategoryId"/>
+		<result column="contact_realname" jdbcType="VARCHAR" property="contactRealname"/>
+		<result column="contact_phone" jdbcType="VARCHAR" property="contactPhone"/>
+		<result column="weixin" jdbcType="VARCHAR" property="weixin"/>
+		<result column="position" jdbcType="VARCHAR" property="position"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="status" jdbcType="INTEGER" property="status"/>
+		<result column="area_code" jdbcType="BIGINT" property="areaCode"/>
+		<result column="creater_uid" jdbcType="INTEGER" property="createrUid"/>
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+		<result column="updater_uid" jdbcType="INTEGER" property="updaterUid"/>
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+		<result column="remark" jdbcType="VARCHAR" property="remark"/>
+		<result column="del_flag" jdbcType="INTEGER" property="delFlag"/>
+		<result column="alias_name" jdbcType="VARCHAR" property="aliasName"/>
+		<result column="nature" jdbcType="INTEGER" property="nature"/>
+		<result column="business_no" jdbcType="INTEGER" property="businessNo"/>
+	</resultMap>
+	
+	<sql id="allField">
+		id,user_id,level,canteen_no,name,canteen_category_id,contact_realname,contact_phone,weixin,position,area_code,address,status,creater_uid,create_time,updater_uid,update_time,remark,del_flag
+	</sql>
+	<sql id="oftenUser">
+	
+		user_id,level,name,weixin,position,address,contactRealname,contactPhone
+	</sql>
+	
+	<select id="findAll" resultMap="canteenMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select 
+		<include refid="allField" />
+		from canteen_base_info
+		<where>
+			del_flag= 1
+			<if test="@Ognl@isNotEmpty(id)">
+			and	id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		
+		</where>
+	</select>
+	
+	<select id="findByCanteenId" resultMap="canteenMap" parameterType="LONG">
+		select 
+		<include refid="oftenUser" />
+		from canteen_base_info
+		<where>
+			del_flag= 1
+			<if test="canteenId != null and canteenId !=''">
+				and id = #{canteenId}
+			</if>
+		
+		</where>
+	</select>
+	<!-- 查询所有的商家 【苏常松】 -->
+	<select id="findAllCantenBaseInfo" resultMap="canteenMap" >
+		select nature,alias_name,area_code,id,canteen_no,name,level,canteen_category_id,position,status,create_time,address from canteen_base_info 
+		<where>
+			<choose>
+				<when test="@Ognl@isEmpty(delFlag)">
+					(del_flag=1 or del_flag=0)
+				</when>
+				<otherwise>
+					and del_flag=#{delFlag}
+				</otherwise>
+			</choose>
+			<!-- <if test="@Ognl@isNotEmpty(areaCode)">
+				and area_code=#{areaCode}
+			</if> -->
+			<if test="@Ognl@isNotEmpty(canteenNoName)">
+				and ( canteen_no like "%"#{canteenNoName}"%" or name like "%"#{canteenNoName}"%" or alias_name like "%"#{canteenNoName}"%") 
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenCategoryId)">
+				and canteen_category_id=#{canteenCategoryId} 
+			</if>
+			<if test="@Ognl@isNotEmpty(status)">
+				and status=#{status} 
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId} 
+			</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">
+				and area_code=#{areaCode} 
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(areaCodeS)">
+				and area_code in
+				<foreach collection="areaCodeS" item="areaCode" index="index"  open="(" separator="," close=")"  >
+					#{areaCode}
+				</foreach>
+			</if>
+			
+			<if test="@Ognl@isNotEmpty(name)">
+				and (name LIKE CONCAT('%', #{name} ,'%')  or alias_name like CONCAT('%', #{name} ,'%'))
+			</if>
+			<if test="@Ognl@isNotEmpty(inIds)">
+				and id in 
+				<foreach collection="inIds" item="id" index="index"  open="(" separator="," close=")" >
+		        	#{id}      
+		        </foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(notInIds)">
+				and id not in 
+				<foreach collection="notInIds" item="id" index="index"  open="(" separator="," close=")" >
+		        	#{id}      
+		        </foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(canteenNos)">
+				and canteen_no in 
+				<foreach collection="canteenNos" item="canteenNo" index="index"  open="(" separator="," close=")" >
+		        	#{canteenNo}      
+		        </foreach>
+			</if>
+			<!-- excel yyy -->
+			<if test="@Ognl@isNotEmpty(canteenids)">
+				and id in (${canteenids})
+			</if>
+			<if test="@Ognl@isNotEmpty(nature)">
+				and nature = #{nature}
+			</if>
+		</where>
+		order by
+		<if test="@Ognl@isNotEmpty(canteenNos)">
+		 field(canteen_no,<foreach collection="canteenNos" item="canteenNo" index="index"  open="" separator="," close="" >
+		        	#{canteenNo}      
+		        </foreach>),
+		</if>
+		
+		status asc,create_time desc
+	</select>
+	<!-- 批量审核商家【苏常松】 -->
+	<update id="updateStatusShByIds" parameterType="com.hd.wolverine.util.ParamMap">
+		update canteen_base_info a,user b,canteen_ext_info c  set a.status=2,b.user_status=1,c.enter_time=now() where a.status=1 and a.user_id=b.id and a.id=c.base_info_id and a.id in 
+		<foreach collection="canteenBaseInfoIds" item="id" index="index"  open="(" separator="," close=")" >
+        	#{id}      
+        </foreach>
+	</update>
+	<!-- 批量注销商家【苏常松】 -->
+	<update id="updateStatusZxByIds"  parameterType="com.hd.wolverine.util.ParamMap">
+		update canteen_base_info set status=3 ,del_flag=0 where status=2  and id in
+		<foreach collection="canteenBaseInfoIds" item="id" index="index"  open="(" separator="," close=")" >
+        	#{id}      
+        </foreach>
+	</update>
+	<!-- 数据统计【苏常松】 -->
+	<select id="canteenCount" resultType="Map" parameterType="com.hd.wolverine.util.ParamMap">
+		select count(1) count,`status` from canteen_base_info 
+		<where>
+			<choose>
+				<when test="@Ognl@isEmpty(delFlag)"> (del_flag =1 or del_flag =0)</when>
+				<otherwise>del_flag={delFlag}</otherwise>
+			</choose>
+		</where>
+			 GROUP BY `status`
+	</select>
+	<!-- 根据name 模糊查询 -->
+	<select id="findByCanteenLike" resultMap="canteenMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id,canteen_no,name,level,canteen_category_id,position,status,create_time,address 
+		from canteen_base_info 
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(selectName)">and name like "%"#{selectName}"%"</if>
+		</where>
+	</select>
+	<select id="findAllIds" resultMap="canteenMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id,canteen_no,name,level,canteen_category_id,position,status,create_time,address 
+		from canteen_base_info 
+		<where>
+			<choose> 
+				<when test="@Ognl@isNotEmpty(delFlag)"> del_flag in (0,1)</when>
+				<otherwise>del_flag=1</otherwise>
+			</choose>
+			<if test="@Ognl@isNotEmpty(canteenName)"> and name like  "%"#{canteenName}"%"</if>
+			 <choose>
+				 <when test="@Ognl@isNotEmpty(select)and @Ognl@isNotEmpty(selectName) and select==3">
+				 and	name like "%"#{selectName}"%"
+				 </when>
+			 </choose>
+			 <if test="@Ognl@isNotEmpty(orderId)">
+			 and order_id in (${orderId}) 
+			 </if>
+		</where>
+	
+	</select>
+		<insert id="commonInsert" parameterType="com.hd.wolverine.util.ParamMap">
+		insert into canteen_base_info(id,user_id,level,canteen_no,name,canteen_category_id,contact_realname,contact_phone,weixin,position,area_code,address,status,creater_uid,create_time,updater_uid,update_time,remark,del_flag)
+		values(
+			#{id},#{userId},#{level},#{canteenNo},#{name},#{canteenCategoryId},#{contactRealname},#{contactPhone},#{weixin},#{position},#{areaCode},#{address},#{status},#{createrUid},now(),#{updaterUid},#{updateTime},#{remark},#{delFlag}
+		)
+		</insert>
+		
+		<!-- 根据id取出商家名字 -->
+		<select id="findCanteenById" resultMap="canteenMap">
+		select name from canteen_base_info
+		<where>
+			id in (#{id})
+		</where>
+		</select>
+	<!-- 根据商家名称 手机号 状态查询  状态为1是不允许商家在入驻-->
+	<select id="findByCanteenBaseInfoParam" resultMap="canteenMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select * from canteen_base_info 
+		<where>
+			del_flag =1
+			<if test="name!=null and name!=''">and name =#{name}</if>
+			<if test="@Ognl@isNotEmpty(contactPhone)">and contact_phone =#{headPhone}</if>
+			<if test="@Ognl@isNotEmpty(userId)">and user_id =#{userId}</if>
+		</where>
+		
+	</select>
+	<!-- 根据电话查询商家是否存在 -->
+	<select id="findByContactPhone" resultMap="canteenMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from canteen_base_info 
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(contactPhone)">and contact_phone =#{headPhone}</if>
+		</where>
+		
+	</select>
+	
+	<select id="findByCanteenids" resultMap="canteenMap">
+	select id,contact_phone from canteen_base_info
+	<where>
+	<if test="@Ognl@isNotEmpty(canteenids)">
+	id in (${canteenids})
+	</if>
+	<if test="@Ognl@isNotEmpty(contactPhone)">
+	and contact_phone like "%"#{contactPhone}"%"
+	</if>
+	</where> 
+	</select>
+	
+	<!-- 根据商家帐号  查 -->
+	<select id="findByName" resultMap="canteenMap">
+	select id from canteen_base_info where name like "%"#{name}"%" and del_flag = 1 
+	</select>
+</mapper>

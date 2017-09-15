@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>订单分账明细</title>
+<link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap-table.css">
+<link rel="stylesheet" href="/static/css/common.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/style2.css">
+
+<!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="second-page-header">
+  <div class="header">
+    <h2><a href="../../index.html">筷子说CRM</a></h2>
+    <h3>订单分账明细</h3>
+  </div>
+</div>
+<div id="ohistory" class="clearfix">
+  <div class="history-info">
+    <div class="history-num">
+      <h2>订单编号：</h2>
+      <span>$!orderPO.orderNo</span>
+      <button type="submit" class="btn btn-default">未支付</button>
+    </div>
+    <div class="history-peo">
+      <h2>订单信息</h2>
+      <div class="peonum"></div>
+      <div class="peoinfo">
+        <div><span>姓名：</span>$!orderPO.userName</div>
+        <div><span>联系方式：</span>$!orderPO.mobilephone</div>
+        <div><span>所在企业：</span></div>
+        <div><span>职位信息：</span>生产部/中层管理</div>
+      </div>
+    </div>
+  </div>
+  <div class="history-list">
+    <div class="hprocess"> <span class="horder">下单</span> <span class="hpay">支付</span> <span class="hevaluate">评价</span> <span class="hcomplete">完成</span> </div>
+    <div class="probar">
+      <div class="progressbar">
+        <div class="progressline"><span></span></div>
+        <span class="lineo"></span> <span class="linet"></span> <span class="lineth"></span> <span class="linef"></span> </div>
+    </div>
+    <div class="hprocess htime"> <span class="horder">$!orderPO.createTime</span> <span class="hpay">$!orderPO.payTime</span> <span class="hevaluate">$!orderPO.commentTime</span> <span class="hcomplete">$!orderPO.generalLedgerDate</span> </div>
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">用餐时间</th>
+          <th>供应类目</th>
+          <th>消费状态</th>
+          <th>订单总金额（￥）</th>
+          <th>包装费（￥）</th>
+          <th>配送费（￥）</th> 
+          <th>优惠金额（￥）</th>
+          <th>实付金额（￥）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime">$!oPO.eatTime</td>
+          <td>$!orderPO.supplyCategoryId</td>
+          <td>$!orderPO.consumeStatus</td>
+          <td>$!orderPO.totalMoney</td>
+          <td>包装费</td>
+          <td>配送费</td>
+          <td>sent_time</td>
+          <td>$!orderPO.realMoney</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">商品名称/编号 </th>
+          <th>商品金额（￥）</th>
+          <th>数量（份）</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime clearfix fimg"><div class="foodpic"><img src="/statis/images/order-img01.jpg"></div>
+            <div class="foodint"><span class="beef">土豆烧牛肉</span><span>HD100025879</span></div></td>
+          <td class="goodp">32.00</td>
+          <td class="goodn">2</td>
+          <td><a href="javascript:void(0);" class="lookp" target="_blank">查看评价</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="content-cap">
+        <span class="cap-name">分帐信息</span>
+    </div>
+    <div class="fz-date">分账时间：<span>2017-04-04 12:30</span></div>
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">食堂名称</th>
+          <th>分账比例（%）</th>
+          <th>分账金额（￥）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime">$!cAssignSetVO.name</td>
+          <td>2%</td>
+          <td>2.00</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">平台名称</th>
+          <th>分账比例（%）</th>
+          <th>分账金额（￥）</th>
+          <th>通道费（￥）</th>
+          <th>利润（￥）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime">浙江惠点信息科技有限公司</td>
+          <td>2%</td>
+          <td>2.00</td>
+          <td>2.00</td>
+          <td>2.00</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">代理商名称</th>
+          <th>分账比例（%）</th>
+          <th>分账金额（￥）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime">农家大食堂</td>
+          <td>2%</td>
+          <td>2.00</td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">业务员姓名</th>
+          <th>分账比例（%）</th>
+          <th>分账金额（￥）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime">李四</td>
+          <td>2%</td>
+          <td>2.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="/static/js/jquery/jquery-1.11.1.min.js"></script> 
+<script src="/static/js/bootstrap/bootstrap.min.js"></script> 
+<script src="/static/js/bootstrap/bootstrap-table.js"></script> 
+<script src="/static/js/bootstrap/bootstrap-table-zh-CN.js"></script> 
+<script src="/static/js/layer/layer.js"></script> 
+<script src="/static/js/cityselect/jquery.cityselect.js"></script> 
+<script src="/static/js/DatePicker/WdatePicker.js"></script>
+</body>
+</html>

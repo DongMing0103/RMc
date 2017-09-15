@@ -1,0 +1,62 @@
+{
+  "total":800,
+  "rows":[
+    {
+      "teamName":"商务一部",
+      "setupTime": "2017-12-12 12:00",
+      "managementArea": "浙江 杭州 拱墅",
+      "businessManager": "普京",
+      "teamNumber": "20",
+      "developAgent": "5",
+      "developCateen":"10",
+      "orderNumber":"130",
+      "orderMoney":"1300",
+      "operate":"操作"
+    },
+    {
+      "teamName":"商务一部",
+      "setupTime": "2017-12-12 12:00",
+      "managementArea": "浙江 杭州 拱墅",
+      "businessManager": "普京",
+      "teamNumber": "20",
+      "developAgent": "5",
+      "developCateen":"10",
+      "orderNumber":"130",
+      "orderMoney":"1300",
+      "operate":"操作"
+    },{
+      "teamName":"商务一部",
+      "setupTime": "2017-12-12 12:00",
+      "managementArea": "浙江 杭州 拱墅",
+      "businessManager": "普京",
+      "teamNumber": "20",
+      "developAgent": "5",
+      "developCateen":"10",
+      "orderNumber":"130",
+      "orderMoney":"1300",
+      "operate":"操作"
+    },{
+      "teamName":"商务一部",
+      "setupTime": "2017-12-12 12:00",
+      "managementArea": "浙江 杭州 拱墅",
+      "businessManager": "普京",
+      "teamNumber": "20",
+      "developAgent": "5",
+      "developCateen":"10",
+      "orderNumber":"130",
+      "orderMoney":"1300",
+      "operate":"操作"
+    },{
+      "teamName":"商务一部",
+      "setupTime": "2017-12-12 12:00",
+      "managementArea": "浙江 杭州 拱墅",
+      "businessManager": "普京",
+      "teamNumber": "20",
+      "developAgent": "5",
+      "developCateen":"10",
+      "orderNumber":"130",
+      "orderMoney":"1300",
+      "operate":"操作"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+        <link rel="stylesheet" href="/static/css/style.css?V1">
+        <link rel="stylesheet" href="/static/css/common.css">
+        <script src="$!rc.contextPath/static/js/system_set/teamStructure/teamStructure.js?v1"></script>
+		<script src="$!rc.contextPath/static/js/system_set/teamStructure/teamStructureFormatter.js"></script>
+        <!-- <script src="/static/js/systemOperate/addTeam/addTeam.js"></script> -->
+    </head>
+    <body>
+		<form class="form-horizontal add-team" id="from">
+			<input name="provinceCode" id="provinceCode" type="hidden" value="$!provinceCode">
+			<input name="provinceName" id="provinceName" type="hidden" value="$!provinceName">
+			<input name="teamNameUpdate" id="teamNameUpdate" type="hidden" value="$!teamNameUpdate">
+			<input name="teamId" id="teamId" type="hidden" value="$!teamId">
+			<input name="teamAreaCode" id="teamAreaCode" type="hidden" value="$!teamAreaCode">
+			<input name="id" id="id" type="hidden" value="$!id">
+			<input name="prov1" id="prov1" type="hidden" >
+			<input name="city1" id="city1" type="hidden">
+			<div class="form-group">
+			    <div class="col-sm-3 text-right">
+			        <label class="control-label">团队名称</label>
+			    </div>
+			    <div class="col-sm-4">
+			        <input class="form-control first-input" id="name" name="name" value="$!ctPO.name" placeholder="请输入团队名称" datatype="*" nullmsg="团队名称不能为空" sucmsg=" "/>
+			    </div>
+			    <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+			</div>
+	        <div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">上级主管</label>
+	            </div>
+	            <div class="col-sm-5">
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="region" id="region" onchange="teamStructure.provinceSee(1)">
+	                		<option value="">请选择区</option>
+	                		#foreach($!areaMap in $!areaMap)
+	                			<option value="$!areaMap.areaCode" #if($!areaMap.areaCode == $!areaCodeUpdate) selected="selected" #end>$!areaMap.areaName</option>
+	                		#end
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="province" id="province" onchange="teamStructure.teamSee()">
+	                		<option value="">请选择省</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback linkage-select">
+	                	<select class="form-control" name="parentId" id="parentId">
+	                		<option value="">请选择团队</option>
+	                	</select>
+	                	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="linkage-select">
+	                	<span>(如不选择，该团队视为一级团队)</span>
+	                </div>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+	      
+			<div class="form-group" id="qwe">
+                 <div class="col-sm-3 text-right">
+                     <label class="control-label" for="cuser">业务范围</label>
+                 </div>
+                 <div class="col-sm-9" id="asd">
+	                <div class="city-select" id="city">
+		                <div class="has-feedback" style="display: inline-block;">
+		                    <select class="form-control prov"  id="prov"><option value="">请选择</option><option value="86011">北京市</option><option value="86012">天津市</option><option value="86013">河北省</option><option value="86014">山西省</option><option value="86015">内蒙古自治区</option><option value="86021">辽宁省</option><option value="86022">吉林省</option><option value="86023">黑龙江省</option><option value="86031">上海市</option><option value="86032">江苏省</option><option value="86033">浙江省</option><option value="86034">安徽省</option><option value="86035">福建省</option><option value="86036">江西省</option><option value="86037">山东省</option><option value="86041">河南省</option><option value="86042">湖北省</option><option value="86043">湖南省</option><option value="86044">广东省</option><option value="86045">广西壮族自治区</option><option value="86046">海南省</option><option value="86050">重庆市</option><option value="86051">四川省</option><option value="86052">贵州省</option><option value="86053">云南省</option><option value="86054">西藏自治区</option><option value="86061">陕西省</option><option value="86062">甘肃省</option><option value="86063">青海省</option><option value="86064">宁夏回族自治区</option><option value="86065">新疆维吾尔自治区</option><option value="86071">台湾省</option><option value="86081">香港特别行政区</option><option value="86082">澳门特别行政区</option></select>
+		                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		                </div>
+		                <div class="has-feedback" style="display: inline-block;">
+		                    <select class="form-control city" id="city" disabled="disabled" style="display: none;"></select>
+		                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+		                </div>
+		                <div class="has-feedback" style="display: inline-block;">
+		                    <select class="form-control dist" name="areaCode" style="display: none;"></select>
+		                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+		                </div>
+		            </div>
+	            </div>
+            </div>
+            <div class="form-group text-center mt40">
+            	<a href="javascript:void(0);" onclick="teamStructure.addTeam()" class="btn btn-warning btn-size">确定</a>
+            </div>
+        </form>
+       
+        <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+        <script src="/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="/static/js/layer/layer.js"></script>
+        <script src="/static/js/ValidForm/Validform_v5.3.2.js"></script> 
+        <script src="/static/js/cityselect/jquery.cityselect.js"></script>
+        <script type="text/javascript">
+	        /* 地理联动 */
+			$(function(){debugger;
+// 				teamStructure.provinceSee();	
+				/* teamStructure.teamSee(); */
+				/* if('$!canteenId'==""){ */
+					$('#city').citySelect({
+				        url:"/static/js/cityselect/city.min.js",
+				        prov:"天津市", //省
+				        city:"", //市	
+				        dist:"", //区
+				        nodata:"none", //当子集无数据时，隐藏select
+				        required:false
+				    }); 
+				if('$!id'!=null && '$!id'!=""){
+					teamStructure.provinceSee();					
+					teamStructure.teamSee('$!prov');
+					/* 地理信息  */
+				    $('#city').citySelect({
+						url:"$!rc.contextPath/static/js/cityselect/city.min.js",
+						prov:"$!prov", //省份 浙江省
+						city:"$!city", //城市 杭州市
+						dist:"$!dist", //区县 拱墅区 
+						nodata:"none" //当子集无数据时，隐藏select
+		  			}); 
+				}
+// 				$(".prov").attr("disabled","disabled")
+				console.log("$!prov")
+					
+			});
+	        
+        </script>
+    </body>
+</html>
+
+

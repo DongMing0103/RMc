@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="PayCanteenCashflowMapper">
+<resultMap  id="PayCanteenCashflow"  type="com.hd.kzscrm.dao.entity.split.PayCanteenCashflowPO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="cash_flow_no" jdbcType="VARCHAR" property="cashFlowNo" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="create_time"  property="createTime"/>
+    <result column="cash_flow_type" jdbcType="INTEGER" property="cashFlowType" />
+     <result column="cash_flow_money" property="cashFlowMoney" />
+    <result column="balance" property="balance" />
+    <result column="canteen_id" jdbcType="BIGINT" property="canteenId" />
+    <result column="canteen_order_id" jdbcType="BIGINT" property="canteenOrderId" />
+    <result column="cash_flow_status" jdbcType="INTEGER" property="cashFlowStatus" />
+    <result column="user_type" property="userType" />
+    <result column="cashflow_type" property="cashflowType" />
+    <result column="pay_model" property="payModel" />
+    <result column="refund_type" property="refundType" />
+    <result column="pay_timestamp" property="payTimestamp" />
+</resultMap>
+
+   <!-- 显示的记录对应的列 -->
+<sql id="Base_Column_List">
+		payCanteenCashflow.id as id,
+		payCanteenCashflow.cash_flow_no as cashFlowNo,
+		payCanteenCashflow.user_id as userId,
+		payCanteenCashflow.create_time as createTime,
+		payCanteenCashflow.cash_flow_type as cashFlowType,
+		payCanteenCashflow.cash_flow_money as cashFlowMoney,
+		payCanteenCashflow.balance as balance,
+		payCanteenCashflow.canteen_id as canteenId,
+		payCanteenCashflow.canteen_order_id as canteenOrderId,
+		payCanteenCashflow.cash_flow_status as cashFlowStatus,
+		payCanteenCashflow.user_type as userType,
+		payCanteenCashflow.cashflow_type as cashflowType,
+		payCanteenCashflow.pay_model as payModel,
+		payCanteenCashflow.refund_type as refundType,
+		payCanteenCashflow.pay_timestamp as payTimestamp
+	</sql>
+
+	<insert id="commonInsert">
+		insert into pay_canteen_cashflow(id,cash_flow_no,user_id,create_time,cash_flow_type,cash_flow_money,balance,canteen_id,canteen_order_id,cash_flow_status,user_type,cashflow_type,pay_model,refund_type,pay_timestamp)
+		values(#{id},#{cashFlowNo},#{userId},now(),#{cashFlowType},#{cashFlowMoney},#{balance},#{canteenId},#{canteenOrderId},#{cashFlowStatus},#{userType},#{cashflowType},#{payModel},#{refundType},#{payTimestamp}) 
+	</insert>
+	
+	<!-- 根据ID根据流水表状态 -->
+	<update id="updateCashFlowStatusByIds" parameterType="com.hd.wolverine.util.ParamMap">
+		<if test="@Ognl@isNotEmpty(ids) and @Ognl@isNotEmpty(cashFlowStatus)">
+			update pay_canteen_cashflow set cash_flow_status=#{cashFlowStatus}
+			where id in  
+			<foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</update>
+	
+	<!-- 查詢全部 --> 
+   <select id="findAllSupply" parameterType="com.hd.wolverine.util.ParamMap" resultMap="PayCanteenCashflow">
+ 		SELECT 
+ 		id,cash_flow_no,cash_flow_type,create_time,cash_flow_money,balance,cash_flow_status,user_type,cashflow_type,refund_type,pay_model,pay_timestamp	from pay_canteen_cashflow 
+ 		<where> 	 
+ 			<if test="@Ognl@isNotEmpty(id)">
+				id = #{id}
+			</if>
+			 <if test="ids!=null and ids !=''"> 
+				and id in 
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+ 			<if test="canteenId != null and canteenId ">
+				and canteen_id = #{canteenId}
+			</if>
+			<if test="month==1">
+				<![CDATA[ and DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(create_time)]]>
+			</if>
+			<if test="week==2">
+				<![CDATA[ and DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(create_time)]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(starTime)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTime}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTime)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTime}]]>
+			</if>
+			order by create_time desc 
+		</where>
+	</select> 
+	
+	<!-- 查询Id -->
+	<select id="findById" resultMap="PayCanteenCashflow" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from pay_canteen_cashflow
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id =#{id}</if>
+		</where>
+		
+	</select>
+	
+	<!-- 根据时间短查询金额 -->
+	<select id="findPeriodTime" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.math.BigDecimal">
+		select SUM(cash_flow_money) as cashFlowMoney from pay_canteen_cashflow
+		<where>
+			<if test="@Ognl@isNotEmpty(starTime)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') >= #{starTime}]]>
+			</if>
+			<if test="@Ognl@isNotEmpty(endTime)">
+				<![CDATA[ and date_format(create_time,'%Y-%m-%d') <= #{endTime}]]>
+			</if>
+			<if test="canteenId != null and canteenId ">
+				and canteen_id = #{canteenId}
+			</if>
+			</where>
+	</select>
+	
+	<select id="queryOrderCashFlowNo" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.String">
+		select cash_flow_no
+		from pay_canteen_cashflow
+		<where>
+		<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+		<if test="@Ognl@isNotEmpty(canteenOrderId)">and canteen_order_id = #{canteenOrderId}</if>
+		</where>
+		order by id asc limit 1
+	</select>
+	<!-- findByOrderId -->
+	<select id="findByOrderId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="PayCanteenCashflow">
+		select * from pay_canteen_cashflow
+		<where>
+			<if test="@Ognl@isNotEmpty(orderId)">and canteen_order_id=#{orderId}</if>
+		</where>
+	
+	</select>
+	
+	
+</mapper> 

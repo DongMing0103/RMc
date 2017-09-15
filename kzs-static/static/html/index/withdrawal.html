@@ -1,0 +1,66 @@
+<div class="m-content">
+    <div class="row">
+        <form class="form-inline" id="searchForm">
+            <input type="hidden" name="month" value="">
+            <input type="hidden" name="week" value="">
+            <div class="col-xs-12">
+                <div class="l-tit"><span>提现</span></div>
+                <div class="bill clearfix">
+                    <div class="bill-money"> <span class="money" id="">￥0</span><span>分账金额</span> </div>
+                    <div class="bill-money"> <span class="money" id="">￥0</span><span>已提现金额</span> </div>
+                    <div class="bill-money"> <span class="money" id="">￥0</span><span>总分账金额</span> </div>
+                    <div class="bill-con">
+                        <div class="bill-kj">
+                            <button type="button" class="btn-bill btn-green billcash" onclick="withdrawals()">提现</button>
+                        </div>
+                        <div class="bill-card"><em>已绑定银行卡：</em>中国农业银行（尾号7532）</a>
+                            <span class="ts">（提现过程中产生的手续费将从提现金额中由银行直接扣除，<br>到账时间以银行规定为准）</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">提现记录</label>
+                </div>
+                <table data-classes="table table-hover table-bill tabledown"
+                       id="table"
+                       data-toggle="table"
+                       data-url="../static/json/4.json"
+                       data-pagination="true"
+                       data-pagination-v-align="both"
+                       data-side-pagination="server"
+                       data-cache="false"
+                       data-query-params="queryParams"
+                       data-page-size=20
+                       data-page-list="[10,20,50]">
+                    <thead>
+                    <tr>
+                        <th data-field="a" data-align="center">提现编号</th>
+                        <th data-field="b" data-align="center">流水号</th>
+                        <th data-field="c" data-align="center">提现时间</th>
+                        <th data-field="d" data-align="center">提现金额（￥）</th>
+                        <th data-field="e" data-align="center">收款银行</th>
+                        <th data-field="f" data-align="center">银行卡尾号</th>
+                        <th data-field="g" data-align="center" data-formatter="operationFormatter">状态</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    $(function() {
+        $('#table').bootstrapTable();
+    });
+    /* 状态 */
+    function operationFormatter(value,row,index) {
+
+        var a = "";
+        if(value == 1) {
+            var a = '<span style="color:#2cae72">成功</span>';
+        }else if(value == 2){
+            var a = '<span style="color:#2cae72">失败</span>';
+        }
+        return a;
+    }
+</script>

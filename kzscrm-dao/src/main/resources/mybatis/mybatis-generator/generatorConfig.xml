@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+		PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<!--<plugin type="org.mybatis.generator.plugins.QueryListPlugin"></plugin>-->
+	<!-- 数据库驱动 -->
+	<context id="DB2Tables" targetRuntime="MyBatis3" defaultModelType="flat" >
+		<property name="queryParameterType" value="com.hd.wolverine.util.ParamMap"/>
+		<plugin type="org.mybatis.generator.plugins.MysqlPaginationPlugin"></plugin>
+
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+			<property name="javaFileEncoding" value="UTF-8" />
+		</commentGenerator>
+		<!--数据库链接URL，用户名、密码 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://172.30.0.61:3306/dev_qzs3"
+						userId="qzs_dev"
+			password="qzs_2w9i5rc4en">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.hd.qzs.dao.entity.cms"
+			targetProject="src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- 生成映射文件的包名和位置 -->
+		<sqlMapGenerator targetPackage=""
+			targetProject="src/main/resources/mapper/cms">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- 生成DAO的包名和位置 <javaClientGenerator type="XMLMAPPER" targetPackage="test.dao" 
+			targetProject="src"> <property name="enableSubPackages" value="true"/> </javaClientGenerator> -->
+		<!-- 要生成哪些表 -->
+		<!--<table tableName="base_area" domainObjectName="BaseAreaPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="base_datadictionary" domainObjectName="BaseDatadictionaryPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_activist" domainObjectName="JzxActivistPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_advisory" domainObjectName="JzxAdvisoryPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_article" domainObjectName="JzxArticlePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_bestla_detail" domainObjectName="JzxBestlaDetailPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_bestla_service" domainObjectName="JzxBestlaServicePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_case" domainObjectName="JzxCasePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_case_desc" domainObjectName="JzxCaseDescPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_case_detail" domainObjectName="JzxCaseDetailPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_category" domainObjectName="JzxCategoryPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_company" domainObjectName="JzxCompanyPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_company_lic" domainObjectName="JzxCompanyLicPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_company_member" domainObjectName="JzxCompanyMemberPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_company_serviced" domainObjectName="JzxCompanyServicedPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_company_user" domainObjectName="JzxCompanyUserPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_demand" domainObjectName="JzxDemandPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_demand_cate" domainObjectName="JzxDemandCatePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_index_banner" domainObjectName="JzxIndexBannerPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_industry" domainObjectName="JzxIndustryPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_industry_diy" domainObjectName="JzxIndustryDiyPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_order_evaluation" domainObjectName="JzxOrderEvaluationPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_project" domainObjectName="JzxProjectPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_service" domainObjectName="JzxServicePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_service_area" domainObjectName="JzxServiceAreaPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_service_cate" domainObjectName="JzxServiceCatePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="jzx_service_desc" domainObjectName="JzxServiceDescPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="perm_account" domainObjectName="PermAccountPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="perm_menu" domainObjectName="PermMenuPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="perm_role" domainObjectName="PermRolePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="perm_role_menu" domainObjectName="PermRoleMenuPO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="perm_user_role" domainObjectName="PermUserRolePO" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />-->
+		<!--<table tableName="cms_art"-->
+			   <!--domainObjectName="CmsArtPO"-->
+			   <!--enableUpdateByExample="false"-->
+
+		<!--/>-->
+
+		<!--<table tableName="qzs_tags_linkdata"-->
+			   <!--domainObjectName="QzsAdsBannerPO"-->
+			   <!--enableUpdateByExample="false"-->
+
+		<!--/>-->
+		<table tableName="cms_art_counter"
+			   domainObjectName="CmsArtCounterPO"
+			   enableUpdateByExample="false"
+
+		/>
+		<!--<table tableName="qzs_ads_postion"-->
+			   <!--domainObjectName="QzsAdsPostionPO"-->
+			   <!--enableUpdateByExample="false"-->
+
+		<!--/>-->
+	</context>
+
+
+
+</generatorConfiguration>

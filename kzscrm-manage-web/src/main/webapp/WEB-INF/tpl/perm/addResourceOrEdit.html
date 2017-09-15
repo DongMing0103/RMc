@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/js/FlexBox/css/jquery.flexbox.css" />
+        
+        
+        <script src="$!rc.contextPath/static/js/dep/jquery-1.12.0.min.js"></script>
+        <script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+        <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+        <script src="$!rc.contextPath/static/js/dep/ValidForm/Validform_v5.3.2.js"></script>
+        <script src="$!rc.contextPath/static/js/FlexBox/js/jquery.flexbox.js"></script>
+        <script src="$!rc.contextPath/static/js/common.js"></script>
+        
+        <script src="$!rc.contextPath/static/js/perm/addResourceOrEdit/addResourceOrEdit.js"></script>
+        
+        
+    </head>
+	<body>
+		<form class="form-horizontal add-resource p50" id="form" name="form" method="post">
+		<input type="hidden" name="sourcesId" id="sourcesId" value="$!sourcesId">
+	        
+			<div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">一级菜单</label>
+	            </div>
+	            <div class="col-sm-5 has-feedback">
+	                <select class="form-control" id="parentId" onchange="addResourceOrEdit.getSecondMenu(this)" datatype="*" nullmsg="一级菜单不能为空" sucmsg=" ">
+	                    <option value="">--请选择一级菜单--</option>
+	                    #foreach($!crmPermMenuVO in $!crmPermMenuVOs)
+	                    	#if($!crmPermMenuVO.parentId==0)
+	                    		<option value="$!crmPermMenuVO.id">$!crmPermMenuVO.name</option>
+	                    	#end
+	                    #end
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            </div>
+	            <div class="col-sm-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+	        </div>
+			<div class="form-group">
+	            <div class="col-sm-3 text-right">
+	                <label class="control-label">二级菜单</label>
+	            </div>
+	            <div class="col-sm-5 has-feedback">
+	                <select class="form-control" id="nameSecond" name="menuId" onchange="addResourceOrEdit.getSources()" datatype="*" nullmsg="二级菜单不能为空" sucmsg=" ">
+	                    <option value="">--请选择二级菜单--</option>
+	                </select>
+	                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            </div>
+	            
+	        </div>
+	        <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">按钮名称</label>
+                </div>
+                <div class="col-sm-5">
+                    <input class="form-control" placeholder="" name="sourcesName" value="$!permMenuPO.sourcesName"  datatype="*" nullmsg="按钮名称不能为空" sucmsg=" ">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">按钮控制名称</label>
+                </div>
+                <div class="col-sm-5">
+                    <input class="form-control" placeholder="" name="frontContrlName" value="$!permMenuPO.frontContrlName"  datatype="*" nullmsg="按钮控制名称不能为空" sucmsg=" ">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">资源路径</label>
+                </div>
+                <div class="col-sm-5">
+                    <input class="form-control" placeholder="" name="sourcesUrls" value="$!permMenuPO.sourcesUrls"  datatype="*" nullmsg="资源路径不能为空" sucmsg=" ">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="text-center mt50">
+                   <a id="sourceBtn" class="btn btn-warning width-auto role_addSource save crmPermAddSave">
+	        		<span class="glyphicon glyphicon-plus"></span>新增按钮
+	        	</a>
+            </div>
+            
+		</form>
+        <script type="text/javascript">
+        	var menus=new Array();
+        	#foreach($!crmPermMenuVO in $!crmPermMenuVOs)
+        		var menu={};
+        		menu['id']='$!crmPermMenuVO.id';
+        		menu['parentId']='$!crmPermMenuVO.parentId';
+        		menu['name']='$!crmPermMenuVO.name';
+        		menus.push(menu);
+        	#end
+        	//对ParentId升序
+        	menus.sort(function(a,b){return parseInt(a.parentId)-parseInt(b.parentId)});
+        	
+       		var oneMenu={};//一级菜单
+       		var twoMenu={};//二级菜单
+       		//整理1级和二级菜单
+       		$.each(menus,function(index,menu){
+   				var option="<option value='"+menu.id+"'>"+menu.name+"</option>";
+       			if(menu.parentId==0){
+       				oneMenu[menu.id]=option;
+       			}else{
+       				//如果为空，则赋值一个数组，否则添加元素
+       				var twoArray=twoMenu[menu.parentId];
+       				if(!!!twoArray){
+       					twoMenu[menu.parentId]=twoArray=new Array();
+       				}
+       				twoArray.push(option);
+       			}
+       		});
+       		
+    	   	
+    	   	
+    	   	var validForm=$('#form').Validform({
+               btnSubmit:".save",
+               tiptype:2,
+               datatype:{
+                   "zh2-10":/^([\u4E00-\u9FA5]|(([A-Za-z]+\s?)*[A-Za-z])){2,10}$/,
+                   "n11":/^(13\d|14[57]|15[^4,\D]|17[678]|18\d)\d{8}|170[059]\d{7}$/,
+                   "n15-18":/^\d{15}|(\d{17}([0-9]|X))$/,
+                   "n9":/^1[45][0-9]{7}|([P|p|S|s]\d{7})|([S|s|G|g]\d{8})|([Gg|Tt|Ss|Ll|Qq|Dd|Aa|Ff]\d{8})|([H|h|M|m]\d{8，10})$/
+               },
+               postonce:true,
+               ignoreHidden: true,
+               ajaxPost:true,
+               beforeCheck:function(curform){
+            	   validForm.config({
+	           			showAllError:true,
+	           			url:"$!rc.contextPath/crmpermsources/doSave",
+	           			ajaxpost:{
+	           				data:JSON.stringify($('#form').serializeJson()),
+	           				contentType:'application/json;charset=UTF-8;'
+	           			}
+           			});
+            	  return true; 
+               },
+               callback:function(data){
+                   if(data && data.code==0){
+                       //$('.save').prev().css('display','block');
+                       parent.$("table").bootstrapTable('refresh');
+                       parent.layer.closeAll();
+                       parent.layer.msg(data.desc);
+                   }else{
+                       layer.msg(data.desc);
+                       //$('.save').prev().css('display','none');
+                   }
+               }
+           	});
+    		
+        </script>
+	</body>
+</html>
+
+
+
+
+

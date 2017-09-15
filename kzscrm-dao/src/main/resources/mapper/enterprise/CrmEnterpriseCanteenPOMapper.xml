@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmEnterpriseCanteenPOMapper">
+	<!-- 表中列对应PO -->
+	<resultMap type="com.hd.kzscrm.dao.entity.enterprise.CrmEnterpriseCanteenPO"
+	id="BaseResultMap">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="enterprise_id" property="enterpriseId" />
+		<result column="canteen_id" property="canteenId" />
+		<result column="del_flag"  property="delFlag" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id as id,
+		enterprise_id as enterpriseId,
+		canteen_id as canteenId,
+		del_flag as delFlag
+	</sql>
+	
+	<update id="deleteById" parameterType="java.lang.Long">
+		update crm_enterprise_canteen set del_flag=0 where id=#{id}
+	</update>
+	 <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_enterprise_canteen crmEnterpriseCanteen
+    </sql>
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="@Ognl@isNotEmpty(id)">and crmEnterpriseCanteen.id=#{id}</if>
+                                      <if test="@Ognl@isNotEmpty(enterpriseId)">and crmEnterpriseCanteen.enterprise_id=#{enterpriseId}</if>
+                                      <if test="@Ognl@isNotEmpty(canteenId)">and crmEnterpriseCanteen.canteen_id=#{canteenId}</if>
+                  </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+    
+      <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM   <include refid="querySqlMain"/>
+		<where>
+			del_flag =1
+			<include refid="queryOptions"/>
+		</where>
+		<include refid="orderControl"/>       
+    </select>
+    
+      <!-- 非分页查询对应的记录 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM   crm_enterprise_canteen
+		<where>
+			<choose>
+				<when test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</when>
+				<otherwise>and del_flag=1</otherwise>
+			</choose>
+			<if test="@Ognl@isNotEmpty(id)">and id=#{id}</if>
+	         <if test="@Ognl@isNotEmpty(enterpriseId)">and enterprise_id=#{enterpriseId}</if>
+	         <if test="@Ognl@isNotEmpty(canteenId)">and canteen_id=#{canteenId}</if>
+		</where>
+    </select>
+    
+    <!-- 根据参数查询企业商家映射信息 -->
+    <select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+    	select id,enterprise_id,canteen_id
+    	from crm_enterprise_canteen
+    	<where>
+    		<if test="@Ognl@isNotEmpty(id)">and id=#{id}</if>
+	        <if test="@Ognl@isNotEmpty(enterpriseId)">and enterprise_id=#{enterpriseId}</if>
+	        <if test="@Ognl@isNotEmpty(canteenId)">and canteen_id=#{canteenId}</if>
+	        <if test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</if>
+    	</where>
+    </select>
+</mapper>

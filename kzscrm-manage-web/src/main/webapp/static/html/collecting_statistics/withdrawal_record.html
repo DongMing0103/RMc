@@ -1,0 +1,118 @@
+<!--提现记录-->
+<div class="main-content withdrawal-record">
+    <div class="content-cap">
+        <span class="cap-name">提现记录</span>
+    </div>
+    <ul class="nav nav-tabs nav-self">
+        <li><span>提现状态</span></li>
+        <li class="active"><a href="#all" data-toggle="tab" onclick="" aria-expanded="true">全部（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#effective" data-toggle="tab" onclick="" aria-expanded="false">审核中（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#failure" data-toggle="tab" onclick="" aria-expanded="false">成功（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#failure" data-toggle="tab" onclick="" aria-expanded="false">失败（0）</a></li>
+    </ul>
+    <div class="form-box">
+    	<form class="form-inline" id="form">
+	        <div class="form-group">
+	            <label class="control-label">分账时间</label>
+	            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	            <input type="hidden" value="2" name="leixing">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">提现角色</label>
+		        <div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="status">
+		                <option value="">请选择</option>
+		                <option>代理商</option>
+		                <option>业务员</option>
+		                <option>平台</option>
+		                <option>商家</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+		    </div>
+	        <div class="form-group">
+	        	<div class="has-feedback" style="display: inline-block;">
+		        	<select class="form-control selectarrow" name="status">
+		                <option value="">请选择搜索条件</option>
+		                <option>代理商</option>
+		                <option>食堂</option>
+		                <option>业务员</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	            <input class="form-control" name="" id="" placeholder="请输入文字">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+	        </div>
+	    </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="$!rc.contextPath/myBill/queryPage"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="withdrawalsFlowNo" data-align="center">提现编号</th>
+            <th data-field="b" data-align="center">流水号</th>
+            <th data-field="operationTime" data-align="center">提现时间</th>
+            <th data-field="d" data-align="center">提现角色</th>
+            <th data-field="e" data-align="center">名称</th>
+            <th data-field="status" data-align="center">提现状态</th>
+            <th data-field="initialMoney" data-align="center">提现金额（￥）</th>
+            <th data-field="h" data-align="center">账户余额（￥）</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+    
+	function commit(){
+		query();
+	}
+	
+	//根据条件查询
+	function query(url){
+		var _url=$('#table').attr("data-url");
+		if(url==null){
+			url=_url;
+		}
+		
+		$('#table').bootstrapTable('removeAll'); 
+		$('#table').bootstrapTable('refresh', {
+			url : url
+		}, {
+			params : $('#form').serialize()
+		});
+	}
+	
+	/*表格分页*/
+	function queryParams(params) {
+		return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+	}
+</script>
+

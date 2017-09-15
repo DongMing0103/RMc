@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>新增业务员</title>
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../../css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/style2.css">
+</head>
+<body>
+<form class="form-horizontal add-merchants" id="form" name="form" enctype="multipart/form-data" action="$!rc.contextPath/canteenBaseInfoSystem/saveOrUpdate" method="post">
+    <input type="hidden" name="id" value="$!canteenId" />
+    <div class="form-group">
+        <div class="col-sm-3 text-right">
+            <label class="control-label" for="cname">姓名</label>
+        </div>
+        <div class="col-sm-5">
+            <input class="form-control" name="canteenName" placeholder="请输入姓名" value="" datatype="*" nullmsg="姓名不能为空" sucmsg=" "/>
+        </div>
+        <div class="col-sm-3">
+            <div class="Validform_checktip"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3 text-right">
+            <label class="control-label" for="ctype">所属团队</label>
+        </div>
+        <div class="col-sm-5 has-feedback">
+            <select class="form-control selectarrow" name="canteenCategoryId" datatype="*" nullmsg="所属团队不能为空" sucmsg=" ">
+                <option selected="selected" value="">请选择</option>
+                <option>商务一部</option>
+                <option>商务二部</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="col-sm-3">
+            <div class="Validform_checktip"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3 text-right">
+            <label class="control-label" for="ctel">身份证号码</label>
+        </div>
+        <div class="col-sm-5">
+            <input class="form-control" name="headIdcard" placeholder="请输入身份证号码" value="" datatype="n15-18" nullmsg="身份证号不能为空" errormsg="身份证号格式不正确" sucmsg=" "/>
+        </div>
+        <div class="col-sm-3">
+            <div class="Validform_checktip"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3 text-right">
+            <label class="control-label" for="cpho">联系电话</label>
+        </div>
+        <div class="col-sm-5">
+            <input class="form-control" name="contactPhone" placeholder="请输入联系电话" value="" datatype="nd" nullmsg="手机号码不能为空" errormsg="手机号码格式不正确" sucmsg=" ">
+        </div>
+        <div class="col-sm-3">
+            <div class="Validform_checktip"></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-3 text-right">
+            <label class="control-label" for="cpho">微信号</label>
+        </div>
+        <div class="col-sm-5">
+            <input class="form-control" name="weixin" placeholder="请输入微信号" value=""/>
+        </div>
+        <div class="col-sm-3">
+            <div class="Validform_checktip"></div>
+        </div>
+    </div>
+    <div class="text-center mt30 pr">
+        <div class="shade-save"></div>
+        <a class="btn btn-warning save" href="javascript:void(0);">确定</a>
+    </div>
+</form>
+
+<script src="../../js/jQuery/jquery-1.11.1.min.js"></script>
+<script src="../../js/bootstrap/bootstrap.min.js"></script>
+<script src="../../js/layer/layer.js"></script>
+<script src="../../js/ValidForm/Validform_v5.3.2.js"></script>
+<script type="text/javascript">
+    /* 表单验证 */
+    $('.save').click(function() {
+        if ($('.Validform_checktip').hasClass('.Validform_wrong')) {
+            $(this).prev().css('display', 'block');
+        }
+    });
+    var validForm = $('.form-horizontal').Validform({
+        btnSubmit : ".save",
+        tiptype : 2,
+        datatype : {
+            "zh2-10" : /^[\u4E00-\u9FA5\uf900-\ufa2d]{2,10}$/,
+            "zn" : /^[\u4E00-\u9FA50-9]+$/,
+            "n11" : /^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|17[3|7]|18[0|1|2|3|5|6|7|8|9])\d{8}$/,
+            "dn11" : /^\d{3}-\d{8}|\d{4}-\d{7}$/,
+            "nd":/^[0-9-]{8,}$/,
+            "wn" : /^[a-zA-Z\d_]{5,}$/,
+            "n15-18":/^(\d{15}$|^\d{18}$|^\d{17}(\d|X|x))$/
+        },
+        postonce : true,
+        ajaxPost : true,
+        beforeCheck:function(){
+            var prov=$('.prov').val(),
+                city=$('.city').val(),
+                dist=$('.dist').val(),
+                textarea=$('textarea').val(),
+                showInfo=$('.geography .Validform_checktip');
+            if(prov != '' && city != ''  && city != null && dist != '' && dist != null && textarea != ''){
+                showInfo.addClass('Validform_right');
+            }else if(prov == '' && city == null && dist == null && textarea == ''){
+                showInfo.addClass('Validform_wrong');
+                showInfo.text('地理信息不能为空');
+            }else{
+                showInfo.text('地理信息不完善');
+            }
+        },
+        callback : function(data) {
+            if (data.code == 0) {
+                $('.save').prev().css('display', 'none');
+                parent.$("table").bootstrapTable('refresh');
+                parent.layer.closeAll();
+                parent.layer.msg("保存成功!");
+            } else {
+                layer.msg(data.desc);
+                $('.save').prev().css('display', 'none');
+            }
+        }
+    });
+    var postData=$("#from").serialize();
+    validForm.config({
+        showAllError:true,
+        url:"$!rc.contextPath/canteenBaseInfoSystem/saveOrUpdate",
+        ajaxPost:{
+            data:postData
+        }
+    });
+
+</script>
+</body>
+</html>
+
+
+
+
+

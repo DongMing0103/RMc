@@ -1,0 +1,35 @@
+<toolbox>
+    <!--枚举-->
+    <tool>
+        <key>jdtCommonEnum</key>
+        <scope>application</scope>
+        <class>org.apache.velocity.tools.generic.FieldTool</class>
+        <!--多个枚举类的场合value用逗号分隔-->
+        <parameter name="include" value="com.hd.qzs.common.enums.ShopStatusTypeEnum
+                                    	,com.hd.qzs.common.enums.ShopTemplateStatusEnum
+                                        ,com.hd.qzs.common.enums.BillContactStatusEnum
+                                        ,com.hd.qzs.common.enums.TagsStatusEnum 
+                                    	,com.hd.qzs.common.enums.ProductStatusTypeEnum
+                                    	,com.hd.qzs.common.enums.IndustryStatusEnum
+                                    	,com.hd.qzs.common.enums.SiteConstEnum
+                                    	,com.hd.qzs.common.enums.StatusEnum"
+                                        />
+    </tool>
+    <tool>
+        <key>dateTool</key>
+  		<scope>application</scope>
+   		<class>org.apache.velocity.tools.generic.DateTool</class>
+    </tool>
+   	<tool>  
+        <key>numberTool</key>  
+        <scope>application</scope>  
+        <class>org.apache.velocity.tools.generic.NumberTool</class>  
+    </tool>
+    <!-- 自定义工具 -->
+    <tool>  
+        <key>customTools</key>  
+        <scope>application</scope>  
+        <class>com.hd.qzs.manage.common.util.VelocityCustomerTools</class>  
+    </tool>
+     
+</toolbox>

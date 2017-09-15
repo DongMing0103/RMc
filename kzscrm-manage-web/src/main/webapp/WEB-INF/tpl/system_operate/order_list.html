@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>订单列表</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header fashionable-detail" style="padding-left: 50px;">
+	    	<h2><a href="../../index.html">筷子说CRM</a></h2>
+		    <h3>订单列表</h3>
+	    
+    </div>
+    <div class="second-page-bg">
+        <div class="second-page-body">
+            <div class="form-box">
+                <form class="form-inline" id="form">
+                	<input type="hidden" name="canteenId" value="$!canteenId">
+                    <div class="form-group">
+                        <label class="control-label">下单时间</label>
+                        <input class="Wdate input-date" id="d4311" name="createTimeStart" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+			            &nbsp;至&nbsp;
+			            <input class="Wdate input-date" id="d4312" name="createTimeEnd" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">订单状态</label>
+                        <div class="has-feedback" style="display: inline-block;">
+	                        <select class="form-control" name="status">
+	                            <option value="">请选择</option>
+	                            <option value="1">未支付</option>
+	                            <option value="2">已支付</option>
+	                            <option value="9">待取餐</option>
+	                            <option value="8">待评价</option>
+	                            <option value="5">已完成</option>
+	                            <option value="7">已取消</option>
+	                        </select>	 
+	                        <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>                      
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">订单查询</label>
+                        <input class="form-control" placeholder="请输入订单编号" name="orderNoLike">
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-default" href="javascript:void(0);"  onclick="query();">
+                            <i class="fa fa-search"></i>搜索
+                        </a>
+                        <a class="btn btn-default" href="javascript:void(0);" onclick="resetBtn();">重置</a>
+                    </div>
+                </form>
+            </div>
+            <table
+                id="table"
+                data-classes="table table-public tabledown"
+                data-toggle="table"
+                data-url="$!rc.contextPath/crmOrder/orderListDetails"
+                data-pagination="true"
+                data-pagination-v-align="both"
+                data-side-pagination="server"
+		        data-cache="false"
+		        data-query-params="queryParams"
+                data-page-size="20"
+                data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th data-field="cashFlowNo" data-align="center">流水号</th>
+                    <th data-field="orderNo" data-align="center">订单编号</th>
+                    <th data-field="userMobilephone" data-align="center">用户账号</th>
+                    <th data-field="orderRealMoney" data-align="center">金额（￥）</th>
+                    <th data-field="payModel" data-align="center" data-formatter="payModelFormatter">支付方式</th>
+                    <th data-field="payTime" data-align="center" data-formatter="dateFormatter">支付时间</th>
+                    <th data-field="realMoney"  data-align="center">商家金额（￥）</th>
+                    <th data-field="cutMoney"  data-align="center">抽成金额（￥）</th>
+                    <th data-field="channelMoney"  data-align="center">通道费（￥）</th>
+                    <th data-field="status"  data-align="center" data-formatter="statusFormatter">状态</th>
+                    <th data-field="operate" data-align="center" data-formatter="operateFormatter">操作</th>
+                </tr>
+                </thead>
+            </table>
+            <div class="mt10">
+                <a class="btn btn-warning" href="javascript:void(0);" onclick="tabledown('$!rc.contextPath/crmOrder/orderListDetailsExcelOut?Ids=')">
+                    <i class="fa fa-cloud-download"></i>导出
+                </a>
+            </div>
+        </div>
+    </div>
+                                     
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    <script type="text/javascript" src="$!rc.contextPath/static/js/order/order_list.js"></script>
+    <script type="text/javascript">
+	    $(function(){
+	        $('#table').bootstrapTable();
+	    });
+        /*操作*/
+        function operateFormatter(value, row, index) {
+            return [
+                '<a href=$!rc.contextPath/crmOrder/orderDetails?orderId='+row.id+' target="_blank">查看</a>'
+            ].join('');
+        }
+    </script>
+</body>
+</html>
+

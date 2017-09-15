@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>订单详情</title>
+<link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+<link rel="stylesheet" href="/static/css/bootstrap/bootstrap-table.css">
+<link rel="stylesheet" href="/static/css/common.css">
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="/static/css/style2.css">
+<style>
+	.progressline span{
+		animation: gradual 1s linear;
+		-webkit-animation: gradual 1s linear;
+	}
+	@keyframes gradual{
+		0%{
+			width: 0;
+		},
+		100%{
+			width: 100%;
+		}
+	}
+	@-webkit-keyframes gradual{
+		0%{
+			width: 0;
+		},
+		100%{
+			width: 100%;
+		}
+	}
+	/* .table-history td:first-child{
+		width: 500px;
+	} */
+</style>
+<!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="second-page-header">
+  <div class="header">
+    <h2><a href="../../index.html">筷子说CRM</a></h2>
+    <h3>订单详情</h3>
+  </div>
+</div>
+<div id="ohistory" class="clearfix">
+  <div class="history-info">
+    <div class="history-num">
+      <h2>订单编号：</h2>
+      <span>$!orderDTO.orderNo</span>
+      <button type="submit" class="btn btn-default">$!orderDTO.statusName</button>
+    </div>
+    <div class="history-peo">
+      <h2>订单信息</h2>
+      <div class="peonum">$!enterpriseEmployeesLinkDTO.userNo</div>
+      <div class="peoinfo">
+        <div><span>姓名：</span>$!enterpriseEmployeesLinkDTO.realName</div>
+        <div><span>联系方式：</span>$!enterpriseEmployeesLinkDTO.mobilephone</div>
+        <div><span>所在企业：</span>$!enterpriseEmployeesLinkDTO.enterpriseName</div>
+        <div><span>职位信息：</span>$!enterpriseEmployeesLinkDTO.departmentName/$!enterpriseEmployeesLinkDTO.positionName</div>
+      </div>
+    </div>
+  </div>
+  <div class="history-list">
+    <div class="hprocess"> <span class="horder">下单</span> <span class="hpay">支付</span> <span class="hevaluate">评价</span> <span class="hcomplete">完成</span> </div>
+    <div class="probar">
+      <div class="progressbar">
+        <div class="progressline"><span></span></div>
+        <span class="lineo"></span> <span class="linet"></span> <span class="lineth"></span> <span class="linef"></span> </div>
+    </div>
+    <div class="hprocess htime"> <span class="horder">$!dateTool.format('yyyy-MM-dd hh:mm:ss',$!orderDTO.createTime)</span> <span class="hpay">$!dateTool.format('yyyy-MM-dd hh:mm:ss',$!orderDTO.payTime)</span> <span class="hevaluate">$!dateTool.format('yyyy-MM-dd hh:mm:ss',$!orderDTO.commentTime)</span> <span class="hcomplete">$!dateTool.format('yyyy-MM-dd hh:mm:ss',$!orderDTO.endTime)</span> </div>
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">用餐时间</th>
+          <th>供应类目</th>
+          <th>消费状态</th>
+          <th>订单总金额（￥）</th>
+          <th>优惠金额（￥）</th>
+          <th>实付金额（￥）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="foodtime">$!dateTool.format('yyyy-MM-dd',$!orderDTO.eatTime)</td>
+          <td>$!orderDTO.supplyCategoryName</td>
+          <td>$!orderDTO.consumeStatusName</td>
+          <td>$!orderDTO.orderRealMoney</td>
+          <td>0.00</td>
+          <td>$!orderDTO.orderRealMoney</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="table table-history">
+      <thead>
+        <tr>
+          <th class="foodtime">商品名称/编号 </th>
+          <th>商品金额（￥）</th>
+          <th>数量（份）</th>
+        </tr>
+      </thead>
+      <tbody>
+      	#foreach($!orderGoodsItemDTO in $!orderGoodsItemDTOs)
+        <tr>
+          <td class="foodtime clearfix fimg"><div class="foodpic"><img src="$!orderGoodsItemDTO.goodsImg"></div>
+            <div class="foodint"><span class="beef">$!orderGoodsItemDTO.goodsName</span><span>$!orderGoodsItemDTO.goodsNo</span></div></td>
+          <td class="goodp">$!orderGoodsItemDTO.goodsPrice</td>
+          <td class="goodn">$!orderGoodsItemDTO.goodsNum</td>
+        </tr>
+        #end
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="/static/js/jquery/jquery-1.11.1.min.js"></script> 
+<script src="/static/js/bootstrap/bootstrap.min.js"></script> 
+<script src="/static/js/bootstrap/bootstrap-table.js"></script> 
+<script src="/static/js/bootstrap/bootstrap-table-zh-CN.js"></script> 
+<script src="/static/js/layer/layer.js"></script> 
+<script src="/static/js/cityselect/jquery.cityselect.js"></script> 
+<script src="/static/js/DatePicker/WdatePicker.js"></script>
+<!-- <script src="$!rc.contextPath/static/js/order/order_detail.js"></script> -->
+<script type="text/javascript">
+String.prototype.trim=function(){
+    return this.replace(/(^\s*)|(\s*$)/g, "");
+}
+	
+		var statusName = "$!orderDTO.statusName";
+		
+		if(isNotNull("$!orderDTO.payTime") || statusName == "已支付" || statusName == "待取餐" || statusName == "待评价"){
+			$(".dott").css({"width":"33%","background":"#32B16C"});
+         	$(".linet").css("background","#32B16C");
+         	$('.progressline span').css('background',"#32B16C").css('width','33%');
+		}
+		if(isNotNull("$!orderDTO.commentTime") || statusName=="已评价"){
+			$(".dott").css({"width":"66%","background":"#32B16C"});
+				$(".linet").css("background","#32B16C");
+         	$(".lineth").css("background","#32B16C");
+         	$('.progressline span').css('background',"#32B16C").css('width','66%');
+		}
+		if(isNotNull("$!orderDTO.endTime") || statusName=="已完成"){
+			$(".dott").css({"width":"100%","background":"#32B16C"});
+				$(".linet").css("background","#32B16C");
+				$(".lineth").css("background","#32B16C");
+				$(".linef").css("background","#32B16C");
+				$('.progressline span').css('background',"#32B16C").css('width','100%');
+		}
+/**
+ * 判断是否为空 
+ * @return true 不为空
+ */
+function isNotNull(str){
+	if(str && str != undefined && str != null && str != ''){
+		return true;
+	}
+}
+</script>
+</body>
+</html>

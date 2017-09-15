@@ -1,0 +1,82 @@
+<!--团队目标审核-->
+<script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+<script type="text/javascript" src="../../static/js/index/teamAudit/teamAudit.js"></script>
+<script type="text/javascript" src="../../static/js/index/teamAudit/teamAuditFormatter.js"></script>
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">工作目标审核</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+        <div class="form-group">
+            <label class="control-label">工作月：&nbsp;$!workTargetMonth</label>
+        </div>
+        <br/>
+        <div class="form-group">
+            <label class="control-label">申报性质</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="targetType">
+                <option value="">状态</option>
+                <option value="1">团队目标</option>
+                <option value="2">个人目标</option>
+                <option value="3">代理商目标</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+<!--         <div class="form-group has-feedback"> -->
+<!--             <select class="form-control selectarrow" name="nameType"> -->
+<!--                 <option value="">请选择搜索条件</option> -->
+<!--                 <option value="1">代理商名称</option> -->
+<!--                 <option value="2">业务员姓名</option> -->
+<!--             </select> -->
+<!--             <i class="fa fa-sort-down form-control-feedback triangle-fa"></i> -->
+<!--         </div> -->
+<!--         <div class="form-group"> -->
+<!--             <input class="form-control" name="businessAgentName" id="businessAgentName" placeholder="请输入文字"> -->
+<!--         </div> -->
+        <div class="form-group">
+            <a class="btn btn-default crmWorkTargetAuditSearch" href="javascript:void(0);" onclick="teamAudit.search()"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default crmWorkTargetAuditReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/initTargetCheck')">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-method="post"
+           data-url="crmworktarget/workTargetCheckQuery"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="teamAudit.queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-field="id" data-align="center" data-visible=false>ID</th>
+            <th data-field="businessName" data-align="center">申报人</th>
+            <th data-field="targetType" data-align="center" data-formatter="teamAuditFormatter.targetTypeFormatter">申报性质</th>
+            <th data-field="creatTime" data-align="center" data-formatter="teamAuditFormatter.creatTimeFormatter">申报时间</th>
+            <th data-field="agentNum" data-align="right">发展代理商数量</th>
+            <th data-field="canteenNum" data-align="right">发展食堂数量</th>
+            <th data-field="orderMoney" data-align="right" data-formatter="teamAuditFormatter.orderMoneyFormatter">订单金额（￥）</th>
+            <th data-field="id" data-formatter="teamAuditFormatter.operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+
+</div>
+<script type="text/javascript">
+	$('#table').bootstrapTable();
+	$('#table').on('load-success.bs.table',function(e,data){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+		 #if(!$!cSourcesVO.check)
+			$('$!cSourcesVO.frontContrlName').remove();
+		 #end
+		#end
+	})
+</script>

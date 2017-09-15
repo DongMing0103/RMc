@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/util  
+     					http://www.springframework.org/schema/util/spring-util-3.0.xsd
+	">
+	
+	<!-- ================ Shiro start ================ -->
+		<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+			<property name="sessionManager" ref="sessionManager" />
+			<property name="realm" ref="dbRealm" />
+		</bean>
+	
+    <bean id="memoryCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"><!-- 自定义cacheManager -->
+    </bean>
+    
+    <bean id="sessionManager"  class="com.hd.wolverine.shiro.session.MyDefaultWebSessionManager">
+<!--         <property name="sessionDAO" ref="redisShiroSessionDAO" /> -->
+<!--        	<property name="cacheManager" ref="redisCacheManager" /> -->
+		<property name="cacheManager" ref="memoryCacheManager" />
+<!--         <property name="globalSessionTimeout" value="${shiro.session.timeout}" /> -->
+<!--         <property name="sessionValidationInterval" value="3000000" /> -->
+        <property name="sessionIdCookieEnabled" value="true" />
+    </bean>
+    
+		<!-- 項目自定义的Realm -->
+		<bean id="dbRealm" class="com.hd.kzscrm.manage.service.CrmBRealm" >
+		</bean>
+		
+		<!-- Shiro Filter -->
+		<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+			<property name="securityManager" ref="securityManager" />
+			
+			<property name="loginUrl" value="/login" />
+			<!-- 在mvc中控制成功页面 -->
+			<property name="successUrl" value="/index" />
+			
+			<property name="unauthorizedUrl" value="/login" />
+			
+			<property name="filterChainDefinitions">
+				<value>
+				/crmUser/modifyPasswordShow = anon
+				/crmUser/moidfyPasswordVerificationCode = anon
+				/crmUser/validVerificationCode = anon
+				/crmUser/modifyPassword = anon
+				/static/** 				= anon
+	           	/login	 				= anon
+	           	/doLogin		 			= anon
+	           	/book/**					= anon
+	           	/nl/**                  =anon
+	           	/**						= roles[default]
+				</value>
+			</property>
+		</bean>
+		
+	<!-- ================ Shiro end ================ -->
+   
+</beans>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>分账明细</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+	<style>
+	.container {
+	    width: 1246px!important;
+	}
+	</style>
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header fashionable-detail" style="width:1246px!important">
+        <div class="container">
+            <h2><a href="../../index.html">筷子说CRM</a></h2>
+            <h3>分账明细</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+            <div class="form-box">
+                <form class="form-inline" id="form">
+				<input name="clientId" id="clientId" type="hidden" value="$!clientId"/>
+                <input id="businessId" name="businessId" type="hidden"/>
+                <input id="agentId" name="agentId" type="hidden"/>
+                <input type="hidden" id="orderId" name="orderId"/>
+
+                    <div class="form-group">
+                        <label class="control-label">分账时间</label>
+                        <input class="Wdate input-date" id="stratTimes" name="startTime" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'endTimes\')||\'2020-10-01\'}'})">
+			            &nbsp;至&nbsp;
+			            <input class="Wdate input-date" id="endTimes" name="endTime" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'stratTimes\')}',maxDate:'2020-10-01'})">
+                    </div>
+       <!--              <div class="form-group">
+                        <label class="control-label">食堂查询</label>
+                        <div class="has-feedback" style="display: inline-block;">
+	                        <select class="form-control" name="canteenId" id="canteenId">
+	                            <option value="">请选择</option>
+	                            #foreach($!canteenName in $!allCanteen)
+	                            	<option value="$!canteenName.id">$!canteenName.name</option>
+	                            #end
+	                        </select>	 
+	                        <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>                      
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="control-label">支付方式</label>
+                        <div class="has-feedback" style="display: inline-block;">
+	                        <select class="form-control" name="payModel" id="payModel">
+	                            <option value="0">请选择</option>
+	                            <option value="1">余额</option>
+	                            <option value="2">支付宝</option>
+	                            <option value="3">微信</option>
+	                        </select>
+	                        <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">订单查询</label>
+                        <input class="form-control" placeholder="请输入订单编号" name="orderNo" id="orderNo">
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-default" href="javascript:void(0);"  onclick="query();">
+                            <i class="fa fa-search"></i>搜索
+                        </a>
+                        <a class="btn btn-default" href="/crmbusinesssplitdetail/canteenSplit?clientId=$!clientId" >重置</a>
+                    </div>
+                </form>
+            </div>
+            <div  class="tab-content">
+            <table 
+                id="table"
+                data-classes="table table-public"
+                data-toggle="table"
+                data-url="$!rc.contextPath/crmbusinesssplitdetail/canteenSplitPage"
+                data-pagination="true"
+                data-pagination-v-align="both"
+                data-side-pagination="server"
+		        data-cache="false"
+		        data-query-params="queryParams"
+                data-page-size="10"
+                data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th data-field="orderNo" data-align="center">订单编号</th>
+                    <th data-field="cashFlowNo" data-align="center">支付流水号</th>
+                    <th data-field="payModel" data-align="center" data-formatter="payModel">支付方式</th>
+                    <th data-field="generalLedgerDate" data-align="center" data-formatter="dateFormatter">分账时间</th>
+<!--                     <th data-field="canteenName" data-align="center">食堂名称</th> -->
+                    <th data-field="realMoney"  data-align="center">实付金额（￥）</th>
+                    <th data-field="cutMoney"  data-align="center">抽成金额（￥）</th>
+                    <th data-field="canteenSplitPercent"  data-align="center">分账比例（%）</th>
+                    <th data-field="splitMoney"  data-align="center">分账金额（￥）</th>
+                    <th data-field="operate" data-align="center" data-formatter="operateFormatter">操作</th>
+                </tr>
+                </thead>
+            </table>
+            </div>
+            <div class="mt10">
+                <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData('请选择要导出的数据！','$!rc.contextPath/crmbusinesssplitdetail/viewExcelOulNew?ids=')">
+                    <i class="fa fa-cloud-download"></i>导出
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    
+    <script type="text/javascript">
+    
+    
+  	 	 $(function(){
+      	 	 $('#table').bootstrapTable();
+   		 });
+        /*操作*/
+        function operateFormatter(value, row, index) {
+			var str = '<a class=look href="/crmbusinesssplitdetail/orderDetailsInit?orderId='+row.id+'">查看</a>';
+			return str;
+        }
+        
+        /*查看*/
+        function view (orderId) {
+        	var url ='/crmbusinesssplitdetail/orderView/' + orderId;
+        	window.open(url);
+        }
+        
+        /*支付方式*/
+        function payModel (value, row, index) {
+        	if (value == 1) {
+        		return "余额";
+        	} else if (value == 2) {
+        		return "支付宝";
+        	} else if (value == 3) {
+        		return "微信";
+        	}
+        }
+        
+        
+        
+        function commit(){
+        	qurery();
+        }
+
+
+        //查询
+        function qurery(url){
+        	var _url =$("#table").attr("data-url");
+        	if(url==null){
+        		url=_url;
+        	}
+        	
+        	$("#table").bootstrapTable("removeAll");
+        	$("#table").bootstrapTable('refresh',{
+        		url:url
+        	},{
+        		query:$('#form').serialize()
+        	})
+        }
+        /*分页查询*/
+        function queryParams(params) {
+        	return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

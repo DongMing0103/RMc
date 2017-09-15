@@ -1,0 +1,111 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">代理商列表</span>
+    </div>
+    <ul class="nav nav-tabs nav-self">
+        <li><span>代理状态</span></li>
+        <li class="active"><a href="#all" data-toggle="tab" onclick="">全部（0）</a></li>
+        <li class="mt10">|</li>
+        <li><a href="#effective" data-toggle="tab" onclick="">有效（0）</a></li>
+        <li class="mt10">|</li>
+        <li><a href="#failure" data-toggle="tab" onclick="">无效（0）</a></li>
+    </ul>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+            <div class="form-group">
+                <label class="control-label">代理区域</label>
+                <div class="city-select" id="city">
+                    <select class="form-control prov"></select>
+                    <select class="form-control city"></select>
+                    <select class="form-control dist"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <select class="form-control">
+                    <option value="">请选择搜索条件</option>
+                    <option value="">代理商名称</option>
+                    <option value="">代理商编号</option>
+                </select>
+                <input class="form-control" placeholder="请输入...">
+            </div>
+            <div class="form-group">
+                <a class="btn btn-default" href="javascript:void(0);"  onclick="query();">
+                    <span class="glyphicon glyphicon-search"></span>搜索
+                </a>
+                <a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv();">重置</a>
+            </div>
+        </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="../static/json/data.json"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="id" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="nature" data-align="center">性质</th>
+            <th data-field="agentStatus" data-align="center">代理状态</th>
+            <th data-field="agentArea" data-align="center">代理区域 </th>
+            <th data-field="contactSalesman " data-align="center">联系业务员</th>
+            <th data-field="contactName"  data-align="center">联系人姓名</th>
+            <th data-field="contactTele"  data-align="center">联系人电话</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" >操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="">解约</a>
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="">续约</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    function operateFormatter(value, row, index) {
+        return [
+            '<div class="dropdown">',
+                '<a href="javascript:void(0);" id="agent-operate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                    '请操作',
+                    '<span class="caret"></span>',
+                '</a>',
+                '<ul class="dropdown-menu" aria-labelledby="agent-operate">',
+                    '<li><a href="javascript:void(0);">查看资料</a></li>',
+                    '<li><a href="javascript:void(0);">当月工作目标</a></li>',
+                    /*代理状态有效为解约操作，代理状态无效为续约操作*/
+                    '<li><a href="javascript:void(0);">解约</a></li>',
+                    '<li><a href="javascript:void(0);">续约</a></li>',
+                    /* ********************************************** */
+                    '<li><a href="javascript:void(0);">编辑资料</a></li>',
+                    '<li><a href="javascript:void(0);">业务员列表</a></li>',
+                    '<li><a href="javascript:void(0);">客户列表</a></li>',
+                    '<li><a href="javascript:void(0);">下级代理列表</a></li>',
+                    '<li><a href="javascript:void(0);">分账明细</a></li>',
+                '</ul>',
+            '</div>'
+        ].join('');
+    }
+
+    /*地理联动*/
+    $("#city").citySelect({
+        url:"js/cityselect/city.min.js",
+        prov:"",//省份
+        city:"",//城市
+        dist:"",//区县
+        nodata:"none",//当子集无数据时，隐藏select
+        required:false
+    });
+</script>
+

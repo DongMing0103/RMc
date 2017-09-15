@@ -1,0 +1,27 @@
+{
+  "total":800,
+  "rows":[
+    {
+      "id":"20135987",
+      "name": "浙江惠点",
+      "nature": "法人",
+      "agentStatus": "有效",
+      "agentArea": "浙江 杭州 拱墅",
+      "contactSalesman": "奥巴马",
+      "contactName":"老王",
+      "contactTele":"13000000000",
+      "operate":"操作"
+    },
+    {
+      "id":"20135987",
+      "name": "浙江惠点",
+      "nature": "法人",
+      "agentStatus": "无效",
+      "agentArea": "浙江 杭州 拱墅",
+      "contactSalesman": "奥巴马",
+      "contactName":"老王",
+      "contactTele":"13000000000",
+      "operate":"操作"
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+<!--平台客户-->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">平台客户</span>
+    </div>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+        <input name="agentId" id="agentId" value="$!agentId" type="hidden"/>
+        <input name="customerAttribute" id="customerAttribute" value="2" type="hidden"/>
+        <input name="address" id="address" type="hidden"/>
+        	<div class="form-group">
+	            <label class="control-label">入驻时间</label>
+	            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	            <input type="hidden" value="2" name="leixing">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">客户类别</label>
+	            <div class="has-feedback" style="display: inline-block">
+		        	<select class="form-control selectarrow" name="clientType">
+		                <option value="0">请选择</option>
+		                <option value="2">厂内食堂</option>
+		                <option value="3">校内食堂</option>
+		                <option value="4">独立食堂</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">地理信息</label>
+	            <div class="city-select" id="city">
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control prov" name="provCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control city" name="cityCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control dist" name="areaCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	        	<!-- <div class="has-feedback" style="display: inline-block">
+		            <select class="form-control selectarrow" name="selectNum">
+		                <option value="1">食堂名称</option>
+		                <option value="0">请选择搜索条件</option>
+		                <option value="2">食堂编号</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div> -->
+		        <label class="control-label">食堂搜索</label>
+	            <input class="form-control" name="condition" id="enterNoName" placeholder="请输入食堂名称" >
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default crmClientResourceSearch" href="javascript:void(0);"  onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default crmClientResourceReset" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/platformCustomerInit')">重置</a>
+	        </div>
+	    </form>
+	</div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="$!rc.contextPath/crmclientresource/platformCustomer"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+	        <tr>
+	            <th data-checkbox="true"></th>
+	            <th data-field="id" data-align="center">ID</th>
+	            <th data-field="name" data-align="center">名称</th>
+	            <th data-field="applyApproveTime" data-align="center" data-formatter="dateFormatter">入驻时间</th>
+	            <th data-field="clientTypeStr" data-align="center" >客户类别</th>
+	            <th data-field="clientTypeName" data-align="center">业务员</th>
+	            <th data-field="address" data-align="center">地理信息</th>
+	            <th data-field="canteenSplitPercent" data-align="center">分账比例（%）</th>
+	            <th data-field="mobile" data-align="center">联系电话</th>
+	            <th data-field="j" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+	        </tr>
+        </thead>
+    </table>
+        <div class="mt10">
+        <a class="btn btn-warning crmClientResourceExport" href="javascript:void(0);" onclick="downloadData('确定要导出','$!rc.contextPath/crmclientresource/excelOut1?clientIds=')">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="$!rc.contextPath/static/js/agent/platformAndAgentCustomer.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#table').bootstrapTable();
+	$("#table").on('load-success.bs.table',function(e,data){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+			#if(!$!cSourcesVO.check)
+				$('$!cSourcesVO.frontContrlName').remove();
+			#end
+		#end
+	})
+});
+
+    /* 操作 */
+    function operateFormatter(value, row, index) {
+    	var str4= 	"<div class=tddiv>"+
+					"<span class=settingtda>请选择</span>"+
+					"<ul class=settingtdmenu>"+
+					"<li><a class=crmClientResourceSee href=crmclientresource/seeAgent?clientId="+row.id+" target=_blank>查看资料</a></li>"+
+					'<li><a class=crmClientResourceEdit href="javascript:void(0);" onclick="editData(\'编辑资料\',\'/crmagent/addInit?id='+row.id+'\',\'768px\',\'500px\')">编辑资料</a></li>';
+    	var str5 =	"<div class=tddiv>"+
+        			"<span class=settingtda>请选择</span>"+
+        			"<ul class=settingtdmenu>"+
+    				"<li><a class=crmClientResourceSee1 href=crmclientresource/customerResourceLook?clientId="+row.id+" target=_blank>查看资料</a></li>"+
+    				'<li><a class=crmClientResourceEdit1 href="javascript:void(0);" onclick="editData(\'编辑资料\',\'/crmclientresource/editCrmClientResourceInit?crmClientResourceParam.id='+row.id+'\',\'768px\',\'500px\')">编辑资料</a></li>';
+    	
+    		var str1 =  
+	        			"<li><a class=crmClientResourceTailrecord href=/crmbusinesstailrecord/initClint?customerId="+row.id+" target=_blank>跟踪记录</a></li>"+
+	        			"<li><a class=crmClientResourcePlitdetail href=/crmbusinesssplitdetail/viewInfoInit?id="+row.id+" target=_blank>分账明细</a></li>"+
+	        			
+	        			"<li><a class=crmClientResourceAdjustRatio href=javascript:void(0); onclick=adjustRatio(id="+row.id+");>调整分账比例</a></li>";
+	       
+	        /* 注意!!! 业务员才有跟踪登记，管理员没有 */
+	    var str2 =  "<li><a class=crmClientResourceTrackRegister href=javascript:void(0); onclick=editData('跟踪登记','/crmbusinesstailrecord/trackRegisterInit?customerId="+row.id+"') target=_blank>跟踪登记</a></li>";
+	       
+	    var str3 = "<li><a class=crmClientResourceOrderList href=crmOrder/orderListInit?id="+row.id+" target=_blank>订单列表</a></li>";
+	    			
+	    var str6 ="<li><a class=crmClientResourceViewEnterprise  href=crmEnterprise/viewEnterpriseInformation?clientId="+row.id+" target=_blank>企业信息</a></li>";		
+	    	
+	    var str7 = "</ul></div>";
+	    
+	    if(row.clientTypeStr=="代理商"){
+	    	return str4+str1+str7;
+	    }else if(row.clientTypeStr=="独立食堂"){
+	    	return str5+str1+str2+str3+str7;
+	    }else{
+    		return str5+str1+str6+str2+str3+str7;
+    	}
+
+    	
+
+	    
+    	
+    	
+    }
+    /*地理联动*/
+    $("#city").citySelect({
+        url:"/static/js/cityselect/city.min.js",
+        prov:"",//省份
+        city:"",//城市
+        dist:"",//区县
+        nodata:"none",//当子集无数据时，隐藏select
+        required:false
+    });
+
+	/* 调整分账比例 */
+	function adjustRatio(id){
+		var index=layer.open({
+	      	type:2,
+	      	title:"调整分账比例",
+	      	shade:[0.5,'#000'],
+	      	area:["768px","80%"],
+	      	content:"crmsplitassignset/adjustSplitPercentInit?clientId="+id,
+	    	success: function(layero, index){
+				layer.getChildFrame('.first-input',index).focus();
+			}
+      		/* yes:function(){
+      			$.ajax({
+      				type:"POST",
+      				url:"crmsplitassignset/saveAdjustSplitPercent?clientId="+id,
+      				dataType:"json",
+      				data:{ids:id},
+      				success:function(data){
+      					if(data!=200){
+      						layer.msg(data.message);
+      					}
+      					layer.msg(msg);
+      					$("#table").bootstropTable('refresh');
+      					layer.close(index);
+      				}      				
+      			})
+      				
+      		}   */
+		});
+
+	}
+	
+	
+	//客户类别	1.代理商，2.厂内食堂，3.校内食堂，4.独立食堂
+	function clientType(index,value,row){
+		if(value==1){
+			return "代理商";
+		}else if(value==2){
+			return "厂内食堂";			
+		}else if(value==3){
+			return "校内食堂";			
+		}else if(value==4){
+			return "独立食堂";			
+		}
+	}
+	//客户性质	1.散客，2.保护客户，3.正式客户
+	function clientNature(index,value,row){
+		if(value==1){
+			return "散客";
+		}else if(value==2){
+			return "保护客户";			
+		}else if(value==3){
+			return "正式客户";			
+		}
+	}
+</script>
+

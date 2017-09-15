@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>跟踪登记</title>
+	<link rel="stylesheet" href="../../css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="../../css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/style2.css">
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="second-page-bg">
+        <div class="container second-page-body">
+            <table
+                    id="table"
+		        data-classes="table table-public"
+		        data-toggle="table"
+		        data-url="/crmbusinesstailrecord/queryList"
+		        data-pagination="true"
+		        data-pagination-v-align="both"
+		        data-side-pagination="server"
+		        data-cache="false"
+		        data-query-params="queryParams"
+		        data-page-size="20"
+		        data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                     <th data-field="" data-align="center">业务员</th>
+		            <th data-field="" data-align="center">跟踪性质</th>
+		            <th data-field="" data-align="center">时间</th>
+		            <th data-field="" data-align="center">对接人</th>
+		            <th data-field="" data-align="center">对接人电话</th>
+		            <th data-field="" data-align="center" data-formatter="operationFormatter" data-width="30%" style="position:relative">跟踪情况</th>
+                </tr>
+                </thead>
+            </table>
+            <form class="form-horizontal add-merchants" id="form" name="form" action="" method="post">
+			    <div class="form-group">
+			        <div class="col-sm-3 text-right">
+			            <label class="control-label" for="ctype">跟踪性质</label>
+			        </div>
+			        <div class="col-sm-5 has-feedback">
+			            <select class="form-control selectarrow" name="agentId" datatype="*" nullmsg="请选择跟踪性质" sucmsg=" ">
+			                <option selected="selected" value="">请选择</option>
+			                <option>上门拜访</option>
+			                <option>电话联系</option>
+			            </select>
+			            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+			        </div>
+			        <div class="col-sm-3">
+			            <div class="Validform_checktip"></div>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			    	<div class="col-sm-3 text-right">
+			            <label class="control-label" for="ctype">时间</label>
+			        </div>
+			        <div class="col-sm-5" style="white-space: nowrap;">
+				        <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})"style="width:114px!important;background: #fff url(../../images/date-input.png) no-repeat 88px center !important;"  datatype="*" nullmsg="请选择日期" sucmsg=" ">
+				        &nbsp;至&nbsp;
+				        <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})"style="width:114px!important;background: #fff url(../../images/date-input.png) no-repeat 88px center !important;"  datatype="*" nullmsg="请选择日期" sucmsg=" ">
+			    	</div>
+			        <div class="col-sm-3">
+			            <div class="Validform_checktip"></div>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <div class="col-sm-3 text-right">
+			            <label class="control-label" for="cname">对接人</label>
+			        </div>
+			        <div class="col-sm-5">
+			            <input class="form-control" name="name" placeholder="请输入对接人" value="" datatype="*" nullmsg="对接人不能为空" sucmsg=" "/>
+			        </div>
+			        <div class="col-sm-3">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+			            <div class="Validform_checktip"></div>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <div class="col-sm-3 text-right">
+			            <label class="control-label" for="cpho">对接人电话</label>
+			        </div>
+			        <div class="col-sm-5">
+			            <input class="form-control" name="mobilephone" placeholder="请输入对接人电话" value="" datatype="nd" nullmsg="对接人电话不能为空" errormsg="手机号码格式不正确" sucmsg=" ">
+			        </div>
+			        <div class="col-sm-3">
+			            <div class="Validform_checktip"></div>
+			        </div>
+			    </div>
+			    <div class="form-group geography">
+			        <div class="col-sm-6 col-sm-offset-3">
+			            <textarea name="" class="" placeholder="（请登记跟踪情况）" datatype="*" nullmsg="请登记跟踪情况" sucmsg=" "></textarea>
+			        </div>
+			        <div class="col-sm-3">
+			            <div class="Validform_checktip"></div>
+			        </div>
+			    </div>
+			    <div class="text-center mt40 pr">
+			        <div class="shade-save"></div>
+			        <a class="btn btn-warning save" href="javascript:void(0);">确定</a>
+			    </div>
+			</form>
+        </div>
+</div>
+
+
+    <script src="../../js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/ValidForm/Validform_v5.3.2.js"></script>
+    <script src="../../js/DatePicker/WdatePicker.js"></script>
+    <script type="text/javascript">
+    var validForm = $('.form-horizontal').Validform({
+        btnSubmit : ".save",
+        tiptype : 2,
+        datatype : {
+            "nd":/^[0-9-]{8,}$/
+        },
+        postonce : true,
+        ajaxPost : true,
+        beforeCheck:function(){
+        },
+        callback : function(data) {
+        }
+    });
+    var postData=$("#from").serialize();
+    validForm.config({
+        showAllError:true,
+        url:"",
+        ajaxPost:{
+            data:postData
+        }
+    });
+	</script>
+</body>
+</html>

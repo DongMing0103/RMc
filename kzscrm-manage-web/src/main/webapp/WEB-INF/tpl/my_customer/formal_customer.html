@@ -1,0 +1,125 @@
+<!-- 正式客户 -->
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">正式客户</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+    	#if($!userType == 4)
+		<div class="form-group">
+            <label class="control-label">所属团队</label>
+            <div class="has-feedback" style="display: inline-block">
+             <select class="form-control" name="teamId">
+                 <option value="">请选择团队</option>
+					#foreach($!team in $!teamPOs)                    
+                 	<option value="$!team.id">$!team.name</option>
+             		#end
+             </select>
+             <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>                
+        </div>
+        <div class="form-group">
+            <div class="has-feedback" style="display: inline-block">
+             <select class="form-control" name="businessId">
+                 <option value="">请选择业务员</option>
+					#foreach($!businessPO in $!businessPOs)                    
+                 	<option value="$!businessPO.id" class="business$!businessPO.teamId businessPO">$!businessPO.name</option>
+             		#end
+             </select>
+             <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>                
+        </div>
+	
+		<!-- <div class="form-group">
+			<label class="control-label">业务员</label>
+			<input class="form-control" placeholder="请输入..." name="condition">
+		</div> -->
+		#end
+        <div class="form-group">
+            <label class="control-label">客户类别</label>
+        </div>
+        <div class="form-group">
+	        <div class="has-feedback">
+            	<select class="form-control selectarrow" name="clientType" #if ($!userType == 3) onchange="query();" #end>
+	                <option value="">请选择</option>
+	                <option value="2">厂内食堂</option>
+	                <option value="3">校内食堂</option>
+	                <option value="4">独立食堂</option>
+	            </select>
+	            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+        </div>
+        #if ($!userType == 4)
+        <div class="form-group">
+			<a class="btn btn-default crmBusinessSaleman" href="javascript:void(0);" onclick="query();"> 
+				<span class="glyphicon glyphicon-search"></span>搜索
+			</a> 
+			<a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/formalCustomerInit');">重置</a>
+		</div>
+		#end
+    </form>
+
+    <table
+           id="table"
+           data-classes="table table-public tabledown"
+           data-toggle="table"
+           data-url="/crmclientresource/getFormalCustomerDetails"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="clientNum" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="clientType" data-align="center" data-formatter="clientTypeFormatter">客户类别</th>
+            <th data-field="address" data-align="center">地理信息</th>
+            #if($!userType == 4)<th data-field="businessName" data-align="center">业务员</th>#end
+            <th data-field="applyApproveTime" data-align="center" data-formatter="dateFormatter">签约时间</th>
+            <th data-field="contact" data-align="center">联系人</th>
+            <th data-field="mobile" data-align="center">联系电话</th>
+            #if($!userType == 3)
+            <th data-field="canteenSplitPercent" data-align="center">分账比例（%）</th>
+            #end
+            <th data-field="operate" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+	<div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="tabledown('crmclientresource/formalCustomerDetailsExcelOut?Ids=')">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+<script src="$!rc.contextPath/static/js/my_customer/formal_customer.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+        $(".businessPO").hide();
+    });
+    
+    function operationFormatter(value, row, index) {
+    	var strStart = 	"<div class=tddiv>"+
+       	 	"<span class=settingtda>请选择</span>"+
+       		 "<ul class=settingtdmenu>"+
+       		 "<li><a href=/crmclientresource/customerResourceLook?clientId="+row.id+" target=_blank>查看</a></li>";
+       var str1 = "<li><a href=javascript:void(0); onclick=editData('编辑','/crmagent/editAgent?clientId="+row.id+"','768px','500px')>编辑</a></li>";	 
+       		 
+       var str2 = "<li><a href=javascript:void(0); onclick=editData('编辑','/crmclientresource/editCrmClientResourceInit?crmClientResourceParam.id="+row.id+"','768px','500px')>编辑</a></li>";
+       		 
+       var str3 = "<li><a href=/crmbusinesstailrecord/trackRegisterInit?customerId="+row.id+" target=_blank>跟踪登记</a></li>";
+       
+       var str4 = "<li><a href=javascript:void(0); onclick=editData('续约','/crmagentapply/agentJoinApplyInit?clientId="+row.id+"','768px','700px')>续约</a></li>";
+       
+        var strEnd = "</ul></div>";
+  		if(1 == row.clientType){//代理商
+  			return strStart + str1 + str3 + strEnd;
+  		}else{//食堂
+  			return strStart + str2 + str3 + str4 + strEnd;
+  		}
+    }
+    </script>

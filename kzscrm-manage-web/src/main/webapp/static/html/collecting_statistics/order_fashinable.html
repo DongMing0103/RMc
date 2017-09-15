@@ -1,0 +1,96 @@
+<!--订单分账表-->
+<div class="main-content order-fashinable">
+    <div class="content-cap">
+        <span class="cap-name">订单分账表</span>
+    </div>
+    <div class="form-box">
+        <form class="form-inline" id="form">
+	        <div class="form-group">
+	            <label class="control-label">分账时间</label>
+	            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	            <input type="hidden" value="2" name="leixing">
+	        </div>
+	        <div class="form-group">
+	        	<label class="control-label">支付方式</label>
+	        	<div class="has-feedback" style="display:inline-block;">
+		        	<select class="form-control selectarrow" name="status">
+		                <option value="">请选择</option>
+		                <option>微信</option>
+		                <option>支付宝</option>
+		                <option>余额</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+	        </div>
+	        <div class="form-group">
+	        	<label class="control-label">订单查询</label>
+	            <input class="form-control" name="enterNoName" id="enterNoName" placeholder="请输入订单编号">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default crmOrderCutSearch" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default crmOrderCutReset" href="javascript:void(0);">重置</a>
+	        </div>
+	    </form>
+	</div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="../static/json/9.json"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="a" data-align="center">流水号</th>
+            <th data-field="b" data-align="center">订单编号</th>
+            <th data-field="c" data-align="center">实付金额（￥）</th>
+            <th data-field="d" data-align="center">支付方式</th>
+            <th data-field="e" data-align="center">支付时间</th>
+            <th data-field="f" data-align="center">商家金额（￥）</th>
+            <th data-field="g" data-align="center">抽成金额（￥）</th>
+            <th data-field="h" data-align="center">通道费（￥）</th>
+            <th data-field="i" data-align="center" data-formatter="opFormatter">状态</th>
+            <th data-field="j" data-align="center" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning crmOrderCutExport" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function opFormatter(value, row, index) {
+        var a = "";
+        if (value==1) {
+            var a = '<span></span>';
+        } else if(value==2) {
+            var a = '<span></span>';
+        }else if(value==3) {
+            var a = '<span></span>';
+        }else if(value==4) {
+            var a = '<span></span>';
+        }
+        return a;
+    }
+    function operationFormatter(value, row, index) {
+        var str='<a class="crmOrderCutSee" href="/static/html/system_operate/order_fashionalbe_detail.html" target="_blank">查看</a>';
+        return str;
+    }
+</script>
+

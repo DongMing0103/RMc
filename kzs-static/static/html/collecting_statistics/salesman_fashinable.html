@@ -1,0 +1,113 @@
+<!--业务员分账-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">业务员分账</span>
+    </div>
+    <ul class="nav nav-tabs nav-self">
+        <li><span>职业状态</span></li>
+        <li class="active"><a href="#all" data-toggle="tab" onclick="" aria-expanded="true">全部（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#effective" data-toggle="tab" onclick="" aria-expanded="false">在职（0）</a></li>
+        <li class="mt10">|</li>
+        <li class=""><a href="#failure" data-toggle="tab" onclick="" aria-expanded="false">离职（0）</a></li>
+    </ul>
+    <form class="form-inline mb10" id="form" role="form">
+        <div class="form-group">
+            <label class="control-label">分账时间&nbsp;</label>
+        </div>
+        <div class="form-group">
+            <input class="Wdate input-date" id="d4311" name="stratTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+            &nbsp;至&nbsp;
+            <input class="Wdate input-date" id="d4312" name="endTimes" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+            <input type="hidden" value="2" name="leixing">
+        </div>
+        <div class="form-group">
+            <label class="control-label">所属团队</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择</option>
+                <option>商务一部</option>
+                <option>商务二部</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择搜索条件</option>
+                <option>业务经理姓名</option>
+                <option>业务经理编号</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="" id="" placeholder="请输入文字">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill"
+           data-toggle="table"
+           data-url="../static/json/11.json"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="a" data-align="center">ID</th>
+            <th data-field="b" data-align="center">名称</th>
+            <th data-field="c" data-align="center">所属团队</th>
+            <th data-field="d" data-align="center">入职时间</th>
+            <th data-field="e" data-align="center" data-formatter="opFormatter">职业状态</th>
+            <th data-field="f" data-align="center">正式客户</th>
+            <th data-field="g" data-align="right">抽成金额（￥）</th>
+            <th data-field="h" data-align="right">分账金额（￥）</th>
+            <th data-field="i" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function opFormatter(value, row, index) {
+        var a = "";
+        if (value==1) {
+            var a = '<span></span>';
+        } else if(value==2) {
+            var a = '<span></span>';
+        }else if(value==3) {
+            var a = '<span></span>';
+        }else if(value==4) {
+            var a = '<span></span>';
+        }
+        return a;
+    }
+    function operationFormatter(value, row, index) {
+        var str="<a class=look href=javascript:void(0);>查看</a>";
+        return str;
+    }
+
+
+</script>
+

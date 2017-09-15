@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>新增食堂</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/fileinput.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/jquery.Jcrop.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/scojs.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/sco.message.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style2.css">
+</head>
+<body>
+<div class="merchants">
+    <form class="form-horizontal add-enterprise" id="form" name="form" method="post">
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label">单位名称</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" id="eName" value="$!crmEnterpriseVO.eName" disabled="disabled" name="eName" placeholder="请输入单位名称" datatype="*" nullmsg="单位名称不能为空" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label">单位性质</label>
+            </div>
+            <div class="col-sm-5 has-feedback">
+           		 <!-- 0.公司/企业/工厂 1.学校，2.政府机构，3.事业单位，4.其它 -->
+                <select class="form-control selectarrow" id="eStyle" disabled="disabled" name="eStyle" datatype="*" nullmsg="单位性质不能为空" sucmsg=" ">
+                    <option value="">请选择</option>
+                    <option value="0" #if($!crmEnterpriseVO.eStyle=='0') selected #end>公司/企业/工厂</option>
+                    <option value="1" #if($!crmEnterpriseVO.eStyle=='1') selected #end>学校</option>
+                    <option value="2" #if($!crmEnterpriseVO.eStyle=='2') selected #end>政府机关</option>
+                    <option value="3" #if($!crmEnterpriseVO.eStyle=='3') selected #end>事业单位</option>
+                    <option value="4" #if($!crmEnterpriseVO.eStyle=='4') selected #end>其它</option>
+                </select>
+                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cuser">联系人</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" id="contact" value="$!crmEnterpriseVO.contact" disabled="disabled"name="contact" placeholder="请输入联系人姓名" datatype="zh2-10" nullmsg="联系人不能为空" errormsg="联系人姓名格式不正确" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctel">手机号码</label>
+            </div>
+            <div class="col-sm-5 col-md-4 col-lg-3">
+                <input class="form-control" id="mobilephone" value="$!crmEnterpriseVO.mobilephone" disabled="disabled" name="mobilephone" placeholder="请输入手机号码" datatype="n11" nullmsg="手机号码不能为空" errormsg="手机号码格式不正确" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cpho">座机</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" value="$!crmEnterpriseVO.telephone" disabled="disabled" id="telephone" name="telephone" placeholder="请输入座机号码" datatype="*" nullmsg="座机号码不能为空" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+            <div class="col-sm-8 col-sm-offset-3">
+                <span class="help-block">（请认真填写，审核后将作为登录的账号）</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctel">地理信息</label>
+            </div>
+            <div class="col-sm-5 col-md-4 col-lg-3">
+                <textarea  class="address"  name="address" sucmsg=" " disabled="disabled">$!crmEnterpriseVO.address</textarea>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div style="border: 4px solid rgb(221, 221, 221); border-image: none;">
+                    <div id="allmap" style="width: 100%; height: 400px;"></div>
+                    <input name="position" class="position" type="hidden">
+                </div>
+            </div>
+            <!-- $!crmEnterpriseVO.position -->
+            <div class="col-sm-8 col-sm-offset-3">
+                <span class="help-block mapPosition">（请在地图上标明地理位置）</span>
+            </div>
+        </div>
+        <!-- <div class="text-center mt30 pr">
+            <div class="shade-save"></div>
+            <a class="btn btn-warning save role_add_save crmClientResourceNewAddSave" href="javascript:void(0);">确定保存</a>
+        </div> -->
+    </form> 
+</div>
+
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VdGhOfYto316HMEuGEiyQgjDjk8tyPF8"></script>
+<script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+<script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+<script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+<script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+<script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js?V1"></script>
+<script src="$!rc.contextPath/static/js/ValidForm/Validform_v5.3.2.js"></script>
+<script src="$!rc.contextPath/static/js/fileinput.js" type="text/javascript"></script>
+<script src="$!rc.contextPath/static/js/zh.js" type="text/javascript"></script>
+<script src="$!rc.contextPath/static/js/jquery.Jcrop.min.js"></script>
+<script src="$!rc.contextPath/static/js/sco.modal.js"></script>
+<script src="$!rc.contextPath/static/js/template.js"></script>
+<script src="$!rc.contextPath/static/js/portrait.js"></script>
+<script src="$!rc.contextPath/static/js/portrait2.js"></script>
+<script src="$!rc.contextPath/static/js/common.js"></script>
+
+<script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+
+<script>
+	#foreach($!cSourcesVO in $!cSourcesVOs)
+		#if(!$!cSourcesVO.check)
+			$('$!cSourcesVO.frontContrlName').remove();
+		#end
+	#end
+	$(function(){
+		//地图初始化ip定位城市
+	    var map = new BMap.Map("allmap");
+	    var position="$!crmEnterpriseVO.position";
+	    if ($.isNotEmptyObject(position)) {
+	        myFun4(position);
+	    }
+		//编辑使用
+	    function myFun4(result){
+	        var posiArry=result.split(",");
+	        var new_point = new BMap.Point(parseFloat(posiArry[0]),parseFloat(posiArry[1]));//读入的经纬度
+	        var marker = new BMap.Marker(new_point);  // 创建标注
+	        var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+	        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+	        map.centerAndZoom(new_point,14);
+	        map.enableScrollWheelZoom(true);
+	        map.addOverlay(marker);
+	        map.panTo(new_point);
+	        map.addControl(top_left_control);
+	        map.addControl(top_left_navigation);
+	
+	        marker.enableDragging();
+	        marker.addEventListener("dragend", function(e){
+	            //移动标注显示地址
+	             myGeo.getLocation(e.point, function(rs){
+	             var addComp = rs.addressComponents;
+	             document.getElementById("sult").innerHTML =addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+	             });
+	            longitude = e.point.lng;
+	            latitude = e.point.lat;
+	            $(".position").val(longitude + "," + latitude);
+	        });
+	        
+	        //解决中心点失焦问题
+	       /* var loadCount=1;
+	        map.addEventListener("tilesloaded",function(){
+	        	if(!$('#form').is(':hidden')){
+	        		if(loadCount==1){
+	        			map.clearOverlays();
+			        	 map.centerAndZoom(new_point, 14);
+			        	 loadCount=2;
+	        		}
+	        	}
+	         });  */
+	    }
+	});
+</script>
+</body>
+</html>
+
+
+
+
+

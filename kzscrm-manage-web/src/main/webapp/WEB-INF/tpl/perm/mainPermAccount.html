@@ -1,0 +1,136 @@
+	<div class="m-content">
+		<div class="content-cap">
+			<span class="cap-name">管理员列表</span>
+			<div class="pull-right">
+				<a class="btn btn-warning role_newAdd" href="javascript:void(0);" onclick="editData('新增管理员','$!rc.contextPath/permAccount/addPermAccount','800px','90%')">
+					<span class="glyphicon glyphicon-plus"></span> 新增
+				</a>
+			</div>
+		</div>
+		<form class="form-inline mb10" id="form" role="form">
+	
+			<div class="form-group has-feedback">
+				<select class="form-control" name="deleteFlag">
+					<option value="">状态</option>
+					<option value="1">已启用</option>
+					<option value="0">已注销</option>
+				</select>
+				<span class="glyphicon glyphicon-triangle-bottom form-control-feedback caret-self" aria-hidden="true"></span>
+			</div>
+			<div class="form-group ml15">
+				<input class="form-control w245" name="account" placeholder="请输入管理员帐号">
+			</div>
+			<div class="form-group ml15">
+				<a class="btn btn-default role_search" href="javascript:void(0);" onclick="searchClick()"><span class="glyphicon glyphicon-search"></span>搜索</a>
+				<a class="btn btn-default role_reset" href="javascript:void(0);" onclick="loadXMLDoc('$!rc.contextPath/permaccount/init')">重置</a>
+			</div>
+		</form>
+	
+		<table 
+			id="table"
+		    data-classes="table table-bill" 
+			data-toggle="table" 
+			data-url="$!rc.contextPath/permAccount/listData"
+			data-pagination="true" 
+			data-pagination-v-align="both"
+			data-side-pagination="server" 
+			data-cache="false"
+			data-query-params="queryParams" 
+			data-page-size="20"
+			data-page-list="[10,20,50]">
+			<thead>
+	
+				<tr>
+					<th data-formatter="indexFormatter" data-width="10%" data-align="center">序号</th>
+					<th class="span2" data-field="name" data-width="10%" data-align="center">用户名</th>
+					<th class="span2" data-field="account" data-width="10%" data-align="center">帐号</th>
+					<th class="span2" data-field="deleteFlag" data-width="10%" data-align="center" data-formatter="deleteFlagFormatter">状态</th>
+					<th class="span2" data-field="mobileNo" data-width="10%" data-align="center">电话号码</th>
+					<th class="span2" data-field="mail" data-width="10%" data-align="center">邮箱</th>
+					<th class="span2" data-field="createTime" data-width="10%" data-align="center" data-formatter="dateFormatter">创建时间</th>
+					<th class="span2" data-field="enabled" data-width="10%" data-align="center" data-formatter="operationFormatter">操作</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<script type="text/javascript">
+		$("#table").bootstrapTable();
+		
+		function deleteFlagFormatter(value,row,index){
+			if(value==1){
+				return "<a style='color:green;'>启用</a>";
+			}else{
+				return "<a style='color:red;'>注销</a>";
+			}
+		}
+		function operationFormatter(value,row,index){
+			if(row.deleteFlag==0){
+				return [
+					'<a class="pl15 role_editAccount" href="javascript:void(0);" onclick="editData(\'编辑\',\'$!rc.contextPath/permAccount/editPermAccount?id='+row.id+'\',\'768px\',\'80%\')">编辑</a>'
+			    ].join('');				
+			}else if(row.deleteFlag==1 && row.id!=1){
+				return [
+		            '<a class="role_del" href="javascript:void(0);" onclick="operate('+row.id+',\'注销\',\'3\',\'确定要注销吗\',\'$!rc.contextPath/permAccount/doDelete?id='+row.id+'\',\'注销成功\')">注销</a>&nbsp;'+
+		            '<a class="pl15 role_editAccount" href="javascript:void(0);" onclick="editData(\'编辑\',\'$!rc.contextPath/permAccount/editPermAccount?id='+row.id+'\',\'768px\',\'80%\')">编辑</a>'+
+		            '<a class="pl15 role_resetPassword" href="javascript:void(0);" onclick="resetPassword('+row.id+');">重置密码</a>'
+		        ].join('');
+			}else{
+				return[
+				'<a class="role_del" href="javascript:void(0);" onclick="operate('+row.id+',\'注销\',\'3\',\'确定要注销吗\',\'$!rc.contextPath/permAccount/doDelete?id='+row.id+'\',\'注销成功\')">注销</a>&nbsp;'+
+	            '<a class="pl15 role_editAccount" href="javascript:void(0);" onclick="editData(\'编辑\',\'$!rc.contextPath/permAccount/editPermAccount?id='+row.id+'\',\'768px\',\'80%\')">编辑</a>'
+	            ].join('');
+			}
+		}
+		function searchClick(){
+			$('#table').bootstrapTable('refresh');
+		}
+		
+		//注销
+		function operate(id, title, icon, content, url, msg){
+			var index=layer.open({
+				title: title,
+				icon: icon,
+				content: content,
+				btn: ['确定','取消'],
+				yes: function(){
+					$.ajax({
+			      		url:url,
+			      		type:"post",
+			      		dataType:"json",
+			      		data:"id="+id,
+			      		success:function(data){
+			      			if(data.code==0){
+			      				$('#table').bootstrapTable('refresh');	
+								layer.close(index);
+			   				}
+			      			layer.msg(msg); 
+			      		}
+			      	})
+				}
+			})
+		}
+		
+		function resetPassword(id){
+			var index=layer.open({
+				title: "重置密码",
+// 				icon: icon,
+				content: "确定重置密码吗?",
+				btn: ['确定','取消'],
+				yes: function(){
+					$.ajax({
+			      		url:"$!rc.contextPath/permAccount/resetPassword",
+			      		type:"POST",
+			      		dataType:"json",
+			      		data:{id:id},
+			      		success:function(data){
+// 			      			layer.closeAll();
+			      			layer.alert("密码:  "+data.message);
+			      			
+			      		}
+			      	})
+				}
+			})
+		}
+	</script>
+</body>
+</html>

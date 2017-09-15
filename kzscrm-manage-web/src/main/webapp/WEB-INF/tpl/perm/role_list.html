@@ -1,0 +1,92 @@
+<!-- main${table.tableNameOut} -->
+<script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+<script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+
+<script src="$!rc.contextPath/static/js/perm/roleList/roleList.js"></script>
+<script src="$!rc.contextPath/static/js/perm/roleList/roleListFormatter.js"></script>
+<script type="text/javascript">
+	//全局变量
+	var roleListVar={
+			cancelUrl:'$!rc.contextPath/crmpermrole/doDelete',
+			editUrl:'$!rc.contextPath/crmpermrole/editCrmPermRole',
+			addUrl:'$!rc.contextPath/crmpermrole/addCrmPermRole'
+	}
+	
+	
+	
+</script>
+
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">角色列表</span>
+        <div class="pull-right"> 
+            <a class="btn btn-warning role_newAdd  crmPermRoleNewAdd" href="javascript:void(0);" onclick="editData('新增角色',roleListVar.addUrl,'800px','60%')">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+        </div>
+    </div>
+    <div class="form-box">
+	    <form class="form-inline" id="form" role="form">
+	        <div class="form-group">
+	        	<label class="control-label">类型</label>	
+	        	<div class="has-feedback" style="display: inline-block;">
+		        	<select class="form-control" name="type">
+						<option value="">请选择</option>
+						<option value="1">平台</option>
+						<option value="2">代理商</option>
+				    </select>
+				    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	        	</div>
+			</div>
+	        <div class="form-group">
+	        	<label class="control-label">角色名称</label>
+		        <input class="form-control" name="nameLike" id="name" placeholder="请输入角色名称">
+		    </div>
+		    <div class="form-group">
+	       		<a class="btn btn-default role_search  crmPermRoleSearch" href="javascript:void(0);" onclick="roleList.search()"><span class="glyphicon glyphicon-search"></span>搜索</a>
+	        	<a class="btn btn-default role_reset  crmPermRoleReset" href="javascript:void(0);" onclick="roleList.reset()">重置</a>
+	        </div>
+	    </form>
+    </div>
+     <table 
+        id="table"
+        data-classes="table table-public" 
+        data-toggle="table"
+        data-url="$!rc.contextPath/crmpermrole/queryPage"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="roleList.queryParams"
+        data-method='post'
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+		<thead>
+		   
+			<tr>
+<!-- 				<th data-field="code" data-align="center" data-width="10%">角色编号</th> -->
+				<th data-field="name" data-align="center" data-width="10%">角色名称</th>
+				<th data-field="type" data-align="center" data-formatter="roleListFormatter.type" data-width="10%">类型</th>
+				<th data-field="delFlag" data-align="center" data-width="10%" data-formatter="roleListFormatter.delFlag">启用状态</th>
+				<th data-field="operation" data-align="center" data-width="10%" data-formatter="roleListFormatter.operateFormatter" class="selecttd">操作</th> 
+			 
+			</tr>
+		</thead>
+	</table>	
+     
+    
+</div>	
+ <script type="text/javascript">
+ $(function(){
+		$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+	});
+ </script> 
+</body>
+</html>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmBusinessPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmBusinessPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+                    <result column="MOBILEPHONE" property="mobilephone" jdbcType="VARCHAR"/>
+                    <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+                    <result column="DEPARTMENT_ID" property="departmentId" jdbcType="BIGINT"/>
+                    <result column="POSITION_ID" property="positionId" jdbcType="BIGINT"/>
+                    <result column="UPDATE_ID" property="updateId" jdbcType="BIGINT"/>
+                    <result column="CREATE_ID" property="createId" jdbcType="BIGINT"/>
+                    <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+                    <result column="AGENT_AREA_CODE" property="agentAreaCode" jdbcType="BIGINT"/>
+                    <result column="USER_TYPE" property="userType" jdbcType="BIGINT"/>
+                    <result column="SEX" property="sex" jdbcType="BIGINT"/>
+                    <result column="REGISTER_TIME" property="registerTime" jdbcType="TIMESTAMP"/>
+                    <result column="HEADER_IMG" property="headerImg" jdbcType="VARCHAR"/>
+                    <result column="LAST_LOGIN" property="lastLogin" jdbcType="TIMESTAMP"/>
+                    <result column="MAIL" property="mail" jdbcType="VARCHAR"/>
+                    <result column="QQ" property="qq" jdbcType="BIGINT"/>
+                    <result column="AUTHENTICATION_STATUS" property="authenticationStatus" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="JOB_STATUS" property="jobStatus" jdbcType="BIGINT"/>
+                    <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+                    <result column="level" property="level"/>
+                    <result column="weixin" property="weixin" />
+                     <result column="work_time" property="workTime" />
+                     <result column="head_id_card" property="headIdCard" />
+                     <result column="agent_id" property="agentId" jdbcType="BIGINT"/>
+                     <result column="type" property="type"/>
+                    <result column="team_id" property="teamId" />
+                    <result column="junior_divide" property="juniorDivide"/>
+                    <result column="user_id" property="userId"/>
+                    <result column="update_time" property="updateTime"/>
+                    
+                    
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmbusiness.id as id,
+	                	        	           crmbusiness.name as name,
+	                	        	           crmbusiness.update_time as updateTime,
+	                	        	           crmbusiness.user_id as userId,
+	                	        	           crmbusiness.agent_id as agentId,
+	                	        	           crmbusiness.type as type,
+	                	        	           crmbusiness.mobilephone as mobilephone,
+	                	        	           crmbusiness.address as address,
+	                	        	           crmbusiness.department_id as departmentId,
+	                	        	           crmbusiness.position_id as positionId,
+	                	        	           crmbusiness.update_id as updateId,
+	                	        	           crmbusiness.create_id as createId,
+	                	        	           crmbusiness.parent_id as parentId,
+	                	        	           crmbusiness.agent_area_code as agentAreaCode,
+	                	        	           crmbusiness.user_type as userType,
+	                	        	           crmbusiness.sex as sex,
+	                	        	           crmbusiness.register_time as registerTime,
+	                	        	           crmbusiness.header_img as headerImg,
+	                	        	           crmbusiness.last_login as lastLogin,
+	                	        	           crmbusiness.mail as mail,
+	                	        	           crmbusiness.qq as qq,
+	                	        	           crmbusiness.authentication_status as authenticationStatus,
+	                	        	           crmbusiness.del_flag as delFlag,
+	                	        	           crmbusiness.create_time as createTime,
+	                	        	           crmbusiness.job_status as jobStatus,
+	                	        	           crmbusiness.level as level,
+	                	        	           crmbusiness.password as password,
+	                	        	           crmbusiness.weixin as weixin,
+	                	        	            crmbusiness.work_time as workTime,
+	                	        	           crmbusiness.head_id_card as headIdCard,
+	                	        	           crmbusiness.team_id as teamId,
+	                	        	           crmbusiness.junior_divide as juniorDivide
+	                    </sql>
+	                    
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 根据业务员类型，获取业务员ID -->
+    <select id="getBusinessIdsByType" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Long">
+    	select id from crm_business where del_flag=1 
+    	<if test="@Ognl@isNotEmpty(userType)"> AND user_type = #{userType} </if>
+    	<if test="@Ognl@isNotEmpty(teamId)"> AND team_id= #{teamId}</if>
+    	<if test="@Ognl@isNotEmpty(name)"> AND name like CONCAT('%',#{name},'%')</if>
+    	<if test="@Ognl@isNotEmpty(isHighest) and isHighest==1"> AND (parent_id = id or parent_id is null)</if>
+    	<choose>
+    		<when test="@Ognl@isNotEmpty(type)"> and type=#{type}</when>
+    		<otherwise> limit 0</otherwise>
+    	</choose>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+		<if test="id != null and id != ''"> AND crmbusiness.id = #{id}</if>
+		<if test="name != null and name != ''"> AND crmbusiness.name = #{name}</if>
+		<if test="mobilephone != null and mobilephone != ''"> AND crmbusiness.mobilephone = #{mobilephone}</if>
+		<if test="address != null and address != ''"> AND crmbusiness.address = #{address}</if>
+		<if test="departmentId != null and departmentId != ''"> AND crmbusiness.department_id = #{departmentId}</if>
+		<if test="positionId != null and positionId != ''"> AND crmbusiness.position_id = #{positionId}</if>
+		<if test="updateId != null and updateId != ''"> AND crmbusiness.update_id = #{updateId}</if>
+		<if test="createId != null and createId != ''"> AND crmbusiness.create_id = #{createId}</if>
+		<if test="@Ognl@isNotEmpty(parentId)"> AND crmbusiness.parent_id = #{parentId}</if>
+		<if test="agentAreaCode != null and agentAreaCode != ''"> AND crmbusiness.agent_area_code = #{agentAreaCode}</if>
+		<if test="@Ognl@isNotEmpty(userType)"> AND crmbusiness.user_type = #{userType}</if>
+		<if test="@Ognl@isNotEmpty(type)"> AND crmbusiness.type = #{type}</if>
+		<if test="sex != null and sex != ''"> AND crmbusiness.sex = #{sex}</if>
+		<if test="registerTime != null and registerTime != ''"> AND crmbusiness.register_time = #{registerTime}</if>
+		<if test="headerImg != null and headerImg != ''"> AND crmbusiness.header_img = #{headerImg}</if>
+		<if test="lastLogin != null and lastLogin != ''"> AND crmbusiness.last_login = #{lastLogin}</if>
+		<if test="mail != null and mail != ''"> AND crmbusiness.mail = #{mail}</if>
+		<if test="qq != null and qq != ''"> AND crmbusiness.qq = #{qq}</if>
+		<if test="@Ognl@isNotEmpty(teamId)"> AND crmbusiness.team_id= #{teamId}</if>
+		<if test="@Ognl@isNotEmpty(teamIds)"> AND crmbusiness.team_id in
+			<foreach collection="teamIds" item="teamId" index="index" open="(" close=")" separator=",">
+				#{teamId}
+			</foreach>
+		 </if>
+		<if test="authenticationStatus != null and authenticationStatus != ''"> AND crmbusiness.authentication_status =
+			#{authenticationStatus}
+		</if>
+		<if test="delFlag != null and delFlag != ''"> AND crmbusiness.del_flag = #{delFlag}</if>
+		<if test="createTime != null and createTime != ''"> AND crmbusiness.create_time = #{createTime}</if>
+		<if test="@Ognl@isNotEmpty(jobStatus)"> AND crmbusiness.job_status = #{jobStatus}</if>
+		<if test="password != null and password != ''"> AND crmbusiness.password = #{password}</if>
+		<if test="@Ognl@isNotEmpty(userId)"> AND crmbusiness.user_id= #{userId}</if>
+		<if test="@Ognl@isNotEmpty(agentId)"> AND crmbusiness.agent_id= #{agentId}</if>
+	</sql>
+
+    <!-- 列表对应的查询条件组合 -->
+  <!--   <sql id="queryOptions">
+          <if test="id != null and id != ''"> AND crmbusiness.id = #{id}</if>
+          <if test="name != null and name != ''"> AND crmbusiness.name = #{name}</if>
+          <if test="delFlag != null and delFlag != ''"> AND crmbusiness.del_flag = #{delFlag}</if>
+          <if test="createrTime != null and createrTime != ''"> AND crmbusiness.creater_time = #{createrTime}</if>
+          <if test="createUid != null and createUid != ''"> AND crmbusiness.create_uid = #{createUid}</if>
+    </sql>  -->
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_business crmbusiness
+    </sql>
+
+    <!-- 查询全部  有条件就按条件查询 -->
+		<select id="findByAll" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+			select * from  crm_business
+			<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(userType)"> AND user_type = #{userType}</if>
+			<if test="id != null">and id = #{id}</if>
+		</where>
+		</select>
+		<!-- 根据业务员id查询 -->
+		<select id="findById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_businiess
+		<where>
+			del_flag = 1 
+			<if test="id != null">and id = #{teamId}</if>
+		 </where>
+	  </select>
+	  
+	<!-- 根据userId查询对象 -->
+       <select id="findByUserId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business
+		<where>
+			del_flag = 1 
+			<if test="userId != null">and user_id = #{userId}</if>
+			<if test="@Ognl@isNotEmpty(startTime)">and date_format(create_time,'%Y-%m-%d')<![CDATA[>=]]> #{startTime}</if>
+	        <if test="@Ognl@isNotEmpty(endTime)">and date_format(create_time,'%Y-%m-%d')<![CDATA[<=]]> #{endTime}</if>
+		 </where>
+	  </select>
+ 
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM crm_business 
+        <where>
+        	 del_flag=1
+        	 <if test="@Ognl@isNotEmpty(agentId) ">and agent_id=#{agentId}</if>
+        	 <if test="@Ognl@isNotEmpty(jobStatus) ">and JOB_STATUS=#{jobStatus}</if>
+        	 <if test="@Ognl@isNotEmpty(teamId) and teamId!=0">and team_id=#{teamId}</if>
+        	 <if test="@Ognl@isNotEmpty(positionId)">and position_id = #{positionId}</if>
+        	 <if test="@Ognl@isNotEmpty(condition)">and  NAME like CONCAT('%',#{condition},'%') </if>
+        	 <if test="@Ognl@isNotEmpty(condition) and selectNum==2">and  id like CONCAT('%',#{condition},'%') </if>
+        	 <if test="@Ognl@isNotEmpty(userId)">and user_id=#{userId}</if>
+        	 <if test="@Ognl@isNotEmpty(businessIds)">and id in (${businessIds})</if>
+        	 <if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+        </where>
+        order by id desc
+    </select>
+    
+    <select id="findByBusinessName" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+    	select * from crm_business
+    	<where>
+    		del_flag=1
+    		<if test="businessName!=null and businessName!=''">and name  like "%"#{businessName}"%"</if>
+    	</where>
+    </select>
+    
+    <select id="findLikeByBusinessName" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+    	select * from crm_business
+    	<where>
+    		del_flag=1
+    		<if test="@Ognl@isNotEmpty(condition)">and name  like "%"#{condition}"%"</if>
+    	</where>
+    </select>
+
+	<select id="findByBusiness" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select * from crm_business
+		<where>
+			del_flag =1 
+			<if test="@Ognl@isNotEmpty(businessId)">and id = #{businessId}</if>
+		</where>
+	</select>
+	
+	<select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * 
+		from crm_business
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(name)">and name = #{name}</if>
+			<if test="@Ognl@isNotEmpty(mobilephone)">and mobilephone = #{mobilephone}</if>
+			<if test="@Ognl@isNotEmpty(address)">and address = #{address}</if>
+			<if test="@Ognl@isNotEmpty(departmentId)">and department_id = #{departmentId}</if>
+			<if test="@Ognl@isNotEmpty(positionId)">and position_id = #{positionId}</if>
+			<if test="@Ognl@isNotEmpty(updateId)">and update_id = #{updateId}</if>
+			<if test="@Ognl@isNotEmpty(createId)">and create_id = #{createId}</if>
+			<if test="@Ognl@isNotEmpty(parentId)">and parent_id = #{parentId}</if>
+			<if test="@Ognl@isNotEmpty(agentAreaCode)">and agent_area_code = #{agentAreaCode}</if>
+			<if test="@Ognl@isNotEmpty(userType)">and user_type = #{userType}</if>
+			<if test="@Ognl@isNotEmpty(sex)">and sex = #{sex}</if>
+			<if test="@Ognl@isNotEmpty(registerTime)">and register_time = #{registerTime}</if>
+			<if test="@Ognl@isNotEmpty(headerImg)">and header_img = #{headerImg}</if>
+			<if test="@Ognl@isNotEmpty(lastLogin)">and last_login = #{lastLogin}</if>
+			<if test="@Ognl@isNotEmpty(mail)">and mail = #{mail}</if>
+			<if test="@Ognl@isNotEmpty(headIdCard)">and head_id_card = #{headIdCard}</if>
+			<if test="@Ognl@isNotEmpty(qq)">and qq = #{qq}</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus)">and authentication_status = #{authenticationStatus}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(createTime)">and create_time = #{createTime}</if>
+			<if test="@Ognl@isNotEmpty(jobStatus)">and job_status = #{jobStatus}</if>
+			<if test="@Ognl@isNotEmpty(password)">and password = #{password}</if>
+			<if test="@Ognl@isNotEmpty(workTime)">and work_time = #{workTime}</if>
+			<if test="@Ognl@isNotEmpty(weixin)">and weixin = #{weixin}</if>
+			<if test="@Ognl@isNotEmpty(teamId)">and team_id = #{teamId}</if>
+			<if test="@Ognl@isNotEmpty(juniorDivide)">and junior_divide = #{juniorDivide}</if>
+			<if test="@Ognl@isNotEmpty(level)">and level = #{level}</if>
+			<if test="@Ognl@isNotEmpty(userId)">and user_id = #{userId}</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+			<if test="@Ognl@isNotEmpty(updateTime)">and update_time = #{updateTime}</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">#{id}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(nameLike)">and name like "%"#{nameLike}"%"</if>
+			<if test="@Ognl@isNotEmpty(teamIdsStr)">and team_id in (${teamIdsStr})</if>
+			<if test="@Ognl@isNotEmpty(teamIds)">
+				and team_id in
+				<foreach collection="teamIds" item="tId" index="index" open="(" separator="," close=")">#{tId}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(agentIds)">
+				and agent_id in
+				<foreach collection="agentIds" item="agentId" index="index" open="(" separator="," close=")">#{agentId}</foreach>
+			</if>
+		</where>
+		order by id desc
+	</select>
+	
+	<select id="findTeamById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * 
+		FROM crm_business
+		<where>
+			<choose>
+				<when test="@Ognl@isNotEmpty(delFlag)">
+					and del_flag=#{delFlag}
+				</when>
+				<otherwise>and del_flag=1</otherwise>
+			</choose>
+			<if test="@Ognl@isNotEmpty(jobStatus)">
+			and job_status = #{jobStatus}
+			</if>
+			and team_id = #{teamId}
+		</where>
+	</select>
+	
+	<!-- 获取团队人数 -->
+	<select id="getTeamNumber" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT COUNT(team_id) FROM crm_business
+		<where>
+			<if test="@Ognl@isNotEmpty(teamId)">and team_id = #{teamId}</if>
+			<if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+			<if test="@Ognl@isNotEmpty(jobStatus)">and job_status = #{jobStatus}</if>
+		</where>
+	</select>
+	
+	<!-- 根据参数查询businessId -->
+	<select id="queryBusinessIdByParam" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Long">
+		select id 
+		from crm_business
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(teamIds)">
+				and team_id in
+				<foreach collection="teamIds" item="teamId" index="index" open="(" separator="," close=")">#{teamId}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+			<if test="@Ognl@isNotEmpty(agentIds)">
+				and agent_id in
+				<foreach collection="agentIds" item="agentId" index="index" open="(" separator="," close=")">#{agentId}</foreach>
+			</if>
+		</where>
+	</select>
+	<!-- findByCanteenId -->
+		<select id="findByCanteenId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_business
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+		</where>
+	</select>
+	<!-- findByMobilPhone -->
+	<select id="findByMobilPhone" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_business
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(mobilephone)">and MOBILEPHONE = #{mobilephone}</if>
+		</where>
+	</select>
+	
+	<!-- 统计职业状态  -->
+	<select id="countOccupationStatus" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.util.Map">
+		select job_status as jobStatus , count(id) as statusNum
+		from crm_business
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+		</where>
+		group by job_status
+	</select>
+	<!-- findByParamm -->
+	<select id="findByParamm" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_business
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(userType)">and type = #{userType}</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and id= #{businessId}</if>
+		</where>
+	
+	</select>
+	
+	
+	</mapper>
+
+
+

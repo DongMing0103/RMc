@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/task
+     http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <context:property-placeholder order="0" location="classpath:config/kzscrm-dao.properties" ignore-resource-not-found="true"
+                                  ignore-unresolvable="true"/>
+	
+	<!-- 自动调度任务注册 -->
+	<task:executor id="executor" pool-size="5" queue-capacity="25" />
+	<task:scheduler id="scheduler" pool-size="20" />
+	<task:annotation-driven executor="executor"		scheduler="scheduler" />   
+	<context:component-scan base-package="com.hd.kzscrm.service.component"/>    
+	                    
+    <import resource="classpath:wolverine/wolverine-dao.xml"/>
+
+    <!-- 引入统计拦截功能 -->
+    <bean id="statFilter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <property name="slowSqlMillis" value="1000"/>
+        <property name="logSlowSql" value="true"/>
+    </bean>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${qzs_jdbc_url}"/>
+        <property name="username" value="${qzs_jdbc_username}"/>
+        <property name="password" value="${qzs_jdbc_password}"/>
+        <!-- 连接池最大使用连接数 -->
+        <property name="maxActive" value="50"/>
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="5"/>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000"/>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="5"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+        <!-- 自动清除无用连接 -->
+        <property name="removeAbandoned" value="true"/>
+        <!-- 清除无用连接的等待时间 -->
+        <property name="removeAbandonedTimeout" value="60"/>
+        <!-- 关闭Abandoned连接时输出错误日志 -->
+        <property name="logAbandoned" value="true"/>
+        <!-- 连接属性 -->
+        <property name="connectionProperties" value="clientEncoding=UTF-8"/>
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="stat"/>
+        <property name="proxyFilters">
+            <list>
+                <ref bean="statFilter"/>
+            </list>
+        </property>
+    </bean>
+    <!-- spring上下文，可以获取直下文的Context -->
+	<bean id="appUtil" class="com.hd.kzscrm.common.util.AppUtil"/>
+
+
+    <!-- 自动扫描mapper.xml文件 -->
+    <bean id="sqlSessionFactory" class="com.hd.wolverine.dao.MySqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/*/*.xml</value>
+                <value>classpath:mapper/*.xml</value>
+            </list>
+        </property>
+        <property name="configLocation" value="classpath:mybatis/config/mybatis-config.xml"/>
+        <!--自动别名配置，比如类名叫DemoPO，那么别名就自动配置为demoPO-->
+        <property name="typeAliasesPackage" value="com.hd.kzscrm.dao.entity"/>
+    </bean>
+
+    <!--往CommonDao注入数据源-->
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg ref="sqlSessionFactory"/>
+    </bean>
+    <!-- 对数据源进行事务管理 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          p:dataSource-ref="dataSource"/>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

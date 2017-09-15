@@ -1,0 +1,70 @@
+<!-- 目标记录 -->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">目标记录</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+        <div class="form-group">
+            <label class="control-label">工作月</label>
+            <input class="Wdate input-date" id="d4311" name="applyMonthStr" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default" href="javascript:void(0);" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmworktarget/personalTargetInit');">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public tabledown"
+           data-toggle="table"
+           data-url="$!rc.contextPath/crmworktarget/getPersonalTargetDetails"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="applyMonth" data-align="center" data-formatter="applyMonthFormatter">工作月</th>
+            <th data-field="agentNum" data-align="center">发展代理商数量</th>
+            <th data-field="completeAgentNum" data-align="center">完成量</th>
+            <th data-field="canteenNum" data-align="center">发展食堂数量</th>
+            <th data-field="completeCanteenNum" data-align="center">完成量</th>
+            <th data-field="orderMoney" data-align="center">订单总金额（￥）</th>
+            <th data-field="completeOrderMoney" data-align="center">完成量</th>
+            <th data-field="percentageCompletion" data-align="center">完成度（%）</th>
+            <th data-field="operate" data-align="center" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+	<div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="tabledown('crmworktarget/personalTargetDetailsExcelOut?Ids=')">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+<script type="text/javascript" src="$!rc.contextPath/static/js/target_record/personal_target.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+    
+      //搜索
+      function commit(){
+    	query();
+    }
+
+    //操作
+    function operationFormatter(value, row, index) {
+    	var str='<a href="$!rc.contextPath/crmclientresource/businessClientListInit?businessId='+row.businessId+'&applyMonth='+row.applyMonth+'" target=_blank>查看</a>';
+        return str;
+    }
+
+
+
+</script>

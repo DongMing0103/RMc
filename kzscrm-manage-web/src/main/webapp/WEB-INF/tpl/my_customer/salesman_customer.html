@@ -1,0 +1,146 @@
+<!--业务员客户-->
+<div class="main-content salesman-customer">
+    <div class="content-cap">
+        <span class="cap-name">业务员客户</span>
+    </div>
+    <div class="form-box">
+    	<form class="form-inline" id="form">
+    	<input type="hidden" name="address" value="">
+	        <div class="form-group">
+	            <label class="control-label">入驻时间</label>
+	            <input class="Wdate input-date" id="d4311" name="enterTimeStart" type="text" placeholder="请选择日期" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'2020-10-01\'}'})">
+	            &nbsp;至&nbsp;
+	            <input class="Wdate input-date" id="d4312" name="enterTimeEnd" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'2020-10-01'})">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">客户类别</label>
+		        <div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="clientType">
+		                <option value="">请选择</option>
+		                <option value="2">厂内食堂</option>
+		                <option value="3">校内食堂</option>
+		                <option value="4">独立食堂</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+		    </div>
+	        <div class="form-group">
+	            <label class="control-label">地理信息</label>
+		        <div class="city-select" id="city">
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control prov selectarrow"></select>
+						<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+					</div>
+					<div class="has-feedback" style="display: inline-block;">
+						<select class="form-control city selectarrow"></select>
+						<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+					</div>
+					<div class="has-feedback" style="display: inline-block;">
+					  	<select name="areaCode" class="form-control dist selectarrow"></select>
+					 	<i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+					</div>
+				</div>
+			</div>
+	        <div class="form-group">
+	        	<div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="searchCriteria">
+		                <option value="">请选择搜索条件</option>
+		                <option value="1">食堂名称</option>
+		                <option value="2">食堂编号</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+	            <input class="form-control" name="searchContent" id="enterNoName" placeholder="请输入...">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);" onclick="query1()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/salesmanCustomerInit')">重置</a>
+	        </div>
+	    </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public tabledown"
+        data-toggle="table"
+        data-url="/crmclientresource/salesmanCustomerDetails"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+        	<th data-checkbox="true"></th>
+            <th data-field="clientNum" data-align="center">ID</th>
+            <th data-field="name" data-align="center">名称</th>
+            <th data-field="clientType" data-align="center" data-formatter="clientTypeFormatter">客户类别</th>
+            <th data-field="businessName" data-align="center">业务员</th>
+            <th data-field="address" data-align="center">地理信息</th>
+            <th data-field="applyApproveTime" data-align="center" data-formatter="dateFormatter">入驻时间</th>
+            <th data-field="canteenSplitPercent" data-align="center">分账比例（%）</th>
+            <th data-field="mobile" data-align="center">联系电话</th>
+            <th data-field="operate" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="tabledown('crmclientresource/salesmanCustomerDetailsExcleOut?Ids=')">
+            <span class="glyphicon glyphicon-save"></span>导出
+        </a>
+    </div>
+
+</div>
+<script type="text/javascript" src="$!rc.contextPath/static/js/my_customer/salesman_customer.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+	
+    /* 地理联动 */
+	$('#city').citySelect({
+        url:"/static/js/cityselect/city.min.js",
+        prov:"", //省
+        city:"", //市	
+        dist:"", //区
+        nodata:"none", //当子集无数据时，隐藏select
+        required:false
+    }); 
+    
+    //操作
+    function operationFormatter(value, row, index) {
+    	var str = 	"<div class=tddiv>"+
+			        "<span class=settingtda>请选择</span>"+
+			        "<ul class=settingtdmenu>"+
+			        "<li><a href=/crmclientresource/customerResourceLook?clientId="+row.id+" target=_blank>查看</a></li>";
+			        
+			        if(1 != row.clientType){
+			        	str += "<li><a href=/crmOrder/orderListInit?canteenId="+row.agentCanteenId+" target=_blank>订单列表</a></li>"+
+			        		"<li><a href=/crmEnterprise/viewEnterpriseInformation?clientId="+row.id+" target=_blank>企业信息</a></li>"+
+			        		"<li><a href=javascript:void(0); onclick=adjustRatio("+row.id+");>调整分账比例</a></li>";
+			        }
+			        str +="</ul></div>";
+        return str;
+    }
+    /* 调整分账比例 */
+	function adjustRatio(id){
+		var index=layer.open({
+	      	type:2,
+	      	title:"调整分账比例",
+	      	shade:[0.5,'#000'],
+	      	area:["768px","500px"],
+	      	content:"crmsplitassignset/adjustSplitPercentInit?clientId="+id,
+			success: function(layero, index){
+				layer.getChildFrame('.first-input',index).focus();
+			}
+      		/* yes:function(){
+      			$.ajax({
+      				
+      			})
+      		} */
+		});
+
+	}
+</script>
+

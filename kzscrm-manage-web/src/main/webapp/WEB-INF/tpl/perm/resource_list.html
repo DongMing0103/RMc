@@ -1,0 +1,105 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">资源列表</span>
+        <div class="pull-right">
+        	<a class="btn btn-warning width-auto role_newAddMenu crmPermRoleNewAddMenu" onclick="editData('新增菜单','crmpermmenu/addCrmPermMenuInit','900px','90%')">
+        		<i class="fa fa-plus"></i> 新增菜单
+        	</a>
+        	<a class="btn btn-warning width-auto role_newAdd  crmPermRoleNewAdd" onclick="editData('新增资源','crmpermsources/addCrmPermSources','800px','90%')">
+        		<i class="fa fa-plus"></i> 新增资源
+        	</a>
+        </div>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public" 
+        data-toggle="table"
+        data-url="/crmpermsources/queryPageBasic"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-page-size="20"
+        data-page-list="[10,20,50]" 
+        data-cache="false">
+        <thead>
+            <tr>
+                <th data-field="firstName" data-align="center">一级菜单</th>
+                <th data-field="secondName" data-align="center">二级菜单</th>
+                <th data-field="sourcesName" data-align="center">功能按钮</th>
+                <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<script type="text/javascript">
+	$(function(){
+		$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+	});
+	
+	
+
+	
+	function operateFormatter(value, row, index) {
+		return [
+			'<div class="tddiv crmPermRoleDelect">',
+				'<span class="settingtda">请选择</span>'+
+				'<ul class="settingtdmenu">'+
+					'<li><a class="delresource role_delect_first crmPermRoleDelectFirst" onclick="deleteBtn('+row.id+',\'一级\')" href="javascript:void(0);">删除一级菜单</a><li>'+
+					'<li><a class="delresource role_delect_second crmPermRoleDelectSecond" onclick="deleteBtn('+row.secondId+',\'二级\')" href="javascript:void(0);">删除二级菜单</a><li>'+
+				'</ul>'+
+			'</div>'			
+       	].join('');
+   	}
+	function deleteBtn(id,parentId) {
+		var postData={};
+		if(parentId=='一级'){
+			postData.parentId=0;
+		}else if(parentId=='二级'){
+			postData.parentId=1;
+		}
+		postData.id=id;
+    	layer.open({
+			title:"删除",
+		  	icon:3,
+		  	content:"确定要删除销该资源吗？",
+		  	btn:["确定","取消"],
+		  	yes:function(index){
+		  		$.ajax({
+		  			type:"POST",
+		  			data:postData,
+		  			dataType:"json",
+		  			url:"/permmenu/delete",
+		  			success:function(data){
+		  				layer.msg(data.message);
+				  		layer.close(index);
+				  		$("#table").bootstrapTable('refresh');
+		  				
+		  			}
+		  		})
+		  	}
+		})
+    }
+
+	
+</script>
+<!-- <script type="text/javascript">
+
+$(function(){
+	alert();
+	#foreach($!cSourcesVO in $!cSourcesVOs)
+		#if(!$!cSourcesVO.check)
+			$('$!cSourcesVO.frontContrlName').remove();
+		#end
+	#end
+});
+</script> -->
+
+
+

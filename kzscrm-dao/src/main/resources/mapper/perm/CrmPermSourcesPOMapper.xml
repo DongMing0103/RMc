@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmPermSourcesPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.perm.CrmPermSourcesPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="MENU_ID" property="menuId" jdbcType="BIGINT"/>
+                    <result column="SOURCES_NAME" property="sourcesName" jdbcType="VARCHAR"/>
+                    <result column="SOURCES_URLS" property="sourcesUrls" jdbcType="VARCHAR"/>
+                    <result column="FRONT_CONTRL_NAME" property="frontContrlName" jdbcType="VARCHAR"/>
+                    <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="ICON" property="icon" jdbcType="VARCHAR"/>
+                    <result column="checked" property="checked" jdbcType="INTEGER" />
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmpermsources.id as id,
+	                	        	           crmpermsources.menu_id as menuId,
+	                	        	           crmpermsources.sources_name as sourcesName,
+	                	        	           crmpermsources.sources_urls as sourcesUrls,
+	                	        	           crmpermsources.front_contrl_name as frontContrlName,
+	                	        	           crmpermsources.parent_id as parentId,
+	                	        	           crmpermsources.create_time as createTime,
+	                	        	           crmpermsources.create_uid as createUid,
+	                	        	           crmpermsources.update_time as updateTime,
+	                	        	           crmpermsources.update_uid as updateUid,
+	                	        	           crmpermsources.del_flag as delFlag,
+	                	        	           crmpermsources.icon as icon,
+	                	        	           crmpermsources.checked as checked
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT *
+        FROM crm_perm_sources
+        where del_flag=1
+        
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmpermsources.id = #{id}</if>
+                                               <if test="menuId != null and menuId != ''"> AND crmpermsources.menu_id = #{menuId}</if>
+                                      <if test="sourcesName != null and sourcesName != ''"> AND crmpermsources.sources_name = #{sourcesName}</if>
+                                               <if test="sourcesUrls != null and sourcesUrls != ''"> AND crmpermsources.sources_urls = #{sourcesUrls}</if>
+                                               <if test="frontContrlName != null and frontContrlName != ''"> AND crmpermsources.front_contrl_name = #{frontContrlName}</if>
+                                                        <if test="parentId != null and parentId != ''"> AND crmpermsources.parent_id = #{parentId}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmpermsources.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmpermsources.create_uid = #{createUid}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmpermsources.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmpermsources.update_uid = #{updateUid}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmpermsources.del_flag = #{delFlag}</if>
+                                      <if test="icon != null and icon != ''"> AND crmpermsources.icon = #{icon}</if>
+                                      <if test="checked != null and checked != ''"> AND crmpermsources.checked = #{checked}</if>
+                              </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_perm_sources crmpermsources
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        order by CREATE_TIME desc
+    </select>
+
+	<!-- findBySourceIds -->
+	<select id="findBySourceIds" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_perm_sources
+		<where>
+			del_falg =1
+			<if test="@Ognl@isNotEmpty(sourceList)">
+				and id in 
+				<foreach collection="sourceList" item="sourceId" index="index" separator="," open="(" close=")">
+					#{sourceId}				
+				</foreach>
+				
+			 </if>
+		</where>
+	
+	</select>
+	
+		
+	
+	</mapper>
+
+
+

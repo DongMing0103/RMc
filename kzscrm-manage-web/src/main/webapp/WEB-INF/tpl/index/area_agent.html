@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>区域代理商表</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+            <h2><a href="../../index.html">筷子说CRM</a></h2>
+            <h3>区域代理表</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+            <div class="form-box">
+                <form class="form-inline" id="form">
+                <input id="agentStatus" name="agentStatus" value="$!agentStatus" type="hidden"/>
+                    <div class="form-group">
+                        <label class="control-label">代理类型</label>
+                        <select class="form-control" id="level" name="level">
+                            <option value="0">请选择</option>
+                            <option value="1">一级代理商</option>
+                            <option value="2">下级代理商</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+	            <label class="control-label">区域代理</label>
+	            <div class="city-select" id="city">
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control prov" name="provCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control city" name="cityCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	                <div class="has-feedback" style="display: inline-block;">
+	                    <select class="form-control dist" name="areaCode"></select>
+	                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	                </div>
+	            </div>
+	        </div>
+                    <div class="form-group">
+                        <select class="form-control" name="selectNum">
+                            <option value="0">请选择搜索条件</option>
+                            <option value="1">代理商名称</option>
+                            <!-- <option value="2">代理商编号</option> -->
+                        </select>
+                        <input class="form-control" placeholder="请输入..." name="condition">
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-default" href="javascript:void(0);"  onclick="commit();">
+                            <span class="glyphicon glyphicon-search"></span>搜索
+                        </a>
+                        <a class="btn btn-default" href="$!rc.contextPath/crmclientresource/areaAgent">
+                         	重置
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <table
+                id="table"
+                data-classes="table table-public"
+                data-toggle="table"
+                data-url="$!rc.contextPath/crmclientresource/areaAgentPage"
+                data-pagination="true"
+                data-pagination-v-align="both"
+                data-query-params="queryParams"
+                data-side-pagination="server"
+                data-page-size="20"
+                data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                        <th data-field="id" data-align="center">区域代理编号</th>
+           				<th data-field="name" data-align="center">名称</th>
+            			<th data-field="agentNatureName" data-align="center">性质</th>
+<!--             			<th data-field="level" data-align="center" data-formatter="level">代理类型</th> -->
+            			<th data-field="signTime" data-align="center" data-formatter="dateNoMinFormatter">签约时间</th>
+         				<th data-field="agentStatusName" data-align="center">代理状态</th>
+         				<th data-field="areaName" data-align="center">代理区域 </th>
+          				<th data-field="businessName" data-align="center">联系业务员</th>
+         				<th data-field="principalName"  data-align="center">联系人姓名</th>
+          				<th data-field="mobilephoe"  data-align="center">联系人电话</th>
+                    <th data-field="operate" data-align="center" data-formatter="operateFormatter" >操作</th>
+                </tr>
+                </thead>
+            </table>
+            <div class="mt10">
+                <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData('请选择导出的字段','$!rc.contextPath/crmclientresource/areaAgentExcelOut?areaIds=')">
+                    <span class="glyphicon glyphicon-save"></span>导出
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    <script src="$!rc.contextPath/static/js/util/dateUtils.js"></script>
+    
+    <script type="text/javascript">
+		$(function(){
+			$('#table').bootstrapTable();
+			$("#table").on('load-success.bs.table',function(e,data){
+				#foreach($!cSourcesVO in $!cSourcesVOs)
+					#if(!$!cSourcesVO.check)
+						$('$!cSourcesVO.frontContrlName').remove();
+					#end
+				#end
+			})
+		});
+  		  
+  	     function commit(){
+  			qurery();
+  		}
+
+  		//查询
+  		function qurery(url){
+  			var _url =$("#table").attr("data-url");
+  			if(url==null){
+  				url=_url;
+  			}
+  			
+  			$("#table").bootstrapTable("removeAll");
+  			$("#table").bootstrapTable('refresh',{
+  				url:url
+  			},{
+  				query:$('#form').serialize()
+  			})
+  		}
+  		/*分页查询*/
+  		function queryParams(params) {
+  			return $('#form').serialize() + '&order=' + params.order + '&offset=' + params.offset + '&limit=' + params.limit;
+
+  		}
+		
+  		function level(value, row, index){
+//   			if(value==null||value==""||value==undefined){
+//   				return "-";
+//   			}
+  			if(value==1){
+  				return  "一级代理";
+  			}
+  			else if(value==null||value==""||value==undefined){
+  				return "-";
+  			}
+  			else{
+  				return "下级代理";
+  			}
+  		}
+  	     /*签约时间*/
+  	    function dateNoMinFormatter(value,row,index){
+  	    	return dateUtils.formatToDate(value,'yyyy-MM-dd hh:mm:ss')
+  	    }
+        /*操作*/
+        function operateFormatter(value, row, index) {
+            return [
+                '<div class="dropdown">',
+                '<a href="javascript:void(0);" id="resource-operate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+                '请操作',
+                '<span class="caret"></span>',
+                '</a>',
+                '<ul class="dropdown-menu" aria-labelledby="resource-operate">',
+                /*保护客户、正式客户只有查看、跟踪记录操作*/
+                '<li><a href=/crmagent/see?agentId='+row.id+' target=_blank>查看</a></li>',
+                '<li><a href=javascript:void(0); onclick=editData(\'编辑\',\'/crmagent/addInit?id='+row.id+'\',\'768px\',\'90%\')>编辑资料</a></li>',
+                '<li><a href=/crmbusinesstailrecord/initClint?customerId='+row.id+' target=_blank>跟踪记录</a></li>',
+               
+                '</ul>',
+                '</div>'
+            ].join('');
+        }
+
+        /*地理联动*/
+        $("#city").citySelect({
+            url:"/static/js/cityselect/city.min.js",
+            prov:"",//省份
+            city:"",//城市
+            dist:"",//区县
+            nodata:"none",//当子集无数据时，隐藏select
+            required:false
+        });
+        
+        function resetBtn(){
+//         	$('#form').reset();
+			$("#form").form("clear");
+        	alert($("#level").val());
+        	$("#table").bootstrapTable('refresh', {
+        		url:"$!rc.contextPath/crmclientresource/areaAgentPage"
+        	});
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

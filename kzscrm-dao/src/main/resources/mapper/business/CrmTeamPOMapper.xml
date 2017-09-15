@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmTeamPOMapper">
+
+	<!-- 表中列对应PO -->
+	<resultMap type="com.hd.kzscrm.dao.entity.business.CrmTeamPO"
+		id="BaseResultMap">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT" />
+		<result column="CREATER_TIME" property="createrTime" jdbcType="TIMESTAMP" />
+		<result column="CREATE_UID" property="createUid" jdbcType="BIGINT" />
+		<result column="agent_id" property="agentId" jdbcType="BIGINT" />
+		<result column="AREA_CODE" property="areaCode" jdbcType="BIGINT" />
+		<result column="parent_id" property="parentId" jdbcType="BIGINT" />
+		<result column="parent_ids" property="parentIds" jdbcType="VARCHAR" />
+		<result column="top_parent_id" property="topParentId" jdbcType="BIGINT" />
+		<result column="level" property="level" />
+		<result column="type" property="type" />
+	</resultMap>
+    
+	<!-- 显示的记录对应的列 -->
+	<sql id="Base_Column_List">
+		crmteam.id as id,
+		crmteam.area_code as areaCode,
+		crmteam.level as level,
+		crmteam.parent_id as parentId,
+		crmteam.parent_ids as parentIds,
+		crmteam.top_parent_id as topParentId,
+		crmteam.agent_id as agentId,
+		crmteam.name as name,
+		crmteam.del_flag as delFlag,
+		crmteam.type as type,
+		crmteam.creater_time as createrTime,
+		crmteam.create_uid as createUid
+	</sql>
+	<update id="deleteById"  parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_team set del_flag=0 where id=#{id}
+	</update>
+	<!-- 无分页查询 -->
+	<select id="queryList" parameterType="com.hd.wolverine.util.ParamMap"
+		resultMap="BaseResultMap">
+		SELECT DISTINCT crmteam.*
+		FROM crm_team crmteam
+		<where>
+			crmteam.del_flag=1
+			
+			<if test="@Ognl@isNotEmpty(id)"> and id=#{id}</if>
+			<if test="@Ognl@isNotEmpty(agentIds)"> and crmteam.agent_id in (#{agentIds})</if>
+			<if test="@Ognl@isNotEmpty(parentId)"> and crmteam.parent_id = (#{parentId})</if>
+			<if test="@Ognl@isNotEmpty(type)"> and crmteam.type=#{type}</if>
+			<if test="@Ognl@isNotEmpty(level)"> and crmteam.level=#{level}</if>
+			<if test="@Ognl@isNotEmpty(areaCode)"> and crmteam.area_code=#{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(agentId)"> and crmteam.agent_id=#{agentId}</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and crmteam.id in
+				<foreach collection="ids" item="id" index="index" open="("
+					separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			
+		</where>
+	</select>
+	
+	<select id="commonSearch" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> from <include refid="querySqlMain"/>
+		<where>
+			<choose>
+				<when test="@Ognl@isNotEmpty(delFlag)">and del_flag=#{delFlag}</when>
+				<otherwise>and del_flag=1</otherwise>
+			</choose>
+			<include refid="queryOptions"/>
+		</where>
+		<include refid="orderControl"/>
+	</select>
+	<!-- 列表对应的查询条件组合 -->
+	<sql id="queryOptions">
+		<if test="id != null and id != ''"> AND crmteam.id = #{id}</if>
+		<if test="@Ognl@isNotEmpty(agentId)"> AND crmteam.agent_id = #{agentId}</if>
+		<if test="@Ognl@isNotEmpty(level)"> AND crmteam.level = #{level}</if>
+		<if test="@Ognl@isNotEmpty(parentId)"> AND crmteam.parent_id = #{parentId}</if>
+		<if test="@Ognl@isNotEmpty(topParentId)"> AND crmteam.top_parent_id = #{topParentId}</if>
+		<if test="name != null and name != ''"> AND crmteam.name = #{name}</if>
+		<if test="delFlag != null and delFlag != ''"> AND crmteam.del_flag = #{delFlag}</if>
+		<if test="createrTime != null and createrTime != ''"> AND crmteam.creater_time = #{createrTime}</if>
+		<if test="createUid != null and createUid != ''"> AND crmteam.create_uid = #{createUid}</if>
+		<if test="@Ognl@isNotEmpty(type)"> AND crmteam.type= #{type}</if>
+		<if test="@Ognl@isNotEmpty(startLevel)"> AND crmagent.level <![CDATA[>=]]> #{startLevel}</if>
+        <if test="@Ognl@isNotEmpty(endLevel)"> AND crmagent.level <![CDATA[<=]]>  #{endLevel}</if>
+	</sql>
+
+	<!-- 列表查询对应的排序选项 -->
+	<sql id="orderControl">
+		<if test="orders != null">
+			<foreach collection="orders.keys" index="key" item="value"
+				open="order by" separator=",">
+				${key} ${orders[key]}
+			</foreach>
+		</if>
+	</sql>
+
+
+	<!-- 列表查询对应的表关系SQL -->
+	<sql id="querySqlMain">
+		crm_team crmteam
+	</sql>
+
+
+	<!-- 分页查询对应的记录 -->
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		<!-- SELECT (select team_id from crm_work_target where del_flag=1)
+		FROM crm_team
+		where del_flag=1 -->
+		
+		SELECT DISTINCT crmteam.* 
+		FROM crm_team crmteam, crm_business crmbusiness
+		<where>
+			crmteam.del_flag = 1
+			and crmbusiness.team_id = crmteam.id
+			<if test="id != null and id != ''">and crmteam.id = #{id}</if>
+			<if test="teamId != null and teamId != 0">and crmbusiness.team_id = #{teamId}</if>
+			<if test="@Ognl@isNotEmpty(idS)">and crmteam.id in (${idS})</if>
+		</where>
+	</select>
+
+	<!-- 基础查询 -->
+	<select id="queryPages" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		<!-- SELECT crmteam.id , crmteam.`name`, crmteam.creater_time, crmteam.area_code ,
+		basearea.area_name
+		FROM crm_team crmteam, base_area basearea 
+		WHERE
+		crmteam.del_flag = 1 AND crmteam.area_code = basearea.area_code -->
+		SELECT * FROM crm_team crmteam LEFT JOIN crm_business cbusiness ON (crmteam.id = cbusiness.team_id)
+		
+	</select>
+
+	<!-- 根据id查询对象 -->
+	<select id="findById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_team
+		<where>
+			del_flag = 1
+			<if test="teamId != null">and id = #{teamId}</if>
+		</where>
+	</select>
+	<select id="commonQuery" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		<include refid="querySqlMain" />
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and crmteam.id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(name)">and crmteam.name = #{name}</if>
+			<if test="@Ognl@isEmpty(delFlag)">and crmteam.del_flag = 1 </if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and crmteam.del_flag = #{delFlag} </if>
+			<if test="@Ognl@isNotEmpty(level)">and crmteam.level = #{level} </if>
+			<if test="@Ognl@isNotEmpty(parentId)">and crmteam.parent_id = #{parentId} </if>
+			<if test="@Ognl@isNotEmpty(topParentId)">and crmteam.top_parent_id = #{topParentId} </if>
+			<if test="@Ognl@isNotEmpty(createrTime)">and crmteam.creater_time = #{createrTime}</if>
+			<if test="@Ognl@isNotEmpty(createUid)">and crmteam.create_uid = #{createUid}</if>
+			<if test="@Ognl@isNotEmpty(type)">and crmteam.type = #{type}</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and crmteam.id in
+				<foreach collection="ids" item="id" index="index" open="("
+					separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+		<if test="@Ognl@isNotEmpty(orderBy)">order by ${orderBy}</if>
+	</select>
+	<!-- 查询全部 有条件就按条件查询 -->
+	<select id="findByAll" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_team
+		<where>
+			del_flag = 1
+			<if test="teamId != null">and id = #{teamId}</if>
+		</where>
+	</select>
+	
+	<!-- 根据团队名称模糊查询 -->
+	<select id="findLikeByTeamName" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_team
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(condition)">and name like "%"#{condition}"%"</if>
+		</where>
+	</select>
+	
+	
+	
+	<!-- 查询团队信息,私有 -->
+	<select id="queryTeamMsg" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, name, area_code, level, agent_id,creater_time
+		from  crm_team
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">#{id}</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(type)">and agent_id is null</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(level)">and level = #{level}</if>
+		</where>
+	</select>
+	
+	<!-- 查询子孙团队,私有 -->
+	<select id="getChildTeam" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, name, area_code, level, agent_id, creater_time, parent_id, parent_ids, top_parent_id, creater_time, create_uid
+		from crm_team
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(level)">and level = #{level}</if>
+			<if test="@Ognl@isNotEmpty(parentId)">and find_in_set(#{parentId},parent_ids)</if>
+		</where>
+	</select>
+	
+	<!-- 查询子孙团队id(包括本身Id),私有 -->
+	<select id="getChildTeamIds" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Long">
+		select id
+		from crm_team 
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(parentId)">and find_in_set(#{parentId},parent_ids)</if>
+		</where>
+	</select>
+	
+	<!-- 查询团队名称 -->
+	<select id="getTeamName" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT 
+			* 
+		FROM
+			crm_team
+		WHERE del_flag = 1
+	</select>
+
+	<select id="getType" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT 
+			* 
+		FROM
+			crm_team
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(type)">and type = #{type}</if>
+		</where>
+	</select>
+	
+	<!-- 查询父级团队(包括本身) -->
+	<select id="queryParentsTeam" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, name, area_code, level, agent_id, creater_time, parent_id, parent_ids, top_parent_id, creater_time, create_uid
+		from crm_team
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(parentIds)">and id in (${parentIds})</if>
+		</where>
+		order by level
+	</select>
+	
+	<select id="selectByAreaCodeLike" resultMap="BaseResultMap">
+		select * from crm_team where  area_code like "%"#{areaCode}"%" and del_flag=1
+	</select>
+	
+	<select id="selectByAreaCode" resultMap="BaseResultMap">
+		select * from crm_team where area_code = #{areaCode} and del_flag=1
+	</select>
+	
+	<select id="findByParentId" resultMap="BaseResultMap">
+		select * from crm_team where del_flag=1 and parent_id = #{parentId}
+	</select>
+	
+</mapper>
+
+
+

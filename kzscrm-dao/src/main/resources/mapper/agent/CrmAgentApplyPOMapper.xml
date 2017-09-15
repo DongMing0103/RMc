@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmAgentApplyPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.agent.CrmAgentApplyPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="APPLY_TIME" property="applyTime" jdbcType="TIMESTAMP"/>
+                    <result column="AGENT_ID" property="agentId" jdbcType="BIGINT"/>
+                    <result column="CHECK_STATUS" property="checkStatus" jdbcType="BIGINT"/>
+                    <result column="CHECK_USER_ID" property="checkUserId" jdbcType="BIGINT"/>
+                    <result column="CHECK_TIME" property="checkTime" jdbcType="TIMESTAMP"/>
+                    <result column="client_id" property="clientId" jdbcType="BIGINT"/>
+                    <result column="area_code" property="areaCode" jdbcType="BIGINT"/>
+                    <result column="cooperation_start_time" property="cooperationStartTime" jdbcType="TIMESTAMP"/>
+                    <result column="cooperation_end_time" property="cooperationEndTime" jdbcType="TIMESTAMP"/>
+                    <result column="contract_img_path" property="contractImgPath" jdbcType="VARCHAR"/>
+                    <result column="create_uid" property="createUid" jdbcType="BIGINT"/>
+                    <result column="del_flag" property="delFlag"/>
+                    <result column="enter_time" property="enterTime"/>
+                    
+                    
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmagentapply.id as id,
+        	        	           crmagentapply.enter_time as enterTime,
+	                	        	           crmagentapply.apply_time as applyTime,
+	                	        	           crmagentapply.agent_id as agentId,
+	                	        	           crmagentapply.check_status as checkStatus,
+	                	        	           crmagentapply.check_user_id as checkUserId,
+	                	        	           crmagentapply.check_time as checkTime,
+	                	        	           crmagentapply.client_id as clientId,
+	                	        	           crmagentapply.area_code as areaCode,
+	                	        	           crmagentapply.cooperation_start_time as cooperationStartTime,
+	                	        	           crmagentapply.cooperation_end_time as cooperationEndTime,
+	                	        	           crmagentapply.contract_img_path as contractImgPath,
+	                	        	           crmagentapply.create_uid as createUid
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmagentapply.id = #{id}</if>
+                                      <if test="@Ognl@isNotEmpty(checkStatus)"> AND crmagentapply.check_status = #{checkStatus}</if>
+                                      <if test="applyTime != null and applyTime != ''"> AND crmagentapply.apply_time = #{applyTime}</if>
+                                                        <if test="agentId != null and agentId != ''"> AND crmagentapply.agent_id = #{agentId}</if>
+                                               <if test="checkStatus != null and checkStatus != ''"> AND crmagentapply.check_status = #{checkStatus}</if>
+                                               <if test="checkUserId != null and checkUserId != ''"> AND crmagentapply.check_user_id = #{checkUserId}</if>
+                                      <if test="checkTime != null and checkTime != ''"> AND crmagentapply.check_time = #{checkTime}</if>
+                                      <if test="clientId != null and clientId != ''"> AND crmagentapply.client_id = #{clientId}</if>
+                                      <if test="areaCode != null and areaCode != ''"> AND crmagentapply.area_code = #{areaCode}</if>
+                                      <if test="cooperationStartTime != null and cooperationStartTime != ''"> AND crmagentapply.cooperation_start_time = #{cooperationStartTime}</if>
+                                      <if test="cooperationEndTime != null and cooperationEndTime != ''"> AND crmagentapply.cooperation_end_time = #{cooperationEndTime}</if>
+                                      <if test="contractImgPath != null and contractImgPath != ''"> AND crmagentapply.contract_img_path = #{contractImgPath}</if>
+                                      <if test="createUid != null and createUid != ''"> AND crmagentapply.create_uid = #{createUid}</if>
+                              </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_agent_apply crmagentapply
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+	
+	<!-- 通用查询 -->
+	<select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id,apply_time,agent_id,client_id,check_status,check_user_id,check_time,area_code,cooperation_start_time,cooperation_end_time,contract_img_path,create_uid
+		from crm_agent_apply
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(applyTime)">and apply_time = #{applyTime}</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(clientId)">and client_id = #{clientId}</if>
+			<if test="@Ognl@isNotEmpty(checkStatus)">and check_status = #{checkStatus}</if>
+			<if test="@Ognl@isNotEmpty(checkUserId)">and check_user_id = #{checkUserId}</if>
+			<if test="@Ognl@isNotEmpty(checkTime)">and check_time = #{checkTime}</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">and area_code = #{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(createUid)">and create_uid = #{createUid}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+		</where>
+	</select>
+	
+	<!-- 根据id查询 -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_agent_apply
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+		</where>
+	</select>
+	<!-- findByAgentId -->	
+		<select id="findByAgentId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_agent_apply
+		<where>
+			del_flag = 1
+			and check_status =1
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+			<if test="@Ognl@isNotEmpty(createUid)">and create_uid = #{createUid}</if>
+		</where>
+	</select>
+	
+	<!-- 根据参数删除申请信息(delFlag置0) -->
+	<update id="deleteAgentApplyEntity" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_agent_apply
+		<set>
+			<if test="@Ognl@isNotEmpty(delFlag)">del_flag = #{delFlag}</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+		</where>
+	</update>
+	
+	
+	</mapper>
+
+
+

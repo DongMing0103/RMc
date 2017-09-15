@@ -1,0 +1,56 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">团队结构</span>
+        <div class="pull-right">
+        	<a href="javascript:void(0);" class="btn btn-warning crmTeamNewAdd" onclick="editData('新增团队','/crmteam/showTeamSet','768px','700px')">
+        		<span class="glyphicon glyphicon-plus"></span>新增
+        	</a>
+        </div>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="crmteam/showTeamStrctrue"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams" 
+        data-page-size="10"
+		data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-field="name" data-align="center">团队名称</th>
+            <th data-field="level" data-align="center">团队级别</th>
+            <th data-field="createrTime" data-align="center" data-formatter="teamStructureFormatter.createTimeFormatter">建立时间</th>
+            <th data-field="higherManager" data-align="center">上级主管</th>
+            <th data-field="areaName" data-align="center" data-formatter="teamStructureFormatter.areaNameFormatter">业务范围 </th>
+            <th data-field="operate" data-align="center" data-formatter="teamStructureFormatter.operateFormatter" >操作</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+<script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+<script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+<script src="$!rc.contextPath/static/js/system_set/teamStructure/teamStructure.js"></script>
+<script src="$!rc.contextPath/static/js/system_set/teamStructure/teamStructureFormatter.js"></script>
+<script type="text/javascript">
+	$(function(){
+	   	$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+    
+	});
+	/* 表格分页 */
+	function queryParams(params) {
+		return 'offset=' + params.offset + '&limit=' + params.limit;
+	}
+</script>
+

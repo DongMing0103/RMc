@@ -1,0 +1,80 @@
+<!--业务员考核-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">业务员考核</span>
+    </div>
+    <div class="form-box">
+    	<form class="form-inline" id="form">
+	        <div class="form-group">
+	            <label class="control-label">工作月</label>
+	            <input class="Wdate input-date" id="d4311" name="applyMonth" type="text" placeholder="请选择日期" onfocus="WdatePicker({dateFmt:'yyyy年MM月'})">
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">所属团队</label>
+		        <div class="has-feedback" style="display: inline-block;">
+		            <select class="form-control selectarrow" name="teamId">
+		                <option value="0">请选择</option>
+		                <option value="">商务一部</option>
+		                <option value="">商务二部</option>
+		            </select>
+		            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		        </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="control-label">姓名检索</label>
+		        <input class="form-control" placeholder="请输入业务员姓名">
+	        </div>
+	        <div class="form-group">
+	            <a class="btn btn-default" href="javascript:void(0);" id="search" onclick="commit()"><i class="fa fa-search"></i>搜索</a>
+	            <a class="btn btn-default" href="javascript:void(0);" id="reset" onclick="loadHtmlDiv('$!rc.contextPath/crmteamcheck/init')">重置</a>
+	        </div>
+	    </form>
+    </div>
+    <table
+        id="table"
+        data-classes="table table-public"
+        data-toggle="table"
+        data-url="../static/json/7.json"
+        data-pagination="true"
+        data-pagination-v-align="both"
+        data-side-pagination="server"
+        data-cache="false"
+        data-query-params="queryParams"
+        data-page-size="20"
+        data-page-list="[10,20,50]">
+        <thead>
+	        <tr>
+	            <th data-checkbox="true"></th>
+	            <th data-field="a" data-align="center">业务员姓名</th>
+	            <th data-field="b" data-align="center">工作月</th>
+	            <th data-field="c" data-align="center">所属团队</th>
+	            <th data-field="d" data-align="center">发展代理商数量</th>
+	            <th data-field="e" data-align="center">完成量</th>
+	            <th data-field="f" data-align="center">发展食堂数量</th>
+	            <th data-field="g" data-align="center">完成量</th>
+	            <th data-field="h" data-align="center">订单总金额（￥）</th>
+	            <th data-field="i" data-align="center">完成量</th>
+	            <th data-field="j" data-align="center">完成度（%）</th>
+	            <th data-field="k" data-align="center" data-formatter="operationFormatter">操作</th>
+	        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str='<a href="/static/html/system_operate/customer_list.html" target="_blank">查看</a>';
+        return str;
+    }
+</script>
+

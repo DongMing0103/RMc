@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmBusinessCanteenPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmBusinessCanteenPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT"/>
+                    <result column="CANTEEN_ID" property="canteenId" jdbcType="BIGINT"/>
+                    <result column="CANTEEN_TYPE" property="canteenType" jdbcType="BIGINT"/>
+                    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmbusinesscanteen.id as id,
+	                	        	           crmbusinesscanteen.business_id as businessId,
+	                	        	           crmbusinesscanteen.canteen_id as canteenId,
+	                	        	           crmbusinesscanteen.canteen_type as canteenType,
+	                	        	           crmbusinesscanteen.create_time as createTime,
+	                	        	           crmbusinesscanteen.del_flag as delFlag
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmbusinesscanteen.id = #{id}</if>
+                                               <if test="businessId != null and businessId != ''"> AND crmbusinesscanteen.business_id = #{businessId}</if>
+                                               <if test="canteenId != null and canteenId != ''"> AND crmbusinesscanteen.canteen_id = #{canteenId}</if>
+                                               <if test="canteenType != null and canteenType != ''"> AND crmbusinesscanteen.canteen_type = #{canteenType}</if>
+                                               <if test="createTime != null and createTime != ''"> AND crmbusinesscanteen.create_time = #{createTime}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmbusinesscanteen.del_flag = #{delFlag}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_business_canteen crmbusinesscanteen
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+	<!-- 统计count(0) -->
+	<select id="commonCount" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer">
+		select count(0) 
+		from <include refid="querySqlMain"/>
+		<where>
+			<include refid="queryOptions"/>
+			<if test="@Ognl@isNotEmpty(applyMonth)">
+				and date_format(crmbusinesscanteen.create_time,'%Y-%m') = date_format(#{applyMonth},'%Y-%m') 
+			</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and crmbusinesscanteen.business_id in 
+				<foreach collection="businessIds" item="businessId" index="index" open="(" separator="," close=")">
+					#{businessId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	
+		
+	
+	</mapper>
+
+
+

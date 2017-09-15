@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!-- mainAddOrEditPermRoleMenu") -->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>新增</title>
+        
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap-table.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/AdminLTE.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/_all-skins.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/main.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+        <link rel="stylesheet" href="$!!rc.contextPath/static/css/style2.css">
+        
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VdGhOfYto316HMEuGEiyQgjDjk8tyPF8"></script>
+        
+        <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+        <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+        <script charset="utf-8" src="$!rc.contextPath/static/js/kindeditor/kindeditor-min.js"></script>
+        <script charset="utf-8" src="$!rc.contextPath/static/js/kindeditor/lang/zh_CN.js"></script>
+        <script src="$!rc.contextPath/static/js/app.js"></script>
+        <script src="$!rc.contextPath/static/js/common.js"></script>
+        <script src="$!rc.contextPath/static/js/DatePicker/WdatePicker.js"></script>
+        
+    </head>
+
+    <body>
+        <div id="_blankpage" style="min-height: 1100px;">
+            <!--
+            <div id="header">
+                <h2><a href="../index.html">筷子说管理后台</a></h2>
+                <h3>新增</h3>
+            </div>
+            -->
+            <div class="m-content">
+                <div class="form_cap mt30">
+                    <div class="dottad_line"></div>
+                    <span class="basic_info">基本信息</span>
+                </div>
+                <form class="form-horizontal mt30" id="from">
+                
+                    
+                    												    <div class="form-group">
+                        <div class="col-sm-2 col-lg-1 col-sm-offset-2 col-lg-offset-3">
+                            <label for="addClassfiy"><i style="color: red">*</i>角色id：</label>
+                            
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3">
+                            <input class="form-control" name="roleId" placeholder="请输入..." id="eName"/>
+                        </div>
+                    </div> 
+			 <div>
+             <div style="display: inline-block;">
+          
+             <label for="addClassfiy"><i style="color: red">*</i>角色id：</label>
+                <input type="text" id="roleId" name="roleId" required  validate="required maxlength[100]"  
+                  value="$!po.roleId"/>
+              </div>
+			 
+             </div>
+	        								    <div class="form-group">
+                        <div class="col-sm-2 col-lg-1 col-sm-offset-2 col-lg-offset-3">
+                            <label for="addClassfiy"><i style="color: red">*</i>资源id：</label>
+                            
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3">
+                            <input class="form-control" name="menuId" placeholder="请输入..." id="eName"/>
+                        </div>
+                    </div> 
+			 <div>
+             <div style="display: inline-block;">
+          
+             <label for="addClassfiy"><i style="color: red">*</i>资源id：</label>
+                <input type="text" id="menuId" name="menuId" required  validate="required maxlength[100]"  
+                  value="$!po.menuId"/>
+              </div>
+			 
+             </div>
+	        								    <div class="form-group">
+                        <div class="col-sm-2 col-lg-1 col-sm-offset-2 col-lg-offset-3">
+                            <label for="addClassfiy"><i style="color: red">*</i>类型（1=前台、中台；2=后台）：</label>
+                            
+                        </div>
+                        <div class="col-sm-5 col-md-4 col-lg-3">
+                            <input class="form-control" name="permType" placeholder="请输入..." id="eName"/>
+                        </div>
+                    </div> 
+			 <div>
+             <div style="display: inline-block;">
+          
+             <label for="addClassfiy"><i style="color: red">*</i>类型（1=前台、中台；2=后台）：</label>
+                <input type="text" id="permType" name="permType" required  validate="required maxlength[100]"  
+                  value="$!po.permType"/>
+              </div>
+			 
+             </div>
+	        			
+						    
+                </form>
+                <div class="center mt80">
+                    <a href="#" class="btn btn-warning" onclick="addUserEnterprise();">确定保存</a>
+                </div>
+            </div>
+        </div>
+        <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+        <script type="text/javascript">
+                
+                /*添加*/
+                function addUserEnterprise(){
+               		var postData=$("#from").serialize();
+               		
+					$.ajax({
+						type:"POST",
+						data:postData,
+						dataType:"json",
+						url:"$!rc.contextPath/permrolemenu/addPermRoleMenu",
+						success:function(){
+							alert("添加成功");
+													}
+					})
+                	
+                }
+                
+
+        </script>
+        
+        
+    <script type="text/javascript">
+		 
+ 	  
+	//录入使用
+	function myFun(result){
+	    
+	}
+	//编辑使用
+	function myFun2(result){
+		 
+	}
+	function myFunction(){ 
+		 
+	};
+
+</script>
+</body>
+</html>
+
+
+
+
+ 

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmBusinessTailRecordPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.business.CrmBusinessTailRecordPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="TAIL_NATURE" property="tailNature" jdbcType="BIGINT"/>
+                    <result column="TAIL_TIME_START" property="tailTimeStart" jdbcType="TIMESTAMP"/>
+                    <result column="TAIL_TIME_END" property="tailTimeEnd" jdbcType="TIMESTAMP"/>
+                    <result column="ACCESS_NAME" property="accessName" jdbcType="VARCHAR"/>
+                    <result column="ACCESS_MOBILE" property="accessMobile" jdbcType="VARCHAR"/>
+                    <result column="ACCESS_TYPE" property="accessType" jdbcType="BIGINT"/>
+                    <result column="ACCESS_AGENT_CANTEEN_ID" property="accessAgentCanteenId" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+                    <result column="del_flag" property="delFlag"/>
+                     <result column="business_id" property="businessId" jdbcType="BIGINT"/>
+                     <result column="remark" property="remark" jdbcType="VARCHAR"/>
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmbusinesstailrecord.id as id,
+	                	        	           crmbusinesstailrecord.tail_nature as tailNature,
+	                	        	           crmbusinesstailrecord.tail_time_start as tailTimeStart,
+	                	        	           crmbusinesstailrecord.tail_time_end as tailTimeEnd,
+	                	        	           crmbusinesstailrecord.access_name as accessName,
+	                	        	           crmbusinesstailrecord.access_mobile as accessMobile,
+	                	        	           crmbusinesstailrecord.access_type as accessType,
+	                	        	           crmbusinesstailrecord.access_agent_canteen_id as accessAgentCanteenId,
+	                	        	           crmbusinesstailrecord.create_time as createTime,
+	                	        	           crmbusinesstailrecord.create_uid as createUid,
+	                	        	           crmbusinesstailrecord.del_flag as delFlag,
+	                	        	           crmbusinesstailrecord.update_time as updateTime,
+	                	        	           crmbusinesstailrecord.update_uid as updateUid,
+	                	        	           crmbusinesstailrecord.business_id as businessId,
+	                	        	           crmbusinesstailrecord.remark as remark
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmbusinesstailrecord.id = #{id}</if>
+                                               <if test="tailNature != null and tailNature != ''"> AND crmbusinesstailrecord.tail_nature = #{tailNature}</if>
+                                      <if test="tailTimeStart != null and tailTimeStart != ''"> AND crmbusinesstailrecord.tail_time_start = #{tailTimeStart}</if>
+                                               <if test="tailTimeEnd != null and tailTimeEnd != ''"> AND crmbusinesstailrecord.tail_time_end = #{tailTimeEnd}</if>
+                                               <if test="accessName != null and accessName != ''"> AND crmbusinesstailrecord.access_name = #{accessName}</if>
+                                               <if test="accessMobile != null and accessMobile != ''"> AND crmbusinesstailrecord.access_mobile = #{accessMobile}</if>
+                                                        <if test="accessType != null and accessType != ''"> AND crmbusinesstailrecord.access_type = #{accessType}</if>
+                                               <if test="accessAgentCanteenId != null and accessAgentCanteenId != ''"> AND crmbusinesstailrecord.access_agent_canteen_id = #{accessAgentCanteenId}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmbusinesstailrecord.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmbusinesstailrecord.create_uid = #{createUid}</if>
+                                               <if test="defFlag != null and defFlag != ''"> AND crmbusinesstailrecord.del_flag = #{defFlag}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmbusinesstailrecord.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmbusinesstailrecord.update_uid = #{updateUid}</if>
+                                                        <if test="businessId != null and businessId != ''"> AND crmbusinesstailrecord.business_id = #{businessId}</if>
+                                                        <if test="remark != null and remark != ''"> AND crmbusinesstailrecord.remark = #{remark}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_business_tail_record crmbusinesstailrecord
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM crm_business_tail_record
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(accessAgentCanteenId)">and ACCESS_AGENT_CANTEEN_ID = #{accessAgentCanteenId}</if>
+			<if test="@Ognl@isNotEmpty(accessType)">and  ACCESS_TYPE = #{accessType}</if>
+		</where>
+		order by  CREATE_TIME desc     
+    </select>
+
+
+	
+	
+		
+	
+	</mapper>
+
+
+

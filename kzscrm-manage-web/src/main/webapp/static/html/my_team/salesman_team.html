@@ -1,0 +1,63 @@
+<!--业务员团队-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">业务员团队</span>
+    </div>
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-public"
+           data-toggle="table"
+           data-url="../static/json/17.json"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="a" data-align="center">团队名称</th>
+            <th data-field="b" data-align="center">成立时间</th>
+            <th data-field="c" data-align="center">业务经理</th>
+            <th data-field="d" data-align="center">团队人数</th>
+            <th data-field="e" data-align="center">发展代理商</th>
+            <th data-field="f" data-align="center">发展食堂</th>
+            <th data-field="g" data-align="center">订单数量</th>
+            <th data-field="h" data-align="center">订单金额（￥）</th>
+            <th data-field="i" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData()">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str = 	"<div class=tddiv>"+
+            "<span class=settingtda>请选择</span>"+
+            "<ul class=settingtdmenu>"+
+            "<li><a href= target=_blank>团队成员</a></li>"+
+            "<li><a href= target=_blank>当月工作目标</a></li>"+
+            "<li><a href= target=_blank>客户列表</a></li>"+
+            "<li><a href= target=_blank>营收统计</a></li>"+
+            "<li><a href= target=_blank>分账明细</a></li>"+
+            "</ul></div>";
+        return str;
+
+    }
+
+
+</script>
+

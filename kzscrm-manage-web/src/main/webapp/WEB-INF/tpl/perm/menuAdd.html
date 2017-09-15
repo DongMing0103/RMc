@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+        <link rel="stylesheet" href="$!rc.contextPath/static/js/FlexBox/css/jquery.flexbox.css" />
+    </head>
+	<body>
+		<form class="form-horizontal alert-form" id="form" role="form">
+			<!-- <input type="hidden" name="addType" value="1">
+			<input type="hidden" name="parentId" value="0">
+			<input type="hidden" name="isLeaf" value="1"> -->
+            <div class="form-group">
+            <input type="hidden" name="id" value="$!id"/>
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">菜单等级</label>
+                </div>
+                <div class="col-xs-6">
+                 <select class="form-control" id="level" name="level" datatype="*" nullmsg="菜单等级不能为空" sucmsg=" " onchange="menuAdd.oneLevelChange(this)">
+		              <option value="1">一级菜单</option>
+		              <option value="2">二级菜单</option>
+		          </select>
+                </div>
+                <div class="col-xs-3">
+                   <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group menuLevel" style="display:none">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">上级菜单</label>
+                </div>
+                <div class="col-xs-6">
+                 <select class="form-control" id="parentId" name="parentId" datatype="*" nullmsg="上级菜单不能为空不能为空" sucmsg=" ">
+                 	  <option value="">请选择</option>	
+                 	  $!crmPermMenuVOs
+                 	  #foreach($!crmPermMenuVO in $!crmPermMenuVOs)
+                 	  	<option value="$!crmPermMenuVO.id">$!crmPermMenuVO.name</option>	
+                 	  #end
+		          </select>
+                </div>
+                <div class="col-xs-3">
+                   <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">菜单名称</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="" name="name" value="$!permMenuPO.name"  datatype="*" nullmsg="菜单名称不能为空" sucmsg=" ">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">菜单编号样式</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="" name="code" value="$!permMenuPO.code"  datatype="*" nullmsg="菜单编号样式" sucmsg=" ">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">资源地址</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control" name="url" placeholder="" value="$!permMenuPO.url">
+                    <!-- <input class="form-control" type="hidden" name="parentId" value="$!permMenuPO.id"> -->
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+                
+            </div>
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">资源icon</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control"  name="icon" placeholder="" value="$!permMenuPO.icon">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            <!-- <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">排序</label>
+                </div>
+                <div class="col-xs-6">
+                    <input class="form-control"  datatype="sortNo" name="sortNo" placeholder="第1位必须为1-9的数字" errormsg="只能是纯数值" value="$!permMenuPO.sortNo">
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div> -->
+            
+            
+            <div class="form-group" >
+             	<div class="col-xs-3">
+                    <label class="control-label pull-right">菜单描述</label>
+                </div>
+                <div class="col-xs-6">
+                    <textarea rows="" cols="" name="description">$!permMenuPO.description</textarea>
+                </div>
+                <div class="col-xs-3">
+                    <div class="Validform_checktip"></div>
+                </div>
+            </div>
+            
+            
+            
+            <div class="form-group">
+                <div class="col-xs-3">
+                    <label class="control-label pull-right">状态</label>
+                </div>
+                <div class="col-xs-6">
+                 <select class="form-control" id="status" name="status" onchange="getMenuFirst()" datatype="*" nullmsg="状态不能为空" sucmsg=" ">
+	  	             <option value="1" #if($!permMenuPO.status==1) selected="selected" #end>启用</option>
+		             <option value="0" #if($!permMenuPO.status==0) selected="selected" #end>禁用</option>
+		          </select>
+                </div>
+            </div>
+            <div class="text-center mt50 pr">
+				<div class="shade-save"></div>
+				<!-- <a class="btn btn-warning save" onclick="menuOne();" href="javascript:void(0);">保存</a> -->
+				<a class="btn btn-warning save" href="javascript:void(0);">保存</a>
+				</div>
+        </form>
+        <script src="$!rc.contextPath/static/js/dep/jquery-1.12.0.min.js"></script>
+        <script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+        <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+        <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+        <script src="$!rc.contextPath/static/js/dep/ValidForm/Validform_v5.3.2.js"></script>
+        <script src="$!rc.contextPath/static/js/FlexBox/js/jquery.flexbox.js"></script>
+        <script src="$!rc.contextPath/static/js/perm/menuAdd/menuAdd.js"></script>
+        <script type="text/javascript">
+    	var validForm=$('.form-horizontal').Validform({
+	           btnSubmit:".save",
+	           tiptype:2,
+	           datatype:{
+	               sortNo:/^$|^[1-9][0-9]*$/
+	           },
+	           postonce:true,
+	           ajaxPost:true,
+	           ignoreHidden:true,
+	           showAllError: true,
+	           beforeCheck:function(curform){
+	        	   validForm.config({
+	               	url:"$!rc.contextPath/crmpermmenu/addCrmPermMenu",
+	               	ajaxpost:{
+	               		data:JSON.stringify($("#form").serializeJson()),
+	               		contentType:'application/json;charset=UTF-8;'
+	               	}
+	               });
+	        	   return true;
+	           },
+	           callback:function(data){
+	               if(data && data.code==0){
+	                   $('.save').prev().css('display','none');
+	                   parent.$("table").bootstrapTable('refresh');
+	                   parent.layer.closeAll();
+	                   parent.layer.msg(data.desc,function(){
+	                	   console.log('a');
+	                   });
+	               }else{
+	                   layer.msg(data.desc);
+	               }
+	              
+	           }
+	       	});
+        	/* function menuOne(){
+        		$.ajax({
+        			type:"POST",
+        			data:$("#form").serialize(),
+        			dataType:"json",
+        			url:"$!rc.contextPath/permMenu/addMenuOne",
+        			success:function(data){
+        				layer.msg(data.message,{
+        					time:2000
+        				},function(){
+        					parent.layer.closeAll();
+        				});
+        				parent.$("#table").bootstrapTable('refresh');
+        			}
+        		})
+        	} */
+        </script>
+	</body>
+</html>
+
+
+
+
+

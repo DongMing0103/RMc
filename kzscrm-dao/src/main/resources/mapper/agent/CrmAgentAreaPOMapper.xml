@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmAgentAreaPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.agent.CrmAgentAreaPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="AREA_CODE" property="areaCode" jdbcType="BIGINT"/>
+                    <result column="AGENT_ID" property="agentId" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="CREATE_UID" property="createUid" jdbcType="BIGINT"/>
+                    <result column="DEF_FLAG" property="defFlag" jdbcType="BIGINT"/>
+                    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+                    <result column="UPDATE_UID" property="updateUid" jdbcType="BIGINT"/>
+                    <result column="del_flag" property="delFlag"/>
+                    
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmagentarea.id as id,
+	                	        	           crmagentarea.area_code as areaCode,
+	                	        	           crmagentarea.agent_id as agentId,
+	                	        	           crmagentarea.create_time as createTime,
+	                	        	           crmagentarea.create_uid as createUid,
+	                	        	           crmagentarea.def_flag as defFlag,
+	                	        	           crmagentarea.update_time as updateTime,
+	                	        	           crmagentarea.update_uid as updateUid
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+       	<include refid="orderControl"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmagentarea.id = #{id}</if>
+                                               <if test="areaCode != null and areaCode != ''"> AND crmagentarea.area_code = #{areaCode}</if>
+                                               <if test="agentId != null and agentId != ''"> AND crmagentarea.agent_id = #{agentId}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmagentarea.create_time = #{createTime}</if>
+                                                        <if test="createUid != null and createUid != ''"> AND crmagentarea.create_uid = #{createUid}</if>
+                                               <if test="defFlag != null and defFlag != ''"> AND crmagentarea.def_flag = #{defFlag}</if>
+                                      <if test="updateTime != null and updateTime != ''"> AND crmagentarea.update_time = #{updateTime}</if>
+                                                        <if test="updateUid != null and updateUid != ''"> AND crmagentarea.update_uid = #{updateUid}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+
+    <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_agent_area crmagentarea
+    </sql>
+
+
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM <include refid="querySqlMain"/>
+        where del_flag=1
+        <include refid="queryOptions"/>
+        <include refid="orderControl"/>
+    </select>
+
+     <!-- findByAgentId -->
+	<select id="findByAgentId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select * from  crm_agent_area 
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(agentId)">and AGENT_ID = #{agentId} </if>
+		</where>
+	</select>
+	
+		
+	
+	</mapper>
+
+
+

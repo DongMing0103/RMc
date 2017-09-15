@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>客户资源库</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+    
+    
+    <script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="$!rc.contextPath/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+    <script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    
+    <script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+	<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+	<script type="text/javascript" src="../../static/js/index/customerResource/customerResourceFormatter.js"></script>
+	<script type="text/javascript" src="../../static/js/index/customerResource/customerResource.js"></script>
+
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+            <h2><a href="../../index.html">筷子说CRM</a></h2>
+            <h3>客户资源库</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+            <div class="form-box">
+                <form class="form-inline" id="form">
+                    <div class="form-group">
+                        <label class="control-label">客户类别</label>
+                        <div class="has-feedback" style="display: inline-block;">
+	                        <select class="form-control" name="clientType">
+	                            <option value="">请选择</option>
+	                            <option value="1">代理商</option>
+	                            <option value="2">厂内食堂</option>
+	                            <option value="3">校内食堂</option>
+	                            <option value="4">独立食堂</option>
+	                        </select>
+	                        <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label">客户性质</label>
+                        <div class="has-feedback" style="display: inline-block;">
+	                        <select class="form-control" name="clientNature">
+	                            <option value="">请选择</option>
+	                            <option value="1">散客</option>
+	                            <option value="2">保护客户</option>
+	                            <option value="3">正式客户</option>
+	                        </select>
+	                        <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+		                <label class="control-label">地理信息</label>
+		                <div class="city-select" id="city">
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select class="form-control prov" name="provCode"><option value="">请选择</option><option value="86011">北京市</option><option value="86012">天津市</option><option value="86013">河北省</option><option value="86014">山西省</option><option value="86015">内蒙古自治区</option><option value="86021">辽宁省</option><option value="86022">吉林省</option><option value="86023">黑龙江省</option><option value="86031">上海市</option><option value="86032">江苏省</option><option value="86033">浙江省</option><option value="86034">安徽省</option><option value="86035">福建省</option><option value="86036">江西省</option><option value="86037">山东省</option><option value="86041">河南省</option><option value="86042">湖北省</option><option value="86043">湖南省</option><option value="86044">广东省</option><option value="86045">广西壮族自治区</option><option value="86046">海南省</option><option value="86050">重庆市</option><option value="86051">四川省</option><option value="86052">贵州省</option><option value="86053">云南省</option><option value="86054">西藏自治区</option><option value="86061">陕西省</option><option value="86062">甘肃省</option><option value="86063">青海省</option><option value="86064">宁夏回族自治区</option><option value="86065">新疆维吾尔自治区</option><option value="86071">台湾省</option><option value="86081">香港特别行政区</option><option value="86082">澳门特别行政区</option></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+			                </div>
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select class="form-control city" name="cityCode" disabled="disabled" style="display: none;"></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+			                </div>
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select class="form-control dist" disabled="disabled" style="display: none;" name="areaCode"></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+			                </div>
+			            </div>
+		            </div>
+                    <div class="form-group">
+                    	<label class="control-label">客户查询</label>
+                    	<div class="has-feedback" style="display: inline-block;">
+	                        <select class="form-control" name="selectNum">
+	                            <option value="">请选择</option>
+	                            <option value="1">代理商</option>
+	                            <option value="2">&nbsp;&nbsp;食堂&nbsp;&nbsp;</option>
+	                        </select>
+	                        <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                        </div>
+                        <input class="form-control" placeholder="请输入..." name="nameLike">
+                    </div>
+                    <div class="form-group">
+                        <a class="btn btn-default crmClientCustomerResourceSeaech href="javascript:void(0);"  onclick="customerResource.query()">
+                            <i class="fa fa-search"></i>搜索
+                        </a>
+                        <a class="btn btn-default  crmClientCustomerResourceReset" href="/crmclientresource/customsResourceInit;" >重置</a>
+                    </div>
+                </form>
+            </div>
+            <table
+                id="table"
+                data-classes="table table-public"
+                data-toggle="table"
+                data-url="$!rc.contextPath/crmclientresource/queryCustomsResource"
+                data-pagination="true"
+                data-pagination-v-align="both"
+                data-side-pagination="server"
+                data-page-size="20"
+                data-method="post"
+                data-query-params="customerResource.queryParams"
+                data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-checkbox="true"></th>
+                    <th data-field="id" data-align="center" >编号</th>
+                    <th data-field="name" data-align="center">名称</th>
+                    <th data-field="clientType" data-align="center" data-formatter="customerResourceFormatter.clientTypeFormatter">客户类别</th>
+                    <th data-field="clientNature" data-align="center" data-formatter="customerResourceFormatter.clientNatureFormatter">客户性质</th>
+                    <th data-field="businessName" data-align="center">联系业务员</th>
+                    <th data-field="address"  data-align="center">地理信息</th>
+                    <th data-field="protectDeadline"  data-align="center" data-formatter="customerResourceFormatter.protectDeadlineFormatter">保护到期</th>
+                    <th data-field="contact"  data-align="center">联系人</th>
+                    <th data-field="mobile"  data-align="center">联系电话</th>
+                    <th data-field="operate" data-align="center" data-formatter="operateFormatter" >操作</th>
+                </tr>
+                </thead>
+            </table>
+            <div class="mt10">
+                <a class="btn btn-warning crmClientCustomerResourceExport" href="javascript:void(0);" onclick="downloadData()">
+                    <i class="fa fa-cloud-download"></i>导出
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+	
+	$(function(){
+		$('#table').bootstrapTable();
+		$("#table").on('load-success.bs.table',function(e,data){
+			#foreach($!cSourcesVO in $!cSourcesVOs)
+				#if(!$!cSourcesVO.check)
+					$('$!cSourcesVO.frontContrlName').remove();
+				#end
+			#end
+		})
+	});
+        /*地理联动*/
+        $("#city").citySelect({
+            url:"/static/js/cityselect/city.min.js",
+            prov:"",//省份
+            city:"",//城市
+            dist:"",//区县
+            nodata:"none",//当子集无数据时，隐藏select
+            required:false
+        });
+        
+        //操作
+       operateFormatter = function(value, row, index) {
+        	//食堂编辑
+    	   var edit='<li><a class="crmClientCustomerResourceEdit" href="javascript:void(0);" onclick="editData(\'编辑食堂\',\'/crmclientresource/editCrmClientResourceInit?crmClientResourceParam.id='+row.id+'\',\'1000px\',\'600px\')">编辑</a></li>';
+    	   //代理商
+    	   if(row.clientType==1){
+    		   edit='<li><a class="crmClientCustomerResourceEdit" href="javascript:void(0);" onclick="editData(\'编辑代理商\',\'/crmagent/editAgent?clientId='+row.id+'\',\'1000px\',\'600px\')">编辑</a></li>';
+    	   }
+	        var userType = parseInt('$!userType');
+	       	var protect='';
+	       	//只有散客才有保护按钮
+	       	if(row.clientNature==1 && (userType == 3 || userType == 4)){
+	       		debugger;
+	       		protect='<li><a href="javascript:void(0);" onclick="operate(\'保护客户\',\'确定要将该客户列入保护客户吗？\',\'3\',\'确定\',\'取消\','+row.id+',\'$!rc.contextPath/crmclientresource/clientProtect\',\'保护成功\',\'opener.location.reload()\')">保护</a></li>';
+	       	}
+	       	return [
+	       			'<div class="dropdown">',
+	       			'<a  href="javascript:void(0);" id="resource-operate" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">',
+	       			'请操作', '<span class="caret"></span>', '</a>',
+	       			'<ul class="dropdown-menu" aria-labelledby="resource-operate">',
+	       			/*保护客户、正式客户只有查看、跟踪记录操作*/
+	                   '<li><a class="crmClientCustomerResourceSee"  href="javascript:void(0);" onclick="view('+ row.id +')">查看</a></li>',
+	                   edit,
+	       			'<li><a class="crmClientCustomerResourceStailrecord" href=/crmbusinesstailrecord/initClint?customerId='+row.id+' target=_blank>跟踪记录</a></li>',
+	       			protect, '</ul>', '</div>' ]
+	       			.join('');
+
+       };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

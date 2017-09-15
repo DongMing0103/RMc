@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>新增食堂</title>
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/fileinput.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/jquery.Jcrop.min.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/scojs.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/sco.message.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/common.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style.css">
+    <link rel="stylesheet" href="$!rc.contextPath/static/css/style2.css">
+</head>
+<body>
+<div class="merchants">
+    <form class="form-horizontal select-merchants" id="form1" name="form1" enctype="multipart/form-data" action="" method="post">
+        <div class="form-group">
+            <div class="col-sm-4 text-right">
+                <label class="control-label" for="ctype">客户类别</label>
+            </div>
+            <div class="col-sm-4 has-feedback">
+                <select class="form-control category selectarrow" id="clientType" name="clientType"  datatype="select" nullmsg="请选择客户类别" sucmsg=" ">
+                    <option value="">请选择</option>
+                    <option value="2" #if($!crmCanteenBaseInfoVO.clientType==2) selected #end>厂内食堂</option>
+                    <option value="3" #if($!crmCanteenBaseInfoVO.clientType==3) selected #end>校内食堂</option>
+                    <option value="4" #if($!crmCanteenBaseInfoVO.clientType==4) selected #end>独立食堂</option>
+                </select>
+                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4 text-right">
+                <label class="control-label" for="ctype">客户属性</label>
+            </div>
+            <div class="col-sm-4 has-feedback">
+                <select class="form-control attribute selectarrow" id="customerAttribute" name="customerAttribute"  datatype="select" nullmsg="请选择客户属性" sucmsg=" ">
+                    <option value="">请选择</option>
+                    <option value="1" #if($!crmClientResourceVO.customerAttribute==1) selected #end>代理商客户</option>
+                    <option value="2" #if($!crmClientResourceVO.customerAttribute==2) selected #end>平台客户</option>
+                </select>
+                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="text-center mt40 pr">
+            <a class="btn btn-warning save selectbtn" href="javascript:void(0);">下一步</a>
+        </div>
+    </form>
+    <form class="form-horizontal add-merchants" id="form2" name="form2" enctype="multipart/form-data" action="" method="post" style="display:none">
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cname">名称</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="name" placeholder="请输入食堂名称" value="$!crmCanteenBaseInfoVO.name" datatype="*" nullmsg="食堂名称不能为空" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        
+        
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cname">LOGO</label>
+            </div>
+            <input type="hidden"  id="crmClientResourceId" class="img" name="id" value="$!crmClientResourceVO.id">
+            <div class="col-sm-4">
+                <input type="hidden" datatype="*" nullmsg="logo不能为空" sucmsg=" " id="logo" class="img" name="crmCanteenExtInfoParam.logo" value="$!crmCanteenExtInfoVO.logo">
+                <a class="btn btn-warning btn-upload" name="upload" href="javascript:void(0);">上传图片</a>
+            </div>
+            <div class="col-sm-3 pt4">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div class="img-box1 imgsbox1" name="logoimg" id="logoimg"></div>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3">
+                <span class="help-block">（请上传8M以下的图片文件，支持jpg/png/gif格式，推荐200*200pix以上）</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cuser">负责人姓名</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="crmCanteenExtInfoParam.headRealname" value="$!crmCanteenExtInfoVO.headRealname" placeholder="请输入姓名" datatype="zh2-10" nullmsg="负责人姓名不能为空" errormsg="姓名格式不正确" sucmsg=" " />
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctel">身份证号码</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="crmCanteenExtInfoParam.headIdcard" placeholder="请输入身份证号码" value="$!crmCanteenExtInfoVO.headIdcard" datatype="n15-18" nullmsg="身份证号不能为空" errormsg="身份证号格式不正确" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cname">身份证照片</label>
+            </div>
+            <div class="col-sm-4">
+                <input type="hidden" datatype="*"  nullmsg="身份证照片不能为空" sucmsg=" " value="$!crmCanteenExtInfoVO.headIdcardPic" id="headIdcardPic" name="crmCanteenExtInfoParam.headIdcardPic" class="img headIdcardPic">
+                <a class="btn btn-warning btn-upload" name="uprectangle" href="javascript:void(0);">上传图片</a>
+            </div>
+            <div class="col-sm-3 pt4">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div class="img-box1 imgsbox2"></div>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3">
+                <span class="help-block">（请上传8M以下的图片文件，支持jpg/png/gif格式，推荐280*210pix以上）</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctel">负责人手机号</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="crmCanteenExtInfoParam.headPhone" value="$!crmCanteenExtInfoVO.headPhone" placeholder="请输入手机号"  datatype="n11" nullmsg="手机号码不能为空" errormsg="手机号码格式不正确" sucmsg=" "  #if($!baseInfoParam.status==2) readonly="readonly" #end />
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+            <div class="col-sm-8 col-sm-offset-3">
+                <span class="help-block">（请填写手机号码，审核后将作为登录的账号）</span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cname">营业执照</label>
+            </div>
+            <div class="col-sm-4">
+                <input type="hidden" datatype="*" value="$!crmCanteenExtInfoVO.businessPic"  nullmsg="营业执照不能为空" sucmsg=" " id="businessPic" class="img businessPic" name="crmCanteenExtInfoParam.businessPic">
+                <a class="btn btn-warning btn-upload" name="uprectangle" href="javascript:void(0);">上传图片</a>
+            </div>
+            <div class="col-sm-3 pt4">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div class="img-box1 imgsbox3"></div>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3">
+                <span class="help-block">（请上传8M以下的图片文件，支持jpg/png/gif格式，推荐280*210pix以上）</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cpho">联系人</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="contactRealname" placeholder="请输入联系人姓名" value="$!crmCanteenBaseInfoVO.contactRealname" datatype="zh2-10" nullmsg="姓名不能为空" errormsg="姓名格式不正确" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cpho">联系电话</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="contactPhone" placeholder="请输入联系电话" value="$!crmCanteenBaseInfoVO.contactPhone" datatype="nd" nullmsg="手机号码不能为空" errormsg="手机号码格式不正确" sucmsg=" ">
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cpho">微信号</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" name="weixin" placeholder="请输入微信号" value="$!crmCanteenBaseInfoVO.weixin"/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cgeo">地理信息</label>
+            </div>
+            <div class="col-sm-9" id="city1">
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control prov selectarrow"></select>
+                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control city selectarrow"></select>
+                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+                <div class="has-feedback" style="display: inline-block;">
+                    <select name="areaCode" class="form-control dist selectarrow"></select>
+                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-group geography">
+            <div class="col-sm-6 col-sm-offset-3">
+                <textarea name="address" class="address1" placeholder="（请输入街道门牌号）" onkeyup="myFunction()">$!crmCanteenBaseInfoVO.address</textarea>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div style="border: 4px solid rgb(221, 221, 221); border-image: none;">
+                    <div id="allmap" style="width: 100%; height: 400px;"></div>
+                    <input name="position" class="position1" type="hidden" value="$!crmCanteenBaseInfoVO.position" >
+                </div>
+            </div>
+            <div class="col-sm-8 col-sm-offset-3">
+                <span class="help-block">（请在地图上标明地理位置）</span>
+            </div>
+        </div>
+        <div class="form-group type2" style="display: none">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctype">联系业务员</label>
+            </div>
+            <div class="col-sm-3 has-feedback">
+                <select class="form-control selectarrow team" name="teamId" datatype="*" nullmsg="请选择" sucmsg=" " onchange="addCanteen.teamChange(this)">
+                    <option value="">请选择</option>
+			        #foreach($!crmTeamVO in $!crmTeamVOs)
+                    <option value="$!crmTeamVO.id" #if($!crmTeamVO.id==$!crmClientResourceVO.businessTeamId) selected #end>$!crmTeamVO.name</option>
+                    #end
+                </select>
+                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+            <div class="col-sm-3 has-feedback">
+                <select class="form-control selectarrow business" name="businessId" datatype="*" nullmsg="请选择" sucmsg=" ">
+                    <option value="">请选择</option>
+                    #foreach($!crmTeamVO in $!crmTeamVOs)
+                    	#foreach($!crmBusinessVO in $!crmTeamVO.crmBusinessVOs)
+                   		 <option value="$!crmBusinessVO.id" teamId="$!crmTeamVO.id" style="display:none" #if($!crmBusinessVO.id==$!crmClientResourceVO.businessId) selected #end>$!crmBusinessVO.name</option>
+                    	#end
+                    #end
+                </select>
+                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        
+        <div class="form-group type1" style="display: none">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctype">所属代理商</label>
+            </div>
+            <div class="col-sm-8">
+            
+            	#foreach($!crmAgentVO in $!crmAgentVOs)
+            		#if($!crmClientResourceVO.id)
+		        		<option style="display:none" class="crmAgentVOTemp$!crmAgentVO.level" value="$!crmAgentVO.id" parentId="$!crmAgentVO.parentId" level="$!crmAgentVO.level" agentName="$!crmAgentVO.name" #if($!crmClientResourceVO.agentIds.indexOf($!crmAgentVO.id)!=-1) selected #end>$!crmAgentVO.name</option>
+		        	#else
+		        		<option style="display:none" class="crmAgentVOTemp$!crmAgentVO.level" value="$!crmAgentVO.id" parentId="$!crmAgentVO.parentId" level="$!crmAgentVO.level" agentName="$!crmAgentVO.name">$!crmAgentVO.name</option>
+		        	#end
+		        #end
+		        #foreach($!crmAgentVO in $!crmAgentVOs)
+		        	#if($!velocityCount==1)
+		        		<div class="has-feedback" style="display:inline-block;">
+			            	<select class="form-control selectarrow selectAgent" level="$!crmAgentVO.level" name="agentIds" datatype="*" nullmsg="请选择" errormsg="请选择" sucmsg=" " onchange="addCanteen.agentChange(this)">
+			                    <option value="">请选择</option>
+			                </select>
+		                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            			</div>	
+            		#else
+            			<!-- 减2是因为velocity默认是从1开始的，而索引是从0开始的 -->
+		        		#set($prevIndex=$!velocityCount - 2)
+            			#if($!crmAgentVOs.get($!prevIndex).level!=$!crmAgentVO.level)
+            				<div class="has-feedback" style="display:inline-block;">
+				            	<select class="form-control selectarrow selectAgent" level="$!crmAgentVO.level" name="agentIds" datatype="*" nullmsg="请选择" errormsg="请选择" sucmsg=" " onchange="addCanteen.agentChange(this)">
+				                    <option value="">请选择</option>
+				                </select>
+				                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+	            			</div>	
+            			#end
+		        	#end
+		        #end 
+            	
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="text-center mt30 pr">
+            <a class="btn btn-warning save role_add_save nextbtn" href="javascript:void(0);" style="display: none;">下一步</a>
+            <a class="btn btn-warning save role_add_save surebtn" href="javascript:void(0);" style="display: none;">确定</a>
+        </div>
+    </form>
+    <form class="form-horizontal add-enterprise" id="form3" name="form3" enctype="multipart/form-data" method="post" style="display:none">
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label">单位名称</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" id="eName" value="$!crmEnterpriseVO.eName" name="crmEnterpriseParam.eName" placeholder="请输入单位名称" datatype="*" nullmsg="单位名称不能为空" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label">单位性质</label>
+            </div>
+            <div class="col-sm-5 has-feedback">
+           		 <!-- 0.公司/企业/工厂 1.学校，2.政府机构，3.事业单位，4.其它 -->
+                <select class="form-control selectarrow" id="eStyle" name="crmEnterpriseParam.eStyle" datatype="*" nullmsg="单位性质不能为空" sucmsg=" ">
+                    <option value="">请选择</option>
+                    <option value="0" #if($!crmEnterpriseVO.eStyle==0) selected #end>公司/企业/工厂</option>
+                    <option value="1" #if($!crmEnterpriseVO.eStyle==1) selected #end>学校</option>
+                    <option value="2" #if($!crmEnterpriseVO.eStyle==2) selected #end>政府机关</option>
+                    <option value="3" #if($!crmEnterpriseVO.eStyle==3) selected #end>事业单位</option>
+                    <option value="4" #if($!crmEnterpriseVO.eStyle==4) selected #end>其它</option>
+                </select>
+                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cuser">联系人</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" value="$!crmEnterpriseVO.contact" id="contact" name="crmEnterpriseParam.contact" placeholder="请输入联系人姓名" datatype="zh2-10" nullmsg="联系人不能为空" errormsg="联系人姓名格式不正确" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="ctel">手机号码</label>
+            </div>
+            <div class="col-sm-5 col-md-4 col-lg-3">
+                <input class="form-control" id="mobilephone" value="$!crmEnterpriseVO.mobilephone" name="crmEnterpriseParam.mobilephone" placeholder="请输入手机号码" datatype="n11" nullmsg="手机号码不能为空" errormsg="手机号码格式不正确" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cpho">座机</label>
+            </div>
+            <div class="col-sm-5">
+                <input class="form-control" id="telephone" value="$!crmEnterpriseVO.telephone" name="crmEnterpriseParam.telephone" placeholder="请输入座机号码" datatype="*" nullmsg="座机号码不能为空" sucmsg=" "/>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+            <div class="col-sm-8 col-sm-offset-3">
+                <span class="help-block">（请认真填写，审核后将作为登录的账号）</span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-3 text-right">
+                <label class="control-label" for="cgeo">地理信息</label>
+            </div>
+            <div class="col-sm-9" id="city2">
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control prov selectarrow"></select>
+                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control city selectarrow"></select>
+                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+                <div class="has-feedback" style="display: inline-block;">
+                    <select name="crmEnterpriseParam.areaCode" class="form-control dist selectarrow"></select>
+                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-3">
+                <textarea  class="address2"  name="crmEnterpriseParam.address" placeholder="（请输入街道门牌号）" datatype="*" nullmsg="地理信息不能为空" errormsg="地理信息格式不正确" sucmsg=" " onkeyup="smyFunction2()">$!crmEnterpriseVO.address</textarea>
+            </div>
+            <div class="col-sm-3">
+                <div class="Validform_checktip"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-8 col-sm-offset-3">
+                <div style="border: 4px solid rgb(221, 221, 221); border-image: none;">
+                    <div id="allmap2" style="width: 100%; height: 400px;"></div>
+                    <input name="crmEnterpriseParam.position" class="position2" type="hidden" value="$!crmEnterpriseVO.position">
+                </div>
+            </div>
+            <div class="col-sm-8 col-sm-offset-3">
+                <span class="help-block">（请在地图上标明地理位置）</span>
+            </div>
+        </div>
+        <div class="text-center mt30 pr">
+            <div class="shade-save"></div>
+            <a class="btn btn-warning save role_add_save" href="javascript:void(0);">确定保存</a>
+        </div>
+    </form> 
+</div>
+
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=VdGhOfYto316HMEuGEiyQgjDjk8tyPF8"></script>
+<script src="$!rc.contextPath/static/js/jquery/jquery-1.11.1.min.js"></script>
+<script src="$!rc.contextPath/static/js/jquery/jquery-extend.js"></script>
+<script src="$!rc.contextPath/static/js/bootstrap/bootstrap.min.js"></script>
+<script src="$!rc.contextPath/static/js/layer/layer.js"></script>
+<script src="$!rc.contextPath/static/js/cityselect/jquery.cityselect.js?V1"></script>
+<script src="$!rc.contextPath/static/js/ValidForm/Validform_v5.3.2.js"></script>
+<script src="$!rc.contextPath/static/js/fileinput.js" type="text/javascript"></script>
+<script src="$!rc.contextPath/static/js/zh.js" type="text/javascript"></script>
+<script src="$!rc.contextPath/static/js/jquery.Jcrop.min.js"></script>
+<script src="$!rc.contextPath/static/js/sco.modal.js"></script>
+<script src="$!rc.contextPath/static/js/template.js"></script>
+<script src="$!rc.contextPath/static/js/portrait.js?v2"></script>
+<script src="$!rc.contextPath/static/js/portrait2.js?v2"></script>
+<script src="$!rc.contextPath/static/js/common.js"></script>
+
+<script type="text/javascript" src="../../static/js/util/numberUtils.js"></script>
+<script type="text/javascript" src="../../static/js/util/dateUtils.js"></script>
+<script src="$!rc.contextPath/static/js/index/addCanteen/addCanteen.js"></script>
+<script id="portraitUpload" type="text/html">
+    <div class="modalselect">
+        <form enctype="multipart/form-data" action="$!rc.contextPath/file/upload_Resize_file" method="post">
+            <div class="embed-responsive embed-responsive-16by9">
+                <div class="embed-responsive-item pre-scrollable selectimg">
+                    <img alt="" src="$!rc.contextPath/static/images/showimg.jpg" id="cut-img" class="img-responsive img-thumbnail"/>
+                </div>
+            </div>
+            <div class="white-divider-md"></div>
+            <div class="uploadtips clearfix">
+                <span class="tipspan"><i class="fa fa-info-circle"></i>裁剪上传图片后请记得确认保存</span>
+                <input type="file" name="file" id="fileUpload" class="file" data-show-preview="false"/>
+            </div>
+            <div class="white-divider-md"></div>
+            <div id="alert" class="alert alert-danger hidden" role="alert"></div>
+            <input type="hidden" id="x" name="x"/>
+            <input type="hidden" id="y" name="y"/>
+            <input type="hidden" id="w" name="w"/>
+            <input type="hidden" id="h" name="h"/>
+        </form>
+    </div>
+</script>
+<script id="portraitrectangle" type="text/html">
+    <div class="modalselect">
+        <form enctype="multipart/form-data" action="$!rc.contextPath/file/upload_Resize_file" method="post">
+            <div class="embed-responsive embed-responsive-16by9">
+                <div class="embed-responsive-item pre-scrollable selectimg">
+                    <img alt="" src="$!rc.contextPath/static/images/showimg.jpg" id="cut-img" class="img-responsive img-thumbnail"/>
+                </div>
+            </div>
+            <div class="white-divider-md"></div>
+            <div class="uploadtips clearfix">
+                <span class="tipspan"><i class="fa fa-info-circle"></i>裁剪上传图片后请记得确认保存</span>
+                <input type="file" name="file" id="filerectangle" class="file" data-show-preview="false"/>
+            </div>
+            <div class="white-divider-md"></div>
+            <div id="alert" class="alert alert-danger hidden" role="alert"></div>
+            <input type="hidden" id="x" name="x"/>
+            <input type="hidden" id="y" name="y"/>
+            <input type="hidden" id="w" name="w"/>
+            <input type="hidden" id="h" name="h"/>
+        </form>
+    </div>
+</script>
+<script type="text/javascript">
+    var i=0;
+    //图片上传
+    var imageViewShow = '$!imgViewAddress';
+    var businessPic= '$!crmCanteenExtInfoVO.businessPic';
+    var headIdcardPic= '$!crmCanteenExtInfoVO.headIdcardPic';
+    var logo= '$!crmCanteenExtInfoVO.logo';
+    //单文件上传
+    function FileUpload() {
+        this.portrait = function (target, uploadUrl, data) {
+            target.fileinput({
+                language: 'zh', //设置语言
+                uploadUrl: '/file/upload_Resize_file', //上传的地址
+                dropZoneEnabled: false,//是否显示拖拽区域
+                uploadExtraData: data,//上传时除了文件以外的其他额外数据
+                allowedPreviewTypes: ['image'],
+                allowedFileTypes: ['image'],
+                allowedFileExtensions:  ['gif', 'jpg' ,'png'],
+                showRemove: false,
+                showCancel: false,
+                showUpload: true, //是否显示上传按钮
+                showCaption: false,//是否显示标题
+                maxFileSize : 8192,
+                maxFileCount: 2,
+                browseClass: "btn btn-primary"
+            }).on("fileuploaded", function(event, data) {
+                if(data && data.response && data.response.code == 0){
+                    //添加图片
+                    var val = data.response.rows  ;
+                    var _html='<img class="delimg" src="$!rc.contextPath/static/images/delimg.png"><img class="upimg" src="'+imageViewShow+data.response.rows+'">';
+                    var $imgdiv=$btn.parents(".form-group").next().find(".img-box1");
+                    $imgdiv.append(_html);
+                    if($imgdiv.html()==null || $imgdiv.html().length == 0){
+                        $imgdiv.append(_html);
+                    }else{
+                        $imgdiv.find("img").remove();
+                        $imgdiv.append(_html);
+                    }
+
+                    $btn.parents(".form-group").find(".img").val(val);
+
+                }else{
+                    alert(data.response.desc);
+                }
+                var modal = $.scojs_modal({
+                    keyboard: true
+                });
+                modal.close();
+
+            });
+        }
+    }
+
+    //身份证，营业执照上传
+    function Filerectangle() {
+        this.portrait = function (target, uploadUrl, data) {
+            target.fileinput({
+                language: 'zh', //设置语言
+                uploadUrl: '/file/upload_Resize_file', //上传的地址
+                dropZoneEnabled: false,//是否显示拖拽区域
+                uploadExtraData: data,//上传时除了文件以外的其他额外数据
+                allowedPreviewTypes: ['image'],
+                allowedFileTypes: ['image'],
+                allowedFileExtensions:  ['gif', 'jpg','png'],
+                showRemove: false,
+                showCancel: false,
+                showUpload: true, //是否显示上传按钮
+                showCaption: false,//是否显示标题
+                maxFileSize : 8192,
+                maxFileCount: 2,
+                browseClass: "btn btn-primary"
+            }).on("fileuploaded", function(event, data) {
+                if(data && data.response && data.response.code == 0){
+                    //添加图片
+                    var val = data.response.rows  ;
+                    var _html='<img class="delimg" src="$!rc.contextPath/static/images/delimg.png"><img class="upimg" src="'+imageViewShow+data.response.rows+'">';
+                    var $imgdiv=$btn.parents(".form-group").next().find(".img-box1");
+                    $imgdiv.append(_html);
+                    if($imgdiv.html()==null || $imgdiv.html().length == 0){
+                        $imgdiv.append(_html);
+                    }else{
+                        $imgdiv.find("img").remove();
+                        $imgdiv.append(_html);
+                    }
+
+                    $btn.parents(".form-group").find(".img").val(val);
+
+                }else{
+                    alert(data.response.desc);
+                }
+                var modal = $.scojs_modal({
+                    keyboard: true
+                });
+                modal.close();
+
+            });
+        }
+    }
+
+
+    //展示
+    if(logo!=null && logo!=''){
+        var _html='<div class="item foodimg"><img src="'+imageViewShow+logo+'" class="wh200"></div>';
+        var _img = $("[name=logo]").parents(".form-group").next().find(".img-box1");
+        if(_img.html()==null || _img.html().length == 0){
+            _img.append(_html);
+        }
+        $("[name=logo]").val(logo);
+    }
+
+    if(businessPic!=null && businessPic!=''){
+        var _html='<div class="tiem foodimg"><img src="'+imageViewShow+businessPic+'" class="upimg"></div>';
+        var _img = $("[name=businessPic]").parents(".form-group").next().find(".img-box1");
+        if(_img.html()==null || _img.html().length == 0){
+            _img.append(_html);
+        }
+        $("[name=businessPic]").val(businessPic);
+    }
+
+    if(headIdcardPic!=null && headIdcardPic!=''){
+        var _html='<div class="tiem foodimg"><img src="'+imageViewShow+headIdcardPic+'" class="upimg"></div>';
+        var _img = $("[name=headIdcardPic]").parents(".form-group").next().find(".img-box1");
+        if(_img.html()==null || _img.html().length == 0){
+            _img.append(_html);
+        }
+        $("[name=headIdcardPic]").val(headIdcardPic);
+    }
+
+    if('$!canteenHealthPicList'){
+        var businessHealthPics=$.parseJSON('$!canteenHealthPicList');
+        if(businessHealthPics && businessHealthPics.length>0){
+            for(var n=0;n<businessHealthPics.length;n++){
+                if(businessHealthPics[n].businessHealthPic !=null && businessHealthPics[n].businessHealthPic!=''){
+                    //添加图片
+                    var val = businessHealthPics[n].businessHealthPic  ;
+                    var _html='<img class="delimg" src="../static/images/delimg.png"><img class="upimg" src="'+imageViewShow+val+'">';
+                    var $imgdiv=$("#businessBtn").parents(".form-group").next().find(".img-box1");
+                    $imgdiv.append(_html);
+                    if($imgdiv.html()==null || $imgdiv.html().length == 0){
+                        $imgdiv.append(_html);
+                    }else{
+                        $imgdiv.find("img").remove();
+                        $imgdiv.append(_html);
+                    }
+
+                    $("#businessBtn").parents(".form-group").find(".img").val(val);
+
+                }
+            }
+        }
+    }
+
+
+    function isNotNull(str){
+        if(str && str != undefined && str != null && str != ''){
+            return true;
+        }
+    }
+
+    if(isNotNull(logo) || isNotNull(businessPic)  || isNotNull(headIdcardPic)){
+        //添加图片
+        //赋值
+        var _html='<div class="item foodimg"><img src="'+imageViewShow+logo+'" class="upimg" id="logo1"></div>';
+        if($(".imgsbox1").html()==null || $(".imgsbox1").html().length == 0){
+            $(".imgsbox1").append(_html);
+        }else{
+            $(".imgsbox1").find(".foodimg").remove();
+            $(".imgsbox1").append(_html);
+        }
+
+        var _html1 = '<div class="item foodimg"><img src="'+imageViewShow+headIdcardPic+'" class="upimg" id="headIdcardPic1"></div>';
+        if ($(".imgsbox2").html() == null
+            || $(".imgsbox2").html().length == 0) {
+            $(".imgsbox2").append(_html1);
+        } else {
+            $(".imgsbox2").find(".foodimg").remove();
+            $(".imgsbox2").append(_html1);
+        }
+
+        var _html2 = '<div class="item foodimg"><img src="'+imageViewShow+businessPic+'" class="upimg" id="businessPic1"></div>';
+        if ($(".imgsbox3").html() == null
+            || $(".imgsbox3").html().length == 0) {
+            $(".imgsbox3").append(_html2);
+        } else {
+            $(".imgsbox3").find(".foodimg").remove();
+            $(".imgsbox3").append(_html2);
+        }
+
+    }
+
+
+    //删除图片
+    $("body").on("click",".delimg",function() {
+        var _html = "<p>确认删除该图片？</p>";
+        var _this = this;
+        layer.open({
+            title : "删除图片",
+            content : _html,
+            icon: 3,
+            btn : [ '确定', '取消' ],
+            yes : function(index, layero) {
+                //按钮【按钮一】的回调
+                layer.close(index);
+                //删除图片
+                $(_this).parents(".form-group").prev().find(".img").val('');
+                $(_this).parent().find("img").remove();
+            },
+            btn2 : function(index, layero) {
+                //按钮【按钮二】的回调
+            },
+            cancel : function() {
+                //右上角关闭回调
+            }
+        })
+    });
+    //地图初始化ip定位城市
+    var map = new BMap.Map("allmap");
+    var position = "$!crmCanteenBaseInfoVO.position";
+    if ($.isNotEmptyObject(position)) {
+        myFun2(position);
+    } else {
+        var myCity = new BMap.LocalCity();
+        myCity.get(myFun);
+    }
+    //地址改变清空地址输入框
+    $(".prov,.city,.dist").change(function(){
+    	var classIndex=1;
+    	if($(this).parents('#city2').length==1){
+    		classIndex=2;
+    	}
+        $(".address"+classIndex).val("");
+        $(".position"+classIndex).val("");
+    });
+    //录入使用
+    function myFun(result) {    	
+        var cityName = result.name;
+        var new_point = new BMap.Point(cityName.lng, cityName.lat);//读入的经纬度
+        map.centerAndZoom(new_point, 13);
+        map.enableScrollWheelZoom(true);
+        map.setCenter(cityName);
+        //地图空间
+        var top_left_control = new BMap.ScaleControl({
+            anchor : BMAP_ANCHOR_TOP_LEFT
+        });// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl(); //左上角，添加默认缩放平移控件
+
+        map.addControl(top_left_control);
+        map.addControl(top_left_navigation);
+    }
+
+    //编辑使用
+    function myFun2(result) {
+        var posiArry = result.split(",");
+        var new_point = new BMap.Point(posiArry[0], posiArry[1]); //读入的经纬度
+        var marker = new BMap.Marker(new_point); // 创建标注
+        
+        
+       /*  map.addEventListener("addoverlay",function(){  
+        	 map.centerAndZoom(new_point, 14);
+         }); */
+        
+        var top_left_control = new BMap.ScaleControl({
+            anchor : BMAP_ANCHOR_TOP_LEFT
+        });// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl(); //左上角，添加默认缩放平移控件
+	    map.addOverlay(marker);
+        map.centerAndZoom(new_point, 14);
+        map.enableScrollWheelZoom(true);
+        marker.enableDragging();
+        map.panTo(new_point);
+        map.addControl(top_left_control);
+        map.addControl(top_left_navigation);
+
+        marker.addEventListener("dragend", function(e){
+            /* //移动标注显示地址
+             myGeo.getLocation(e.point, function(rs){
+             var addComp = rs.addressComponents;
+             document.getElementById("sult").innerHTML =addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+             }); */
+            longitude = e.point.lng;
+            latitude = e.point.lat;
+            $(".position1").val(longitude + "," + latitude);
+        });
+      //解决中心点失焦问题
+        var loadCount=1;
+        map.addEventListener("tilesloaded",function(){
+        	if(!$('#form2').is(':hidden')){
+        		if(loadCount==1){
+        			map.clearOverlays();
+		        	 map.centerAndZoom(new_point, 14);
+		        	 loadCount=2;
+        		}
+        	}
+         });
+    }
+
+    function myFunction() {
+        var abc = $("#city1 .prov option:selected").text();
+        abc += $("#city1 .city option:selected").text();
+        abc += $("#city1 .dist option:selected").text();
+        abc += $("#city1 .address1").val();
+        
+        // 创建地址解析器实例
+        var myGeo = new BMap.Geocoder();
+        // 将地址解析结果显示在地图上,并调整地图视野
+        map.clearOverlays();
+        myGeo.getPoint(abc, function(point) {
+            if (point) {
+                var marker = new BMap.Marker(point);
+                map.centerAndZoom(point, 14);
+                map.enableScrollWheelZoom(true);
+                map.addOverlay(marker);
+                marker.enableDragging();
+                /* document.getElementById("result").innerHTML = point.lng + ", " + point.lat;//打印原坐标 */
+                //经纬度
+                longitude = point.lng;
+                latitude = point.lat;
+                $(".position1").val(longitude + "," + latitude);
+                //移动标注后重新取经纬度
+                marker.addEventListener("dragend", function(e){
+                    /* //移动标注显示地址
+                     myGeo.getLocation(e.point, function(rs){
+                     var addComp = rs.addressComponents;
+                     document.getElementById("sult").innerHTML =addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+                     }); */
+                    longitude = e.point.lng;
+                    latitude = e.point.lat;
+                    $(".position1").val(longitude + "," + latitude);
+
+                });
+            } else {
+                alert("您选择地址没有解析到结果!");
+            }
+        });
+    };
+
+    /* 地理联动 */
+     $(function(){
+    	 url="$!rc.contextPath/static/js/cityselect/city.min.js";
+       	var city1={
+                   url:url,
+                   prov:"$!canteenAreaCodes[2]", //省份
+                   city : "$!canteenAreaCodes[3]", //城市
+                   dist : "$!canteenAreaCodes[4]", //区县
+                   nodata:"none", //当子集无数据时，隐藏select
+                   required:false
+               };
+       	'$!crmCanteenBaseInfoVO.id'!="" && delete city1.required;
+         $('#city1').citySelect(city1);
+    	 var city2={
+                 url:url,
+                 prov:"$!enterpriseAreaCodes[2]", //省份
+	            city : "$!enterpriseAreaCodes[3]", //城市
+	            dist : "$!enterpriseAreaCodes[4]", //区县
+                 nodata:"none", //当子集无数据时，隐藏select
+                 required:false
+         };
+    	 '$!crmCanteenBaseInfoVO.id'!=""&& delete city2.required;
+     	$('#city2').citySelect(city2);
+    }); 
+
+    //地图初始化ip定位城市
+    var map2 = new BMap.Map("allmap2");
+    var position2="$!crmEnterpriseVO.position";
+
+    if ($.isNotEmptyObject(position2)) {
+        myFun4(position2);
+    }else{
+        var myCity2 = new BMap.LocalCity();
+        setInterval(myCity2.get(myFun3),'200');
+    }
+    //录入使用
+    function myFun3(result){
+        var cityName = result.name;
+        var new_point = new BMap.Point(cityName.lng,cityName.lat);//读入的经纬度
+        map2.centerAndZoom(new_point, 13);
+        map2.enableScrollWheelZoom(true);
+        map2.setCenter(cityName);
+        //地图空间
+        var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+
+        map2.addControl(top_left_control);
+        map2.addControl(top_left_navigation);
+    }
+
+    //编辑使用
+    function myFun4(result){
+        var posiArry=result.split(",");
+        var new_point = new BMap.Point(posiArry[0],posiArry[1]);//读入的经纬度
+        var marker = new BMap.Marker(new_point);  // 创建标注
+        var top_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_TOP_LEFT});// 左上角，添加比例尺
+        var top_left_navigation = new BMap.NavigationControl();  //左上角，添加默认缩放平移控件
+        map2.centerAndZoom(new_point,14);
+        map2.enableScrollWheelZoom(true);
+        map2.addOverlay(marker);
+        map2.panTo(new_point);
+        map2.addControl(top_left_control);
+        map2.addControl(top_left_navigation);
+
+        marker.enableDragging();
+        marker.addEventListener("dragend", function(e){
+            /* //移动标注显示地址
+             myGeo.getLocation(e.point, function(rs){
+             var addComp = rs.addressComponents;
+             document.getElementById("sult").innerHTML =addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+             }); */
+            longitude = e.point.lng;
+            latitude = e.point.lat;
+            $(".position2").val(longitude + "," + latitude);
+        });
+        
+        //解决中心点失焦问题
+       var loadCount=1;
+        map2.addEventListener("tilesloaded",function(){
+        	if(!$('#form3').is(':hidden')){
+        		if(loadCount==1){
+        			map2.clearOverlays();
+		        	 map2.centerAndZoom(new_point, 14);
+		        	 loadCount=2;
+        		}
+        	}
+         }); 
+    }
+
+    function smyFunction2(){
+        var abc=$("#city2 .prov option:selected").text();
+        abc+=$("#city2 .city option:selected").text();
+        abc+=$("#city2 .dist option:selected").text();
+        abc+=$("#city2 .address2").val();
+
+        // 创建地址解析器实例
+        var myGeo = new BMap.Geocoder();
+
+        // 将地址解析结果显示在地图上,并调整地图视野
+        map2.clearOverlays();
+        myGeo.getPoint(abc, function(point){
+            if (point) {
+                var marker = new BMap.Marker(point);
+                map2.centerAndZoom(point, 14);
+                map2.enableScrollWheelZoom(true);
+                map2.addOverlay(marker);
+                marker.enableDragging();
+                /* document.getElementById("result").innerHTML = point.lng + ", " + point.lat;//打印原坐标 */
+                //经纬度
+                longitude = point.lng;
+                latitude = point.lat;
+                $(".position2").val(longitude + "," + latitude);
+                //移动标注后重新取经纬度
+                marker.addEventListener("dragend", function(e){
+                    longitude = e.point.lng;
+                    latitude = e.point.lat;
+                    $(".position2").val(longitude + "," + latitude);
+
+                });
+            }else{
+                alert("您选择地址没有解析到结果!");
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>
+
+
+
+
+

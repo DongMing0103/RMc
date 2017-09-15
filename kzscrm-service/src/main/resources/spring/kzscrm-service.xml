@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context.xsd
+
+	">
+
+    <import resource="classpath:spring/kzscrm-dao.xml"/>
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <import resource="classpath*:wolverine/wolverine-service.xml"/>
+
+    <!-- <context:component-scan base-package="com.hd.kzscrm.service.impl"/>  
+     <context:component-scan 
+        base-package="com.hd.kzscrm.service.serviceimpl,com.hd.kzscrm.service.impl">
+        <context:include-filter type="annotation" 
+        expression="org.springframework.stereotype.Service" />
+     </context:component-scan> 
+     -->
+      <context:component-scan base-package="com.hd.kzscrm.service.serviceimpl.*"/>
+      <!-- <context:component-scan base-package="com.hd.kzscrm.service.aspect.*"/> -->
+      <context:component-scan base-package="com.hd.kzscrm.service.component"/><!-- 扫描组件配置 -->
+      
+	<!-- 订单延迟队列初始化 -->
+	<!-- <bean class="com.hd.kzscrm.service.delayQueue.order.OrderStatusTaskQueueDaemonThread" init-method="init"/> -->
+    <!-- <bean class="com.hd.kzscrm.service.util.PropertiesBean"/>
+
+    <bean class="com.jumore.jdt.service.util.JdtNoCreationUtil">
+        <property name="commonDao" ref="commonDao"/>
+    </bean> -->
+    <bean id ="soaService" class="com.hd.wolverine.soa.SOAService"></bean>
+    <bean id ="soaConfiguration" class="com.hd.wolverine.soa.SOAConfiguration"></bean>
+    <bean id ="propertiesBean" class="com.hd.kzscrm.common.util.PropertiesBean"></bean>
+</beans>

@@ -1,0 +1,95 @@
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">目标审核</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+        <div class="form-group">
+            <label class="control-label">工作月&nbsp;2017年6月</label>
+        </div>
+        <div class="form-group">
+            <label class="control-label">申报性质</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">状态</option>
+                <option>团队目标</option>
+                <option>代理商目标</option>
+                <option>个人目标</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择搜索条件</option>
+                <option>代理商名称</option>
+                <option>业务员姓名</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="enterNoName" id="enterNoName" placeholder="请输入文字">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill"
+           data-toggle="table"
+           data-url="../static/json/1.json"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-field="o" data-align="center">申报人</th>
+            <th data-field="a" data-align="center">申报性质</th>
+            <th data-field="b" data-align="center">申报时间</th>
+            <th data-field="c" data-align="right">发展代理商数量</th>
+            <th data-field="d" data-align="right">发展食堂数量</th>
+            <th data-field="e" data-align="right">订单金额（￥）</th>
+            <th data-field="f" data-formatter="operationFormatter">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+        var str="<a class=look href=javascript:void(0); onclick='agree()'>同意</a>&nbsp;&nbsp;"+
+            "<a class=look href=javascript:void(0); onclick=editData('工作目标修正','html/index/target_correction.html','768px','400px')>修正</a>";
+        return str;
+    }
+    function agree(){
+        var index=layer.open({
+            title: '同意',
+            content: '赞成该申报人的月度工作目标吗?',
+            icon: 3,
+            btn: ['确定','取消'],
+            yes: function(index){
+                layer.msg("操作成功", {
+                    time: 1000
+                }, function () {
+                    layer.close(index);//关掉弹出层
+                });
+            }
+        })
+    }
+
+
+
+</script>

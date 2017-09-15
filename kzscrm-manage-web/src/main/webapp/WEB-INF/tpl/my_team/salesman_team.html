@@ -1,0 +1,53 @@
+<div class="main-content">
+    <div class="content-cap">
+        <span class="cap-name">业务团队</span>
+    </div>
+    <table
+            id="table"
+            data-classes="table table-public"
+            data-toggle="table"
+            data-url="$!rc.contextPath/crmteam/queryPage?type=$!type"
+            data-pagination="true"
+            data-pagination-v-align="both"
+            data-side-pagination="server"
+            data-query-params="queryParams"
+            data-page-size="20"
+            data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="name" data-align="center">团队名称</th>
+            <th data-field="createrTime" data-align="center" data-formatter="dateFormatter">成立时间</th>
+<!--             <th data-field="areaName" data-align="center">负责区域</th> -->
+            <th data-field="businessName" data-align="center" data-formatter="business">业务经理</th>
+            <th data-field="teamNumber" data-align="center" data-formatter="team">团队人数 </th>
+            <th data-field="agentNum" data-align="center" data-formatter="agent">发展代理商</th>
+            <th data-field="canteenNums"  data-align="center" data-formatter="canteen">发展食堂</th>
+            <th data-field="completeOrderMoney"  data-align="center" data-formatter="completeOrder">订单数量</th>
+            <th data-field="realMoney"  data-align="center" data-formatter="money">订单金额（￥）</th>
+            <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="mt10">
+        <a class="btn btn-warning" href="javascript:void(0);" onclick="downloadData('请选择要导出的数据！','$!contextPath/crmteam/excelOut?idS=')">
+            <i class="fa fa-cloud-download"></i>导出
+        </a>
+    </div>
+</div>
+
+<!-- <script src="$!rc.contextPath/static/js/"></script> -->
+<script src="/static/js/team/team_list.js"></script>
+<script type="text/javascript">
+$(function(){
+	$('#table').bootstrapTable();
+	$("#table").on('load-success.bs.table',function(e,data){
+		#foreach($!cSourcesVO in $!cSourcesVOs)
+			#if(!$!cSourcesVO.check)
+				$('$!cSourcesVO.frontContrlName').remove();
+			#end
+		#end
+	})
+});
+
+</script>

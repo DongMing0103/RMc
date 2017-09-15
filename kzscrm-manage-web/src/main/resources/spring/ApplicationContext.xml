@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"  
+	xmlns:cache="http://www.springframework.org/schema/cache" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop 
+						http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/tx 
+						http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/util  
+     					http://www.springframework.org/schema/util/spring-util-3.0.xsd
+     					http://www.springframework.org/schema/cache   
+     					http://www.springframework.org/schema/cache/spring-cache.xsd
+     					http://www.springframework.org/schema/mvc    
+        				http://www.springframework.org/schema/mvc/spring-mvc.xsd
+	">
+	
+	<!-- 启用注解 -->
+	<context:annotation-config />
+	
+	<!-- 使用annotation定义事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+	
+	<bean id="propertyConfigurer" class="com.hd.wolverine.config.WolverineConfigurer">  
+		<property name="locations">  
+			<list>  
+                 <value>classpath:config/dbconfig.properties</value>
+                 <value>classpath:config/wolverine.properties</value> 
+                 <value>classpath*:config/kzscrm-dao.properties</value>   
+            </list>  
+        </property>  
+	</bean> 
+	
+	<import resource="classpath*:wolverine/wolverine-*.xml"/>
+	<!-- <import resource="classpath:spring/qzs-dao.xml"/> -->
+	<import resource="classpath:spring/kzscrm-service.xml"/>
+	
+	<!-- 启动组件扫描，排除@Controller组件，该组件由SpringMVC配置文件扫描 -->
+	<context:component-scan base-package="com.hd.kzscrm, com.hd.kzscrm">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	
+	<!-- spring上下文，可以获取直下文的Context -->
+	<bean id="appUtil" class="com.hd.kzscrm.common.util.AppUtil"/>
+	
+	<!-- <bean name="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+    	<property name="dataSource" ref="dataSource"></property>
+ 	</bean> -->
+ 	
+ 	<!-- 使用配置中心时用下面这个 -->
+<!-- 	<bean id="propertyConfigurer" class="com.hd.wolverine.config.WolverineConfigurer">   -->
+<!-- 			<property name="locations">   -->
+<!-- 			<list>   -->
+<!-- 				 <value>classpath:config/customDefaultValue.properties</value>                           -->
+<!--             </list>   -->
+<!--         </property>   -->
+<!--     </bean> -->
+
+	<!-- <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+		<property name="locations">  
+			<list>  
+                 <value>classpath:config/dbconfig.properties</value>
+                 <value>classpath:config/wolverine.properties</value>  
+            </list>  
+        </property>  
+	</bean>
+	
+	阿里 druid数据库连接池
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+         数据库基本信息配置
+         <property name="url" value="${jdbcUrl:jdbc:mysql://192.168.1.153:8096/lgcente1?useUnicode=true}" />  
+         <property name="username" value="${username:lgcentdev}" />
+         <property name="password" value="${password:lgcenterdev}" />  
+         <property name="driverClassName" value="${driverClassName:com.mysql.jdbc.Driver}" />  
+         <property name="filters" value="${filters:stat}" />  
+   		 最大并发连接数
+         <property name="maxActive" value="${maxActive:20}" />
+         初始化连接数量
+         <property name="initialSize" value="${initialSize:1}" />
+         配置获取连接等待超时的时间
+         <property name="maxWait" value="${maxWait:60000}" />
+         最小空闲连接数
+         <property name="minIdle" value="${minIdle:10}" />  
+   		 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+         <property name="timeBetweenEvictionRunsMillis" value="${timeBetweenEvictionRunsMillis:60000}" />
+         配置一个连接在池中最小生存的时间，单位是毫秒
+         <property name="minEvictableIdleTimeMillis" value="${minEvictableIdleTimeMillis:300000}" />  
+         <property name="validationQuery" value="${validationQuery:SELECT 'x'}" />  
+         <property name="testWhileIdle" value="${testWhileIdle:true}" />  
+         <property name="testOnBorrow" value="${testOnBorrow:false}" />  
+         <property name="testOnReturn" value="${testOnReturn:false}" />  
+         <property name="maxOpenPreparedStatements" value="${maxOpenPreparedStatements:20}" />
+         打开removeAbandoned功能
+         <property name="removeAbandoned" value="${removeAbandoned:true}" />
+         1800秒，也就是30分钟
+         <property name="removeAbandonedTimeout" value="${removeAbandonedTimeout:1800}" />
+         关闭abanded连接时输出错误日志   
+         <property name="logAbandoned" value="${logAbandoned:true}" />
+	</bean>  
+	
+	配置mybatis
+	<bean id="sqlSessionFactory" class="com.hd.wolverine.dao.MySqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+        mapper扫描
+        <property name="mapperLocations" value="classpath:mybatis/mapper/*/*.xml"></property>
+    </bean>
+    
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory" />
+	</bean> -->
+   
+   <!-- search start -->
+		<!-- <bean id="searchService" class="com.hd.wolverine.common.search.impl.DefaultJSearch"></bean> -->
+	<!-- search end -->
+	
+	<!-- <bean id="logService" class="com.wolverine.demo.service.LogService"></bean>
+	
+	<bean id="simpleMsgConsumer" class="com.wolverine.demo.mq.service.SimpleMsgConsumer"></bean> -->
+	
+	<!-- 更新PID及tomcat端口 -->
+	<!-- <bean id="nodeListener" class="com.hd.wolverine.config.NodeListener"/> -->
+     
+     <mvc:interceptors>  
+	   <!-- 非法字符拦截器 -->
+	    <mvc:interceptor>         
+	    <mvc:mapping path="/**"/> 
+	    <!-- 静态资源 -->
+	    <mvc:exclude-mapping path="/static/**"/>
+	    <!-- 其它不进行转义字符判断的URL -->
+	    <mvc:exclude-mapping path="/config/**"/>      
+	    <bean class="com.hd.wolverine.aop.interceptor.IllegalCharInterceptor"/>    
+	    </mvc:interceptor>  
+    </mvc:interceptors>
+    
+     <aop:aspectj-autoproxy proxy-target-class="true"/>
+</beans>

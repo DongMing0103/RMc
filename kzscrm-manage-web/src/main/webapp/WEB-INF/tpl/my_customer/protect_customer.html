@@ -1,0 +1,244 @@
+<!-- 保护客户 -->
+<div class="main-content">
+	<div class="content-cap">
+		<span class="cap-name">保护客户</span>
+	</div>
+	<form class="form-inline mb10" id="form">
+		#if($!userType == 4)
+		<div class="form-group">
+            <label class="control-label">所属团队</label>
+            <div class="has-feedback" style="display: inline-block">
+             <select class="form-control" name="teamId">
+                 <option value="">请选择团队</option>
+					#foreach($!team in $!teamPOs)                    
+                 	<option value="$!team.id">$!team.name</option>
+             		#end
+             </select>
+             <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>                
+        </div>
+        <div class="form-group">
+            <div class="has-feedback" style="display: inline-block">
+             <select class="form-control" name="businessId">
+                 <option value="">请选择业务员</option>
+					#foreach($!businessPO in $!businessPOs)                    
+                 	<option value="$!businessPO.id" class="business$!businessPO.teamId businessPO">$!businessPO.name</option>
+             		#end
+             </select>
+             <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+            </div>                
+        </div>
+	
+		<!-- <div class="form-group">
+			<label class="control-label">业务员</label>
+			<input class="form-control" placeholder="请输入..." name="condition">
+		</div> -->
+		#end
+		<div class="form-group">
+			<label class="control-label">客户类别</label>
+		</div>
+		<div class="form-group">
+			<div class="has-feedback">
+				<select class="form-control selectarrow" name="clientType"
+					#if ($!userType == 3) onchange="query();" #end>
+					<option value="">请选择</option>
+					<option value="1">代理商</option>
+					<option value="2">厂内食堂</option>
+					<option value="3">校内食堂</option>
+					<option value="4">独立食堂</option>
+				</select> <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+			</div>
+		</div>
+		#if ($!userType == 4)
+		<div class="form-group">
+			<a class="btn btn-default crmBusinessSaleman" href="javascript:void(0);" onclick="query();"> 
+				<span class="glyphicon glyphicon-search"></span>搜索
+			</a> 
+			<a class="btn btn-default" href="javascript:void(0);" onclick="loadHtmlDiv('$!rc.contextPath/crmclientresource/protectCustomerInit');">重置</a>
+		</div>
+		#end
+	</form>
+	<table id="table" data-classes="table table-public tabledown"
+		data-toggle="table"
+		data-url="/crmclientresource/getProtectCustomerDetails"
+		data-pagination="true" data-pagination-v-align="both"
+		data-side-pagination="server" data-cache="false"
+		data-query-params="queryParams" data-page-size="20"
+		data-page-list="[10,20,50]">
+		<thead>
+			<tr>
+				<th data-checkbox="true"></th>
+				<th data-field="id" data-align="center" >ID</th>
+				<th data-field="name" data-align="center">名称</th>
+				<th data-field="clientType" data-align="center" data-formatter="clientTypeFormatter">客户类别</th>
+				<th data-field="address" data-align="right">地理信息</th> 
+				#if($!userType == 4)<th data-field="businessName" data-align="center">业务员</th>#end
+				<th data-field="protectDeadline" data-align="right" data-formatter="dateFormatter">保护期到</th>
+				<th data-field="contact" data-align="right">联系人</th>
+				<th data-field="mobile" data-align="right">联系电话</th>
+				<th data-field="tailNum" data-align="right">跟踪记录</th>
+				<th data-field="operate" data-formatter="operationFormatter" class="selecttd" data-align="center">操作</th>
+			</tr>
+		</thead>
+	</table>
+
+	<!-- <div class="mt10">
+		<a class="btn btn-warning" href="javascript:void(0);"
+			onclick="tabledown('crmclientresource/protectCustomerDetailsExcelOut?Ids=')">
+			<i class="fa fa-cloud-download"></i>导出
+		</a>
+	</div> -->
+</div>
+
+<script type="text/javascript" src="$!rc.contextPath/static/js/my_customer/protect_customer.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+        $(".businessPO").hide();
+    });
+
+    //操作
+    function operationFormatter(value, row, index) {
+    	
+    	var strStart = "<div class=tddiv>"+
+        "<span class=settingtda>请选择</span>"+
+        "<ul class=settingtdmenu>"+
+        "<li><a href=/crmclientresource/customerResourceLook?clientId="+row.id+" target=_blank>查看</a></li>";
+        
+        var str1 = "<li><a href=javascript:void(0); onclick=editData('编辑','/crmagent/editAgent?clientId="+row.id+"','768px','500px')>编辑</a></li>";
+        
+        var str2 = "<li><a href=javascript:void(0); onclick=editData('编辑','/crmclientresource/editCrmClientResourceInit?crmClientResourceParam.id="+row.id+"','768px','500px')>编辑</a></li>";
+        
+        
+        var str3 = "<li><a href=/crmEnterprise/viewEnterpriseInformation?clientId="+row.id+" target=_blank>企业信息</a></li>";
+        	
+        var str4 = "<li><a href=/crmteam/SchoolOrFactory?"+row.id+" target=_blank>学校信息</a></li>";
+       
+        
+        var str5 = "<li><a href=/crmbusinesstailrecord/trackRegisterInit?customerId="+row.id+" target=_blank>跟踪登记</a></li>";
+        
+        
+        var str6 = "<li><a href=javascript:void(0); onclick=editData('入驻申请','/crmcanteenapply/canteenEnterApplyInit?clientId="+row.id+"','768px','700px')>入驻申请</a></li>";
+        
+        
+        var str7 = "<li><a href=javascript:void(0); onclick=editData('加盟申请','/crmagentapply/agentJoinApplyInit?clientId="+row.id+"','768px','700px')>加盟申请</a></li>";
+        
+        var str9 = "<li>申请审核中</li>";
+        
+        
+        var str8 = "<li><a href=javascript:void(0); onclick=kickedOut('/crmclientresource/kickOutClient?clientId="+row.id+"')>踢出</a></li>";
+        
+        var strEnd = "</ul></div>";
+        
+        if(1 == row.clientType){//1.代理商
+        	console.log(row.checkStatus + "代");
+        	console.log(row.selfClientFlag + "代flag");
+        	if(1 == row.selfClientFlag){
+        		return strStart + str1 + str5+ strEnd;
+        	}else{
+				if (0 == parseInt(row.checkStatus)){
+	        		return strStart + str1 + str5 + str9 + strEnd;
+	        	}else if(null == row.checkStatus || '' == row.checkStatus || undefined == row.checkStatus || 2 == parseInt(row.checkStatus)){//审核状态,0.申请中，1.申请通过，2.申请失败
+	        		return strStart + str1 + str5 + str7 + str8 + strEnd;
+	        	}else{
+	        		return strStart + str1 + str5 + str8 + strEnd;
+	        	}
+        	}
+        }else if(2 == row.clientType){//2.厂内食堂
+        	console.log(row.checkStatus + "厂");
+        	console.log(row.selfClientFlag + "厂flag");
+        	if(1 == row.selfClientFlag){
+        		return strStart + str3 + str2 + str5 + strEnd;
+        	}else{
+	        	if (0 == parseInt(row.checkStatus)){
+	        		return strStart + str3 + str2 + str5 + str9 + strEnd;
+	        	}else if(null == row.checkStatus || '' == row.checkStatus || undefined == row.checkStatus || 2 == parseInt(row.checkStatus)){//审核状态,0.申请中，1.申请通过，2.申请失败
+	        		return strStart + str3 + str2 + str5 + str6 + str8 + strEnd;
+	        	}else{
+	        		return strStart + str3 + str2 + str5 + str8 + strEnd;
+	        	}
+        	}
+        }else if(3 == row.clientType){//3.校内食堂
+        	console.log(row.checkStatus + "校");
+        	console.log(row.selfClientFlag + "校flag");
+        	if(1 == row.selfClientFlag){
+        		return strStart + str4 + str2 + str5 + strEnd;
+        	}else{
+	        	if (0 == parseInt(row.checkStatus)){
+	        		return strStart + str4 + str2 + str5 + str9 + strEnd;
+	        	}else if(null == row.checkStatus || '' == row.checkStatus || undefined == row.checkStatus || 2 == parseInt(row.checkStatus)){//审核状态,0.申请中，1.申请通过，2.申请失败
+	        		return strStart + str4 + str2 + str5 + str6 + str8 + strEnd;
+	        	}else{
+	        		return strStart + str4 + str2 + str5 + str8 + strEnd;
+	        	}
+        	}
+        }else if(4 == row.clientType){//4.独立食堂
+        	console.log(row.checkStatus + "独");
+        	console.log(row.selfClientFlag + "独flag");
+        	if(1 == row.selfClientFlag){
+        		return strStart + str2 + str5 + strEnd;
+        	}else{
+	        	 if (0 == parseInt(row.checkStatus)){
+	         		return strStart + str2 + str5 + str9 + strEnd;
+	         	}else if(null == row.checkStatus || '' == row.checkStatus || undefined == row.checkStatus || 2 == parseInt(row.checkStatus)){//审核状态,0.申请中，1.申请通过，2.申请失败
+	        		return strStart + str2 + str5 + str6 + str8 + strEnd;
+	        	}else{
+	        		return strStart + str2 + str5 + str8 + strEnd;
+	        	}
+        	}
+        }else{
+        	return strStart + strEnd;
+        }
+        
+    };
+    function selectClientType(){
+    	
+    };
+   /*  踢出 */
+    function kickedOut(url){
+    	var index=layer.open({
+    		title:'踢出',
+    		content:'确定要将该客户踢出保护吗？踢出之后3天内不能重复保护。',
+    		icon:'3',
+    		btn:['确定','取消'],
+    		yes:function(data){
+    			$.ajax({
+            		type:"POST",
+            		url:url,
+            		dataType:"json",
+            		success:function(data){
+            			console.log(data);
+            			if(data && data.code == 0){
+            				layer.msg("操作成功");
+            				$('#table').bootstrapTable('refresh');  //刷新table
+    	    			}else{
+    	    				layer.msg(data.desc);
+    	    			}
+    					layer.close(index);//关闭弹窗
+            		}
+            	});
+    		}
+    	});
+    }
+   
+  	/* 格式化编号 */
+	function client(value, row, index) {
+		var formatter = row.clientNum;
+		if (row.clientNum === null || row.clientNum === "") {
+			formatter = "-";
+		}
+		return formatter;
+	}
+
+	/* 跟踪记录格式化 ; */
+	function tail(value, row, index) {
+		var formatter = row.tailNum;
+		if (row.tailNum == null || row.tailNum == "") {
+			formatter = "-";
+		}
+		return formatter;
+	}
+</script>
+
+
+

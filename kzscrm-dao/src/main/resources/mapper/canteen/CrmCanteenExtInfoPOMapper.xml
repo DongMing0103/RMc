@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="CrmCanteenExtInfoPOMapper">
+	<resultMap type="com.hd.kzscrm.dao.entity.canteen.CrmCanteenExtInfoPO" id="CanteenExtInfoMap">
+		<id column="id" jdbcType="BIGINT" property="id"/>
+		<result column="user_id" jdbcType="BIGINT" property="userId"/>
+		<result column="base_info_id" jdbcType="BIGINT" property="baseInfoId"/>
+		<result column="area_code" jdbcType="BIGINT" property="areaCode"/>
+		<result column="logo" jdbcType="VARCHAR" property="logo"/>
+		<result column="head_realname" jdbcType="VARCHAR" property="headRealname"/>
+		<result column="head_phone" jdbcType="VARCHAR" property="headPhone"/>
+		<result column="head_idcard" jdbcType="VARCHAR" property="headIdcard"/>
+		<result column="health_end_time" property="healthEndTime"/>
+		<result column="head_idcard_pic" property="headIdcardPic"/>
+		<result column="business_health_pic" property="businessHealthPic"/>
+		<result column="business_pic" property="businessPic"/>
+		<result column="creater_uid" property="createrUid"/>
+		<result column="create_time" property="createTime"/>
+		<result column="updater_uid" property="updaterUid"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="remark" property="remark"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="window_num" property="windowNum"/>
+		<result column="enter_time" property="enterTime"/>
+		<result column="open_outside_flag" property="openOutsideFlag"/>
+		<result column="open_send_flag" property="openSendFlag"/>
+		<result column="send_base_price" property="sendBasePrice"/>
+		<result column="send_scope" property="sendScope"/>
+	</resultMap>
+	
+		
+	<sql id="allField">
+		id,
+		user_id,
+		base_info_id,
+		area_code,
+		logo,
+		head_realname,
+		head_phone,
+		head_idcard,
+		health_end_time,
+		head_idcard_pic,
+		business_health_pic,
+		business_pic,
+		creater_uid,
+		create_time,
+		updater_uid,
+		update_time,
+		remark,
+		del_flag,
+		enter_time,
+		open_outside_flag,
+		window_num,
+		open_send_flag,
+		send_base_price,
+		send_scope
+	</sql>
+	<!-- 查询 -->
+	<select id="getAll" resultMap="CanteenExtInfoMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select <include refid="allField"/> from crm_canteen_ext_info
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(id)">
+				and id=#{id}
+			</if>
+			<if test="@Ognl@isNotEmpty(userId)">
+				and user_id=#{userId}
+			</if>
+			<if test="@Ognl@isNotEmpty(headPhone)">
+				and head_phone=#{headPhone}
+			</if>
+			<if test="@Ognl@isNotEmpty(baseInfoId)">
+				and base_info_id=#{baseInfoId}
+			</if>
+			<if test="@Ognl@isNotEmpty(headIdcard)">
+				and head_idcard=#{headIdcard}
+			</if>
+			<if test="@Ognl@isNotEmpty(baseInfoIds)">
+				and base_info_id in
+				<foreach collection="baseInfoIds" index="index" item="baseInfoId" open="(" close=")" separator=",">
+					#{baseInfoId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+
+	<select id="findByBaseInfoId" resultMap="CanteenExtInfoMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select business_health_pic,head_idcard_pic,business_pic,id,head_realname,head_phone,head_idcard,area_code,logo,enter_time
+		from crm_canteen_ext_info
+		<where>
+			del_flag=1
+			<if test="canteenId!=null and canteenId !=''">and base_info_id=#{canteenId}</if>
+		</where>
+		
+	</select>
+
+	<!-- 根据canteenIds查询对象 -->
+	<select id="findAllByCanteenIds" resultMap="CanteenExtInfoMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select id,head_realname,enter_time
+		from crm_canteen_ext_info
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(canteenids)">
+				and base_info_id in
+				<foreach collection="canteenids" item="canteenId" index="index" open="(" separator="," close=")">
+					#{canteenId}
+				</foreach>
+			
+			</if>
+		</where>
+	
+	</select>
+
+	<select id="findByHeadPhone" resultMap="CanteenExtInfoMap">
+		select base_info_id from crm_canteen_ext_info where head_phone like "%"#{headPhone}"%"
+	</select>
+</mapper>

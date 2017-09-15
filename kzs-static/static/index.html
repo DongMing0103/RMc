@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>筷子说CRM</title>
+    <link rel="stylesheet" href="css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="css/adminlte/AdminLTE.min.css">
+    <link rel="stylesheet" href="css/adminlte/skins/_all-skins.min.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap-table.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style2.css">
+
+    <!--[if lt IE 9]>
+		<script src="js/html5shiv.min.js"></script>
+		<script src="js/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body class="skin-blue sidebar-mini">
+	<div class="wrapper">
+      	<header class="main-header">
+        <!-- Logo -->
+	        <a href="index.html" class="logo">
+				<span class="logo-mini">CRM</span>
+				<span class="logo-lg">筷子说CRM</span>
+	        </a>
+	        <nav class="navbar navbar-static-top">
+	          	<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+	            	<span class="sr-only">Toggle navigation</span>
+				</a>
+				<div class="navbar-custom-menu">
+		            <ul class="nav navbar-nav">
+						<!--管理员：平台收益表、客户资源表、区域代理表-->
+						<!--业务员、代理商、业务经理：客户资源表、区域代理表-->
+						<li>
+							<a href="html/index/platform_earnings.html" target="_blank">平台收益表</a>
+						</li>
+						<li>
+							<a href="html/index/customer_resource.html" target="_blank">客户资源库</a>
+						</li>
+						<li>
+							<a href="html/index/area_agent.html" target="_blank">区域代理表</a>
+						</li>
+						<li>
+							<div class="dropdown">
+								<a class="btn btn-default dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+									操作
+									<span class="caret"></span>
+								</a>
+								<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+									<!--管理员：修改密码、退出-->
+									<!--业务员、代理商、业务经理：修改密码、修改头像、退出-->
+									<li><a href="javascript:void(0);" onclick="">修改头像</a></li>
+									<li><a href="javascript:void(0);" onclick="">修改密码</a></li>
+									<li><a href="javascript:void(0);" onclick="">退出</a></li>
+
+								</ul>
+							</div>
+						</li>
+		            </ul>
+				</div>
+			</nav>
+      	</header>
+		<aside class="main-sidebar">
+			<section class="sidebar">
+				<div class="user-panel">
+					<!--管理员-->
+					<div class="info">
+						<p>欢迎，13000000000</p>
+						<p>系统管理员</p>
+					</div>
+					<!--业务员、业务经理-->
+					<!--<div class="head-portrait">
+						<img src="images/head_portrait.png" class="img-circle"/>
+					</div>
+					<div class="info">
+						<p>欢迎，13000000000</p>
+						<p>业务员/业务经理 <span>[商务一部]</span></p>
+					</div>-->
+					<!--代理商-->
+					<!--<div class="head-portrait">
+						<img src="images/head_portrait.png" class="img-circle"/>
+					</div>
+					<div class="info">
+						<p>欢迎，13000000000</p>
+						<div class="agent-area">代理区域:
+							<p>浙江 杭州 拱墅</p>
+							<p>河北 保定 雄安</p>
+						</div>
+					</div>-->
+				</div>
+				<div class="sidebar-form">
+					<li class="btn-left-kjk">
+						<!--管理员：新增代理商、新增业务员、新增食堂、团队目标审核、新客户目标审核、代理商审核-->
+						<!--业务员：新增代理商、新增食堂、工作目标申报、提现-->
+						<!--代理商：新增代理商、新增业务员、新增食堂、工作目标申报、工作目标审核、提现-->
+						<!--业务经理：新增代理商、新增食堂、个人目标申报、团队目标申报、工作目标审核、提现-->
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="editData('新增代理商','html/index/add_agent.html','768px','90%')">新增代理商</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="editData('新增业务员','html/index/add_salesman.html','768px','500px')">新增业务员</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="editData('新增食堂','html/index/add_cateen.html','768px','90%')">新增食堂</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="editData('个人目标申报','html/index/user_target_declare.html','768px','500px')">个人目标申报</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="editData('团队目标申报','html/index/team_target_declare.html','768px','500px')">团队目标申报</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="editData('工作目标申报','html/index/work_target_declare.html','768px','500px')">工作目标申报</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="loadHtmlDiv('html/index/team_audit.html')">团队目标审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="loadHtmlDiv('html/index/user_audit.html')">新客户审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="loadHtmlDiv('html/index/agent_audit.html')">代理商审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="loadHtmlDiv('html/index/work_target_audit.html')">工作目标审核</a>
+						<a href="javascript:void(0);" class="btn-left-xk" onclick="loadHtmlDiv('html/index/withdrawal.html')">提现</a>
+					</li>
+				</div>
+	          	<ul class="sidebar-menu">
+					<!--管理员-->
+	            	<li class="treeview">
+						<a href="#">
+							<i class="fa fa-th-list"></i>
+							<span>团队管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/team_management/agent_list.html')">代理商列表</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/team_management/business_team.html')">业务团队</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/team_management/salesman_list.html')">业务员列表</a></li>
+						</ul>
+	            	</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-file-text"></i>
+							<span>客户管理</span>
+							<span class="pull-right-container">
+								<i class="fa fa-angle-left pull-right"></i>
+							</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/customer_management/platform_customer.html')">平台客户</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/customer_management/agent_customer.html')">代理商客户</a></li>
+						</ul>
+					</li>
+	            	<li class="treeview">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>目标考核</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/check/team_check.html')">团队考核</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/check/salesman_check.html')">业务员考核</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/check/agent_check.html')">代理商考核</a></li>
+						</ul>
+	            	</li>
+	            	<li class="treeview active">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>分账统计</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/collecting_statistics/order_fashinable.html')">订单分账表</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/collecting_statistics/agent_fashinable.html')">代理商分账</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/collecting_statistics/salesman_fashinable.html')">业务员分账</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/collecting_statistics/cateen_fashinable.html')">食堂分账</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/collecting_statistics/platform_fashinable.html')">平台分账</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/collecting_statistics/withdrawal_record.html')">提现记录</a></li>
+						</ul>
+	            	</li>
+	            	<li class="treeview">
+	              		<a href="#">
+	                		<i class="fa fa-bitcoin"></i>
+			                <span>系统设置</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+	          			</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/system_set/team_structure.html')">团队结构</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/system_set/position.html')">岗位职务</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/system_set/access_configuration.html')">权限配置</a></li>
+						</ul>
+	            	</li>
+					<!--业务员-->
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>我的客户</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_customer/protect_customer.html')">保护客户（8）</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_customer/formal_customer.html')">正式客户（8）</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span onclick="loadHtmlDiv('html/target_record/target_record.html')">目标记录</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span onclick="loadHtmlDiv('html/my_wealth/my_wealth.html')">我的财富</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+					</li>
+					<!--代理商-->
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>我的团队</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_team/my_agent.html')">我的代理商</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_team/salesman_team.html')">业务员团队</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_team/my_salesman.html')">我的业务员</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>我的客户</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_customer/agent_customer.html')">代理商客户</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_customer/salesman_customer.html')">业务员客户</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>目标记录</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/agent_target_record/agent_target.html')">代理商目标</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/agent_target_record/team_target.html')">团队目标</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/agent_target_record/salesman_target.html')">业务员目标</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span onclick="loadHtmlDiv('html/my_wealth/my_wealth.html')">我的财富</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>系统设置</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/system_set/team_structure.html')">团队结构</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/system_set/position.html')">岗位职务</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/system_set/access_configuration.html')">权限配置</a></li>
+						</ul>
+					</li>
+					<!--业务经理-->
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>团队管理</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/team_management/agent_list.html')">代理商列表</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_team/salesman_list.html')">业务员列表</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>客户一览</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_customer/protect_customer.html')">保护客户（8）</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/my_customer/formal_customer.html')">正式客户（8）</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span>目标记录</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+						<ul class="treeview-menu">
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/target_record/team_target.html')">团队目标</a></li>
+							<li><a href="javascript:void(0);" onclick="loadHtmlDiv('html/target_record/user.html')">个人目标</a></li>
+						</ul>
+					</li>
+					<li class="treeview">
+						<a href="#">
+							<i class="fa fa-bitcoin"></i>
+							<span onclick="loadHtmlDiv('html/my_wealth/my_wealth.html')">我的财富</span>
+			                <span class="pull-right-container">
+		                  		<i class="fa fa-angle-left pull-right"></i>
+		                	</span>
+						</a>
+					</li>
+	          	</ul>
+	        </section>
+	  	</aside>
+		<div class="content-wrapper" id="content-div"></div> 
+    </div>
+
+    <script src="js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="js/bootstrap/bootstrap.min.js"></script>
+    <script src="js/bootstrap/bootstrap-table.js"></script>
+    <script src="js/bootstrap/bootstrap-table-zh-CN.js"></script>
+	<script src="js/DatePicker/WdatePicker.js"></script>
+    <script src="js/app/app.js"></script>
+	<script src="js/layer/layer.js"></script>
+    <script src="js/jquerycookie/jquery.cookie.js"></script>
+    <script src="js/cityselect/jquery.cityselect.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>

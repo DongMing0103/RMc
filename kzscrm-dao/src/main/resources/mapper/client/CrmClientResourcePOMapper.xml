@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmClientResourcePOMapper">
+
+	<!-- 表中列对应PO -->
+	<resultMap type="com.hd.kzscrm.dao.entity.client.CrmClientResourcePO"
+		id="BaseResultMap">
+		<result column="ID" property="id" jdbcType="BIGINT" />
+		<result column="CLIENT_TYPE" property="clientType" jdbcType="BIGINT" />
+		<result column="CLIENT_NATURE" property="clientNature"
+			jdbcType="BIGINT" />
+		<result column="NAME" property="name" jdbcType="VARCHAR" />
+		<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT" />
+		<result column="PROTECT_DEADLINE" property="protectDeadline"
+			jdbcType="TIMESTAMP" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT" />
+		<result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+		<result column="TAIL_NUM" property="tailNum" jdbcType="BIGINT" />
+		<result column="AGENT_CANTEEN_ID" property="agentCanteenId"
+			jdbcType="BIGINT" />
+		<result column="CLIENT_NUM" property="clientNum" jdbcType="BIGINT" />
+		<result column="check_status" property="checkStatus" />
+		<result column="area_code" property="areaCode" />
+		<result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+		<result column="apply_approve_time" property="applyApproveTime"
+			jdbcType="TIMESTAMP" />
+		<result column="agent_id" property="agentId" />
+		<result column="customer_attribute" property="customerAttribute" />
+			<result column="enterprise_id" property="enterpriseId"/>
+			<result column="position" property="position"/>
+		<result column="last_protect_business_id" property="lastProtectBusinessId" jdbcType="BIGINT" />
+		<result column="relieve_protect_time" property="relieveProtectTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id as id,
+		apply_time as applyTime,
+		enterprise_id as enterpriseId,
+		apply_approve_time as applyApproveTime,
+		client_type as clientType,
+		client_nature as clientNature,
+		name as name,
+		contact as contact,
+		area_code as areaCode,
+		mobile as mobile,
+		business_id as businessId,
+		protect_deadline as protectDeadline,
+		create_time as createTime,
+		del_flag as delFlag,
+		address as address,
+		tail_num as tailNum,
+		agent_canteen_id as agentCanteenId,
+		client_num as clientNum,
+		customer_attribute as customerAttribute,
+		check_status as checkStatus,
+		agent_id as agentId,
+		position as position,
+		last_protect_business_id as lastProtectBusinessId,
+		relieve_protect_time as relieveProtectTime
+	</sql>
+	
+	<update id="commonUpdate" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_client_resource 
+		<set>
+			<if test="@Ognl@isNotEmpty(clientType)">client_type=#{clientType},</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">client_nature=#{clientNature},</if>
+			<if test="@Ognl@isNotEmpty(name)">name=#{name},</if>
+			<if test="@Ognl@isNotEmpty(contact)">contact=#{contact},</if>
+			<if test="@Ognl@isNotEmpty(mobile)">mobile=#{mobile},</if>
+			<if test="@Ognl@isNotEmpty(businessId)">business_id=#{businessId},</if>
+			<if test="@Ognl@isNotEmpty(protectDeadline)">protect_deadline=#{protectDeadline},</if>
+			<if test="@Ognl@isNotEmpty(createTime)">create_time=#{createTime},</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">del_flag=#{delFlag},</if>
+			<if test="@Ognl@isNotEmpty(address)">address=#{address},</if>
+			<if test="@Ognl@isNotEmpty(tailNum)">tail_num=#{tailNum},</if>
+			<if test="@Ognl@isNotEmpty(agentCanteenId)">agent_canteen_id=#{agentCanteenId},</if>
+			<if test="@Ognl@isNotEmpty(clientNum)">client_num=#{clientNum},</if>
+			<if test="@Ognl@isNotEmpty(customerAttribute)">customer_attribute=#{customerAttribute},</if>
+			<if test="@Ognl@isNotEmpty(checkStatus)">check_status=#{checkStatus},</if>
+			<if test="@Ognl@isNotEmpty(applyTime)">apply_time=#{applyTime},</if>
+			<if test="@Ognl@isNotEmpty(applyApproveTime)">apply_approve_time=#{applyApproveTime},</if>
+			<if test="@Ognl@isNotEmpty(agentId)">agent_id=#{agentId},</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">area_code=#{areaCode},</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)">enterprise_id=#{enterpriseId},</if>
+			<if test="@Ognl@isEmpty(enterpriseId) and @Ognl@isNotEmpty(enterpriseIdNull)">enterprise_id=null,</if>
+			<if test="@Ognl@isEmpty(agentId) and @Ognl@isNotEmpty(agentIdNull)">agent_id=null,</if>
+			<if test="@Ognl@isEmpty(businessId) and @Ognl@isNotEmpty(businessIdNull)">business_id=null,</if>
+			<if test="@Ognl@isEmpty(position) and @Ognl@isNotEmpty(position)">position=null,</if>
+			<if test="@Ognl@isEmpty(protectDeadline) and @Ognl@isNotEmpty(protectDeadlineNull)">protect_deadline=null,</if>
+		</set>
+		<where>id=#{id}</where>
+	</update>
+
+
+	<!-- 显示的记录对应的列 -->
+
+	<!-- 无分页查询 -->
+	<select id="queryList" parameterType="com.hd.wolverine.util.ParamMap"
+		resultMap="BaseResultMap">
+		SELECT *
+		FROM crm_client_resource
+		<where>
+			del_flag=1
+			
+			<if test="@Ognl@isNotEmpty(clientType)">and CLIENT_TYPE=#{clientType}</if>
+			<if test="@Ognl@isNotEmpty(agentNotFormalClientFlag)">and if(client_nature=3,client_type!=1,1) </if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id=#{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and business_id in
+				<foreach collection="businessIds" item="businessId" index="index" open="(" close = ")" separator=",">
+					#{businessId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature=#{clientNature}</if>
+			<if test="@Ognl@isNotEmpty(nameLike)">and name like "%"#{nameLike}"%"</if>
+			<if test="@Ognl@isNotEmpty(agentCanteenId)">and agent_canteen_id=#{agentCanteenId}</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">and AREA_CODE=#{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(areaCodes)">
+				and AREA_CODE in 
+				<foreach collection="areaCodes" item="areaCode" index="index" open="(" close=")" separator=",">
+					#{areaCode}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientTypes)">
+				and client_type in 
+				<foreach collection="clientTypes" item="clientType" index="index" open="(" close=")" separator=",">
+					#{clientType}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(name)"> AND name = #{name}</if>
+			<if test="@Ognl@isNotEmpty(nameLike)">and name like '${nameLike}'</if>
+			<if test="@Ognl@isNotEmpty(protectDeadlineStart)">and protect_deadline <![CDATA[>=]]> #{protectDeadlineStart}</if>
+			<if test="@Ognl@isNotEmpty(protectDeadlineEnd)">and protect_deadline <![CDATA[<=]]> #{protectDeadlineEnd}</if>
+			<if test="@Ognl@isNotEmpty(condition)">and name like CONCAT('%',#{condition},'%')</if>
+			
+		</where>
+		order by id desc
+	</select>
+	<!-- 列表查询对应的表关系SQL -->
+	<sql id="querySqlMain">
+		crm_client_resource crmclientresource
+	</sql>
+	<!-- 列表对应的查询条件组合 -->
+	<sql id="queryOptions">
+		<if test="id != null and id != ''"> AND crmclientresource.id = #{id}</if>
+		<if test="@Ognl@isNotEmpty(clientType)"> AND crmclientresource.client_type = #{clientType}</if>
+		<if test="@Ognl@isNotEmpty(clientTypes)"> AND crmclientresource.client_type in 
+			<foreach collection="clientTypes" item="clientType" separator="," open="(" close=")">
+				#{clientType}
+			</foreach>
+		</if>
+		<if test="@Ognl@isNotEmpty(clientNature)"> AND crmclientresource.client_nature = #{clientNature}</if>
+		<if test="@Ognl@isNotEmpty(stratTimes)">and crmclientresource.create_time >= #{stratTimes}</if>
+		<if test="@Ognl@isNotEmpty(endTimes)"><![CDATA[ and crmclientresource.create_time <= #{endTimes}]]></if>
+		<if test="@Ognl@isNotEmpty(condition) and selectNum == 1">and name like CONCAT('%',#{condition},'%')</if>
+		<if test="@Ognl@isNotEmpty(condition) and selectNum == 2">and id like CONCAT('%',#{condition},'%')</if>
+		<if test="@Ognl@isNotEmpty(name)"> AND crmclientresource.name = #{name}</if>
+		<if test="@Ognl@isNotEmpty(nameLike)">and name like '${nameLike}'</if>
+		<if test="contact != null and contact != ''"> AND crmclientresource.contact = #{contact}</if>
+		<if test="mobile != null and mobile != ''"> AND crmclientresource.mobile = #{mobile}</if>
+		<if test="businessId != null and businessId != ''"> AND crmclientresource.business_id = #{businessId}</if>
+		<if test="protectDeadline != null and protectDeadline != ''"> AND crmclientresource.protect_deadline =
+			#{protectDeadline}</if>
+		<if test="createTime != null and createTime != ''"> AND crmclientresource.create_time = #{createTime}</if>
+		<if test="applyTime != null and applyTime != ''"> AND crmclientresource.apply_time = #{applyTime}</if>
+		<if test="applyApproveTime != null and applyApproveTime != ''"> AND crmclientresource.apply_approve_time =
+			#{applyApproveTime}</if>
+		<if test="delFlag != null and delFlag != ''"> AND crmclientresource.del_flag = #{delFlag}</if>
+		<if test="address != null and address != ''"> AND crmclientresource.address like #{address}"%"</if>
+		<if test="tailNum != null and tailNum != ''"> AND crmclientresource.tail_num = #{tailNum}</if>
+		<if test="agentCantenId != null and agentCantenId != ''"> AND crmclientresource.agent_canten_id = #{agentCantenId}
+		</if>
+		<if test="clientNum != null and clientNum != ''"> AND crmclientresource.client_num = #{clientNum}</if>
+		<if test="@Ognl@isNotEmpty(checkStatus)"> AND crmclientresource.check_status = #{checkStatus}</if>
+		<if test="@Ognl@isNotEmpty(areaCode)"> AND crmclientresource.area_code = #{areaCode}</if>
+		<if test="@Ognl@isNotEmpty(enterpriseId)"> AND crmclientresource.enterprise_id = #{enterpriseId}</if>
+		
+	</sql>
+
+	<!-- 列表查询对应的排序选项 -->
+	<sql id="orderControl">
+		<if test="orders != null">
+			<foreach collection="orders.keys" index="key" item="value"
+				open="order by" separator=",">
+				${key} ${orders[key]}
+			</foreach>
+		</if>
+	</sql>
+
+
+	<!-- 分页查询对应的记录 -->
+	<select id="queryPage" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT *
+		FROM crm_client_resource
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(customerAttribute)">and customer_attribute=#{customerAttribute}</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature=#{clientNature}</if>
+			<if test="@Ognl@isNotEmpty(clientType) and clientType!=0"> and client_type = #{clientType}</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIdS)">and id in (${businessIdS})</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)"> AND enterprise_id = #{enterpriseId}</if>
+			<if test="@Ognl@isNotEmpty(condition)">and name like "%"#{condition}"%"</if>
+			<if test="@Ognl@isNotEmpty(stratTimes)">and date_format(apply_approve_time,'%Y-%m-%d') <![CDATA[>=]]>  #{stratTimes}</if>
+			<if test="@Ognl@isNotEmpty(endTimes)">and date_format(apply_approve_time,'%Y-%m-%d') <![CDATA[<=]]> #{endTimes}</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">and area_code= #{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(areaCodes)">
+				and area_code in
+				<foreach collection="areaCodes" item="areaCode" index="index" open="(" close = ")" separator=",">
+					#{areaCode}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientTypes)">
+				and client_type in 
+				<foreach collection="clientTypes" item="ct" index="index" open="(" separator="," close=")">
+					#{ct}
+				</foreach>
+			</if>
+		</where>
+		order by id desc
+	</select>
+
+
+	<select id="commonQuery" resultMap="BaseResultMap"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		select id, client_type, client_nature, name, contact, mobile,
+		business_id, protect_deadline, create_time, address, tail_num,
+		agent_canteen_id, client_num, customer_attribute, check_status,
+		apply_time, apply_approve_time,area_code,enterprise_id, position, last_protect_business_id, relieve_protect_time
+		from crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(customerAttribute)">and customer_attribute = #{customerAttribute}</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="("
+					separator="," close=")">
+					#{id}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(areaCode)"> AND area_code = #{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(clientType)"> and client_type = #{clientType}</if>
+			<if test="@Ognl@isNotEmpty(clientTypes)"> and client_type in 
+				<foreach collection="clientTypes" item="cType" separator="," open="(" close=")">
+					#{cType}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature = #{clientNature}</if>
+			<if test="@Ognl@isNotEmpty(enterpriseId)"> AND enterprise_id = #{enterpriseId}</if>
+			<if test="@Ognl@isNotEmpty(name)">and name = #{name}</if>
+			<if test="@Ognl@isNotEmpty(contact)">and contact = #{contact}</if>
+			<if test="@Ognl@isNotEmpty(mobile)">and mobile = #{mobile}</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and business_id in
+				<foreach collection="businessIds" item="bId" index="index"
+					open="(" separator="," close=")">
+					#{bId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientIds)">
+				and id in(${clientIds})
+			</if>
+			<if test="@Ognl@isNotEmpty(protectDeadline)">and protect_deadline = #{protectDeadline}</if>
+			<if test="@Ognl@isNotEmpty(createTime)">and create_time = #{createTime}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(address)">and address like #{address}"%"</if>
+			<if test="@Ognl@isNotEmpty(tailNum)">and tail_num = #{tailNum}</if>
+			<if test="@Ognl@isNotEmpty(agentCanteenId)">and agent_canteen_id = #{agentCanteenId}</if>
+			<if test="@Ognl@isNotEmpty(clientNum)">and client_num = #{clientNum}</if>
+			<if test="@Ognl@isNotEmpty(checkStatus)">and check_status = #{checkStatus}</if>
+			<if test="@Ognl@isNotEmpty(applyTime)">and apply_time = #{applyTime}</if>
+			<if test="@Ognl@isNotEmpty(applyApproveTime)">and apply_approve_time = #{applyApproveTime}</if>
+			<if test="@Ognl@isNotEmpty(applyMonth)">
+				and date_format(apply_approve_time,'%Y-%m') <![CDATA[=]]>date_format(#{applyMonth},'%Y-%m')
+			</if>
+			<if test="@Ognl@isNotEmpty(stratTimes) and @Ognl@isNotEmpty(endTimes)">
+				and date_format(apply_approve_time,'%Y-%m-%d') <![CDATA[>=]]>date_format(#{stratTimes},'%Y-%m-%d')
+				and date_format(apply_approve_time,'%Y-%m-%d') <![CDATA[<=]]>date_format(#{endTimes},'%Y-%m-%d')
+			</if>
+			<if test="@Ognl@isNotEmpty(nameLike)">and name like "%"#{nameLike}"%"</if>
+			<if test="@Ognl@isNotEmpty(clientNumLike)">and client_num like "%"#{clientNumLike}"%"</if>
+		</where>
+		order by id desc
+	</select>
+
+	<!-- 根据agentId 统计客户数量 -->
+	<select id="getAgentNumber" resultType="java.math.BigDecimal"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT COUNT(agent_id) FROM crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(agentId)">and agent_id = #{agentId}</if>
+		</where>
+	</select>
+
+	<!-- findPageBycanteenClien  食堂分账 -->
+	<select id="findPageBycanteenClien" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * 
+		from crm_client_resource
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(customerAttribute) and customerAttribute!=0">and customer_attribute=#{customerAttribute}</if>
+			<if test="@Ognl@isNotEmpty(clientType) and clientType!=0"> and client_type = #{clientType}</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature = #{clientNature}</if>
+			<if test="@Ognl@isNotEmpty(condition) and selectNum==1">and name like "%"#{condition}"%"</if>
+			<if test="@Ognl@isNotEmpty(condition) and selectNum==2">and CLIENT_NUM like "%"#{condition}"%"</if>
+			<if test="@Ognl@isNotEmpty(stratTimes)">and date_format(apply_approve_time,'%Y-%m-%d') <![CDATA[>=]]>  #{stratTimes}</if>
+			<if test="@Ognl@isNotEmpty(endTimes)">and date_format(apply_approve_time,'%Y-%m-%d') <![CDATA[<=]]> #{endTimes}</if>
+			<if test="@Ognl@isNotEmpty(clienIds)">and id  in (${clienIds})</if>
+			<if test="@Ognl@isNotEmpty(ids)">
+				and id in
+				<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">#{id}</foreach>
+			</if>
+		</where>
+	
+	</select>
+
+	<!-- 根据businessId 统计正式客户数量 -->
+	<select id="getBusinessNumber" resultType="java.math.BigDecimal"
+		parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT COUNT(business_id) FROM crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+		</where>
+	</select>
+	<!-- findById -->
+	<select id="findById" resultMap="BaseResultMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_client_resource
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+		</where>
+	</select>
+	
+	<!-- findByBusinessId -->
+	<select id="findByBusinessId" resultMap="BaseResultMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_client_resource
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIdS)">and business_id in (${businessIdS}) </if>
+		</where>
+		and client_nature = 3 
+	</select>
+	
+	<!--统计业务员保护客户数量  -->
+	<select id="countProtectedClientNum" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.util.Map">
+		select business_id as businessId , count(id) as protectedNum
+		from crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature = #{clientNature}</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and business_id in
+				<foreach collection="businessIds" item="businessId" index="index"
+					open="(" separator="," close=")">
+					#{businessId}
+				</foreach>
+			</if>
+		</where>
+		group by business_id
+	</select>
+	<!-- findByAgentCanteenId -->
+		<select id="findByAgentCanteenId" resultMap="BaseResultMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_client_resource
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(agentCanteenId)">and agent_canteen_id = #{agentCanteenId}</if>
+		</where>
+	</select>
+	<select id="findByAgentCanteenIdAndClientType" resultMap="BaseResultMap"  parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_client_resource
+		<where>
+			del_flag =1
+			<if test="@Ognl@isNotEmpty(agentCanteenId)">and agent_canteen_id = #{agentCanteenId}</if>
+			<if test="@Ognl@isNotEmpty(clientTypes)">
+				and client_type in	
+				<foreach collection="clientTypes" item="clientType" index="index" open="(" close=")" separator=",">
+					#{clientType}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<!-- 更新保护客户为散客 -->
+	<update id="changeProtectedClientToIndividualTraveler" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_client_resource 
+		<set>
+			business_id = null,
+			protect_deadline = null,
+			tail_num = 0,
+			customer_attribute = null,
+			check_status = null,
+			apply_time = null,
+			apply_approve_time = null,
+			agent_id = null,
+			<if test="@Ognl@isNotEmpty(clientNature)">client_nature = #{clientNature},</if>
+			<if test="@Ognl@isNotEmpty(lastProtectBusinessId)">last_protect_business_id = #{lastProtectBusinessId},</if>
+			<if test="@Ognl@isNotEmpty(relieveProtectTime)">relieve_protect_time = #{relieveProtectTime}</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+		</where>
+	</update>
+	
+	<!-- 根据参数统计客户数量  -->
+	<select id="countClientNum" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer">
+		select count(id) 
+		from crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(clientType)"> and client_type = #{clientType}</if>
+			<if test="@Ognl@isNotEmpty(clientTypes)"> and client_type in 
+				<foreach collection="clientTypes" item="cType" index="index" separator="," open="(" close=")">
+					#{cType}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature = #{clientNature}</if>	
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and business_id in
+				<foreach collection="businessIds" item="businessId" index="index"
+					open="(" separator="," close=")">
+					#{businessId}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	<!-- updateClientIds -->
+	<update id="updateClientIds">
+		update crm_client_resource set client_nature = 1 
+		<where>
+			id in
+			<foreach collection="ids" index="index" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</update>
+	
+	<!-- 查询客户资源信息 -->
+	<select id="findCustomsResource" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+		select id, client_type, client_nature, name, contact, mobile,
+		business_id, protect_deadline, create_time, address, tail_num,
+		agent_canteen_id, client_num, customer_attribute, check_status,
+		apply_time, apply_approve_time,area_code,enterprise_id, position, last_protect_business_id, relieve_protect_time
+		from crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(clientType)"> and client_type = #{clientType}</if>
+			<if test="@Ognl@isNotEmpty(clientTypes)"> and client_type in 
+				<foreach collection="clientTypes" item="cType" separator="," open="(" close=")">
+					#{cType}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(clientNature)">and client_nature = #{clientNature}</if>
+			<if test="@Ognl@isNotEmpty(clientNatures)"> and client_nature in 
+				<foreach collection="clientNatures" item="cNature" separator="," open="(" close=")">
+					#{cNature}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(checkStatus)">and check_status = #{checkStatus}</if>
+			<if test="@Ognl@isNotEmpty(nameLike)">and name like "%"#{nameLike}"%"</if>
+			<if test="@Ognl@isNotEmpty(areaCode)"> and area_code like '${areaCode}%'</if>
+			<if test="@Ognl@isNotEmpty(areaCodeList)">
+				and
+				<foreach collection="areaCodeList" index="index" item="aCode" open="(" separator="or" close=")">
+					area_code like '${aCode}%'
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(agentNotFormalClientFlag)">and if(client_nature=3,client_type!=1,1) </if>
+		</where>
+		order by id desc
+	</select>
+	<!-- 根据businessID统计食堂数量 -->
+	<select id="countCanteen" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT COUNT(business_id) FROM crm_client_resource
+		<where>
+			<if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(businessIdS)">and business_id in (${businessIdS})</if>
+			<if test="@Ognl@isNotEmpty(clientTypeS)"> and client_type != 1</if>
+		</where>
+		and client_nature = 3 
+	</select>
+</mapper>
+
+
+

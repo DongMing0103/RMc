@@ -1,0 +1,116 @@
+<!--代理商客户-->
+<div class="m-content">
+    <div class="content-cap">
+        <span class="cap-name">代理商客户</span>
+    </div>
+    <form class="form-inline mb10" id="form" role="form">
+        <div class="form-group">
+            <label class="control-label">客户类别</label>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择</option>
+                <option>厂内食堂</option>
+                <option>校内食堂</option>
+                <option>独立食堂</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <label class="control-label">地理信息</label>
+        </div>
+        <div class="form-group">
+            <div class="city-select" id="city">
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control prov"></select>
+                </div>
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control city"></select>
+                </div>
+                <div class="has-feedback" style="display: inline-block;">
+                    <select class="form-control dist"></select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <select class="form-control selectarrow" name="status">
+                <option value="">请选择搜索条件</option>
+                <option>食堂名称</option>
+                <option>食堂编号</option>
+            </select>
+            <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+        </div>
+        <div class="form-group">
+            <input class="form-control" name="enterNoName" id="enterNoName" placeholder="请输入文字">
+        </div>
+        <div class="form-group">
+            <a class="btn btn-default" href="javascript:void(0);"><i class="fa fa-search"></i>搜索</a>
+            <a class="btn btn-default" href="javascript:void(0);">重置</a>
+        </div>
+    </form>
+
+    <table data-toggle="table"
+           id="table"
+           data-classes="table table-bill"
+           data-toggle="table"
+           data-url="../static/json/5.json"
+           data-pagination="true"
+           data-pagination-v-align="both"
+           data-side-pagination="server"
+           data-cache="false"
+           data-query-params="queryParams"
+           data-page-size="20"
+           data-page-list="[10,20,50]">
+        <thead>
+        <tr>
+            <th data-checkbox="true"></th>
+            <th data-field="a" data-align="center">ID</th>
+            <th data-field="b" data-align="center">名称</th>
+            <th data-field="c" data-align="center">入驻时间</th>
+            <th data-field="d" data-align="center">客户类别</th>
+            <th data-field="e" data-align="center">代理商 </th>
+            <th data-field="f" data-align="center">业务员</th>
+            <th data-field="g" data-align="center">地理信息</th>
+            <th data-field="h" data-align="center">分账比例（%）</th>
+            <th data-field="i" data-align="center">联系电话</th>
+            <th data-field="j" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+        </tr>
+        </thead>
+    </table>
+
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#table').bootstrapTable();
+    });
+
+    /* 操作 */
+    function operateFormatter(value, row, index) {
+        var str = 	"<div class=tddiv>"+
+            "<span class=settingtda>请选择</span>"+
+            "<ul class=settingtdmenu>"+
+            "<li><a href= target=_blank>查看</a></li>"+
+            "<li><a href= target=_blank>编辑资料</a></li>"+
+            "<li><a href= target=_blank>跟踪记录</a></li>"+
+            "<li><a href= target=_blank>订单列表</a></li>"+
+            "<li><a href= target=_blank>分账明细</a></li>"+
+            "<li><a href= target=_blank>企业信息</a></li>"+
+            "<li><a href= target=_blank>调整分账比例</a></li>"+
+            "</ul></div>";
+        return str;
+    }
+
+    /*地理联动*/
+    $("#city").citySelect({
+        url:"js/cityselect/city.min.js",
+        prov:"",//省份
+        city:"",//城市
+        dist:"",//区县
+        nodata:"none",//当子集无数据时，隐藏select
+        required:false
+    });
+
+</script>
+

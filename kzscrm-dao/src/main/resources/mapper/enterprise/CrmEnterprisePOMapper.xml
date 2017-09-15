@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmEnterprisePOMapper">
+
+	<!-- 表中列对应PO -->
+	<resultMap type="com.hd.kzscrm.dao.entity.enterprise.CrmEnterprisePO"
+		id="BaseResultMap">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_id" jdbcType="BIGINT" property="userId" />
+		<result column="id_no" jdbcType="VARCHAR" property="idNo" />
+		<result column="level" jdbcType="INTEGER" property="level" />
+		<result column="e_name" jdbcType="VARCHAR" property="eName" />
+		<result column="enter_time" jdbcType="TIMESTAMP" property="enterTime" />
+		<result column="e_style" jdbcType="BIGINT" property="eStyle" />
+		<result column="e_licence" jdbcType="VARCHAR" property="eLicence" />
+		<result column="contact" jdbcType="VARCHAR" property="contact" />
+		<result column="mobilephone" jdbcType="VARCHAR" property="mobilephone" />
+		<result column="telephone" jdbcType="VARCHAR" property="telephone" />
+		<result column="weixin" jdbcType="VARCHAR" property="weixin" />
+		<result column="position" jdbcType="VARCHAR" property="position" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="postcode" jdbcType="BIGINT" property="postcode" />
+		<result column="company_URL" jdbcType="VARCHAR" property="companyURL" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="brand" jdbcType="VARCHAR" property="brand" />
+		<result column="remark" jdbcType="VARCHAR" property="remark" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="create_uid" jdbcType="BIGINT" property="createUid" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="update_uid" jdbcType="BIGINT" property="updateUid" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="del_flag" property="delFlag" />
+		<result column="area_code" jdbcType="BIGINT" property="areaCode" />
+		<result column="service_req_flag" jdbcType="INTEGER" property="serviceReqFlag" />
+		<result column="admin_user_id" jdbcType="BIGINT" property="adminUserId" />
+		<result column="enterprise_id" jdbcType="BIGINT" property="enterpriseId" />
+
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id as id,
+		user_id as userId,
+		id_no as idNo,
+		e_name as eName,
+		enter_time as enterTime,
+		e_style as eStyle,
+		e_licence as eLicence,
+		contact as contact,
+		mobilephone as mobilephone,
+		telephone as telephone,
+		enterprise_id as enterpriseId,
+		weixin as weixin,
+		position as position,
+		address as address,
+		postcode as postcode,
+		company_URL as companyURL,
+		email as email,
+		brand as brand,
+		remark as remark,
+		create_time as createTime,
+		create_uid as createUid,
+		update_time as updateTime,
+		update_uid as updateUid,
+		status as status,
+		del_flag as delFlag,
+		area_code as areaCode,
+		service_req_flag as serviceReqFlag,
+		admin_user_id as adminUserId,
+		level as level
+	</sql>
+
+
+    <!-- 显示的记录对应的列-->
+   
+   
+      <!-- 列表查询对应的表关系SQL  -->
+    <sql id="querySqlMain">
+        crm_enterprise crmEnterprise
+    </sql>
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="@Ognl@isNotEmpty(id)">and crmEnterprise.id=#{id}</if>
+                                      <if test="@Ognl@isNotEmpty(userId)">and crmEnterprise.user_id=#{userId}</if>
+                                      <if test="@Ognl@isNotEmpty(idNo)">and crmEnterprise.id_no=#{idNo}</if>
+                                      <if test="@Ognl@isNotEmpty(eName)">and crmEnterprise.e_name=#{eName}</if>
+                                      <if test="@Ognl@isNotEmpty(enterTime)">and crmEnterprise.enter_time=#{enterTime}</if>
+                                      <if test="@Ognl@isNotEmpty(eStyle)">and crmEnterprise.e_style=#{eStyle}</if>
+                                      <if test="@Ognl@isNotEmpty(eLicence)">and crmEnterprise.e_licence=#{eLicence}</if>
+                                      <if test="@Ognl@isNotEmpty(contact)">and crmEnterprise.contact=#{contact}</if>
+                                      <if test="@Ognl@isNotEmpty(mobilephone)">and crmEnterprise.mobilephone=#{mobilephone}</if>
+                                      <if test="@Ognl@isNotEmpty(status)">and crmEnterprise.status=#{status}</if>
+                                      <if test="@Ognl@isNotEmpty(adminUserId)">and crmEnterprise.admin_user_id=#{adminUserId}</if>
+                                              
+                  </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+
+ 
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM   <include refid="querySqlMain"/>
+		<where>
+			del_flag =1
+			<include refid="queryOptions"/>
+		</where>
+		<include refid="orderControl"/>       
+    </select>
+    
+    <!-- 分页查询对应的记录 -->
+    <select id="queryList" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM   <include refid="querySqlMain"/>
+		<where>
+			del_flag =1
+			<include refid="queryOptions"/>
+		</where>
+		<include refid="orderControl"/>       
+    </select>
+
+	
+	<!-- 根据userId获取企业信息 -->
+	<select id="getByUsesrId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_enterprise
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(userId)">and user_id = #{userId}</if>
+		</where>
+	</select>
+		
+	
+	</mapper>
+
+
+

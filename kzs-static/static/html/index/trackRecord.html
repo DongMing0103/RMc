@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>跟踪记录</title>
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/bootstrap/bootstrap-table.css"/>
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+            <h2><a href="/index">筷子说单位版</a></h2>
+            <h3>跟踪记录</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+            <table
+                id="table"
+                data-classes="table table-public"
+                data-toggle="table"
+                data-url="../static/json/data.json"
+                data-pagination="true"
+                data-pagination-v-align="both"
+                data-page-size="20"
+                data-page-list="[10,20,50]">
+                <thead>
+                <tr>
+                    <th data-field="recordsId" data-formatter="records"></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <script src="../../js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="../../js/bootstrap/bootstrap.min.js"></script>
+    <script src="../../js/bootstrap/bootstrap-table.js"></script>
+    <script src="../../js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="../../js/layer/layer.js"></script>
+    <script src="../../js/cityselect/jquery.cityselect.js"></script>
+</body>
+</html>

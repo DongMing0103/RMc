@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CrmAgentPOMapper">
+
+    <!--   表中列对应PO -->
+    <resultMap type="com.hd.kzscrm.dao.entity.agent.CrmAgentPO" id="BaseResultMap">
+                    <result column="ID" property="id" jdbcType="BIGINT"/>
+                    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+                    <result column="principal_name" property="principalName" jdbcType="VARCHAR"/>
+                    <result column="MOBILEPHOE" property="mobilephoe" jdbcType="VARCHAR"/>
+                    <result column="ADDRESS" property="address" jdbcType="VARCHAR"/>
+                    <result column="POSITION_ID" property="positionId" jdbcType="BIGINT"/>
+                    <result column="UPDATE_ID" property="updateId" jdbcType="BIGINT"/>
+                    <result column="user_id" property="userId" jdbcType="BIGINT"/>
+                    <result column="CREATE_ID" property="createId" jdbcType="BIGINT"/>
+                    <result column="PARENT_ID" property="parentId" jdbcType="BIGINT"/>
+                    <result column="PARENT_IDS" property="parentIds" jdbcType="BIGINT"/>
+                    <result column="TOP_PARENT_ID" property="topParentId" jdbcType="BIGINT"/>
+                    <result column="AREA_CODE" property="areaCode" jdbcType="BIGINT"/>
+                    <result column="LEVEL" property="level" jdbcType="BIGINT"/>
+                    <result column="SEX" property="sex" jdbcType="VARCHAR"/>
+                    <result column="REGISTER_TIME" property="registerTime" jdbcType="TIMESTAMP"/>
+                    <result column="HEADER_IMG" property="headerImg" jdbcType="VARCHAR"/>
+                    <result column="LAST_LOGIN" property="lastLogin" jdbcType="TIMESTAMP"/>
+                    <result column="MAIL" property="mail" jdbcType="VARCHAR"/>
+                    <result column="QQ" property="qq" jdbcType="BIGINT"/>
+                    <result column="AUTHENTICATION_STATUS" property="authenticationStatus" jdbcType="BIGINT"/>
+                    <result column="DEL_FLAG" property="delFlag" jdbcType="BIGINT"/>
+                    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+                    <result column="AGENT_NATURE" property="agentNature" jdbcType="BIGINT"/>
+                    <result column="AGENT_STATUS" property="agentStatus" jdbcType="BIGINT"/>
+                    <result column="BUSINESS_ID" property="businessId" jdbcType="BIGINT"/>
+                    <result column="SIGN_CONTRACT_STATUS" property="signContractStatus" jdbcType="BIGINT"/>
+                    <result column="head_idcard" property="headIdcard" />
+                    <result column="business_pic" property="businesspic"/>
+                    <result column="weixin" property="weixin"/>
+                     <result column="agent_no" property="agentNo"/>
+                     <result column="junior_divide" property="juniorDivide"/>
+                     <result column="TEAM_ID" property="teamId"/>
+                     <result column="identity_card" property="identityCard"/>
+                     <result column="contact_realname" property="contactRealname"/>
+                     <result column="contact_phone" property="contactPhone"/>
+                     
+            </resultMap>
+
+    <!-- 显示的记录对应的列-->
+    <sql id="Base_Column_List">
+        	        	           crmagent.id as id,
+	                	        	           crmagent.name as name,
+	                	        	           crmagent.principal_name as principalName,
+	                	        	          crmagent.user_id as userId,
+	                	        	           crmagent.mobilephoe as mobilephoe,
+	                	        	           crmagent.address as address,
+	                	        	           crmagent.position_id as positionId,
+	                	        	           crmagent.update_id as updateId,
+	                	        	           crmagent.create_id as createId,
+	                	        	           crmagent.parent_id as parentId,
+	                	        	           crmagent.parent_ids as parentIds,
+	                	        	           crmagent.top_parent_id as topParentId,
+	                	        	           crmagent.area_code as areaCode,
+	                	        	           crmagent.level as level,
+	                	        	           crmagent.sex as sex,
+	                	        	           crmagent.register_time as registerTime,
+	                	        	           crmagent.header_img as headerImg,
+	                	        	           crmagent.last_login as lastLogin,
+	                	        	           crmagent.mail as mail,
+	                	        	           crmagent.qq as qq,
+	                	        	           crmagent.authentication_status as authenticationStatus,
+	                	        	           crmagent.del_flag as delFlag,
+	                	        	           crmagent.create_time as createTime,
+	                	        	           crmagent.agent_nature as agentNature,
+	                	        	           crmagent.agent_status as agentStatus,
+	                	        	           crmagent.business_id as businessId,
+	                	        	           crmagent.sign_contract_status as signContractStatus,
+	                	        	           crmagent.head_idcard as headIdcard,
+	                	        	           crmagent.business_pic as businesspic,
+	                	        	           crmagent.weixin as weixin,
+	                	        	           crmagent.agent_no as agentNo,
+	                	        	           crmagent.junior_divide as juniorDivide,
+	                	        	           crmagent.identity_card as identityCard,
+	                	        	           crmagent.contact_realname as contactRealname,
+	                	        	           crmagent.contact_phone as contactPhone
+	                    </sql>
+    <!-- 无分页查询 -->
+    <select id="queryList" parameterType="com.hd.wolverine.util.ParamMap" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM crm_agent crmagent
+        where del_flag=1
+        <include refid="queryOptions"/>
+    </select>
+    
+    <!-- 列表对应的查询条件组合  -->
+    <sql id="queryOptions">
+                                      <if test="id != null and id != ''"> AND crmagent.id = #{id}</if>
+                                      <if test="name != null and name != ''"> AND crmagent.name = #{name}</if>
+                                               <if test="mobilephoe != null and mobilephoe != ''"> AND crmagent.mobilephoe = #{mobilephoe}</if>
+                                               <if test="address != null and address != ''"> AND crmagent.address = #{address}</if>
+                                                        <if test="positionId != null and positionId != ''"> AND crmagent.position_id = #{positionId}</if>
+                                               <if test="updateId != null and updateId != ''"> AND crmagent.update_id = #{updateId}</if>
+                                               <if test="createId != null and createId != ''"> AND crmagent.create_id = #{createId}</if>
+                                               <if test="parentId != null and parentId != ''"> AND crmagent.parent_id = #{parentId}</if>
+                                               <if test="topParentId != null and topParentId != ''"> AND crmagent.top_parent_id = #{topParentId}</if>
+                                               <if test="areaCode != null and areaCode != ''"> AND crmagent.area_code = #{areaCode}</if>
+                                               <if test="@Ognl@isNotEmpty(level)"> AND crmagent.level = #{level}</if>
+                                               <if test="@Ognl@isNotEmpty(startLevel)"> AND crmagent.level <![CDATA[>=]]> #{startLevel}</if>
+                                               <if test="@Ognl@isNotEmpty(endLevel)"> AND crmagent.level <![CDATA[<=]]>  #{endLevel}</if>
+                                      <if test="sex != null and sex != ''"> AND crmagent.sex = #{sex}</if>
+                                               <if test="registerTime != null and registerTime != ''"> AND crmagent.register_time = #{registerTime}</if>
+                                               <if test="headerImg != null and headerImg != ''"> AND crmagent.header_img = #{headerImg}</if>
+                                               <if test="lastLogin != null and lastLogin != ''"> AND crmagent.last_login = #{lastLogin}</if>
+                                               <if test="mail != null and mail != ''"> AND crmagent.mail = #{mail}</if>
+                                                        <if test="qq != null and qq != ''"> AND crmagent.qq = #{qq}</if>
+                                               <if test="authenticationStatus != null and authenticationStatus != ''"> AND crmagent.authentication_status = #{authenticationStatus}</if>
+                                               <if test="delFlag != null and delFlag != ''"> AND crmagent.del_flag = #{delFlag}</if>
+                                      <if test="createTime != null and createTime != ''"> AND crmagent.create_time = #{createTime}</if>
+                                                        <if test="agentNature != null and agentNature != ''"> AND crmagent.agent_nature = #{agentNature}</if>
+                                               <if test="@Ognl@isNotEmpty(agentStatus)"> AND crmagent.agent_status = #{agentStatus}</if>
+                                               <if test="businessId != null and businessId != ''"> AND crmagent.business_id = #{businessId}</if>
+                                               <if test="@Ognl@isNotEmpty(signContractStatus)"> AND crmagent.sign_contract_status = #{signContractStatus}</if>
+                                               <if test="@Ognl@isNotEmpty(userId)"> AND crmagent.user_id= #{userId}</if>
+                                               <if test="@Ognl@isNotEmpty(authenticationStatus)"> AND crmagent.authentication_status= #{authenticationStatus}</if>
+                                               <if test="@Ognl@isNotEmpty(identityCard)"> AND crmagent.identity_card= #{identityCard}</if>
+                                               <if test="@Ognl@isNotEmpty(contactRealname)"> AND crmagent.contact_realname= #{contactRealname}</if>
+                                               <if test="@Ognl@isNotEmpty(contactPhone)"> AND crmagent.contact_phone= #{contactPhone}</if>
+                     </sql>
+
+    <!-- 列表查询对应的排序选项  -->
+    <sql id="orderControl">
+        <if test="orders != null">
+        	<foreach collection="orders.keys" index="key" item="value" open="order by" separator=",">
+        		${key} ${orders[key]}
+        	</foreach>
+        </if>
+    </sql>
+    <!-- 查询全部  有条件就按条件查询 -->
+		<select id="findByAll" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+			select * from  crm_agent
+			<where>
+			del_flag = 1 and target_type=3
+			<if test="id != null">and id = #{id}</if>
+		</where>
+		</select>
+		
+		<select id="findByAgent" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+		select * from crm_agent
+		<where>
+			del_flag =1 
+			<if test="@Ognl@isNotEmpty(agentId)">and id = #{agentId}</if>
+		</where>
+	</select>
+	
+	  <!-- 根据userId查询对象 -->
+     	<select id="findByUserId" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+			select * from  crm_agent
+			<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(userId)">and user_id = #{userId}</if>
+		</where>
+		</select>
+ 
+    <!-- 分页查询对应的记录 -->
+    <select id="queryPage" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+        SELECT *
+        FROM  crm_agent 
+		<where>
+			del_flag =1 
+			<if test="@Ognl@isNotEmpty(agentStatus)">and AGENT_STATUS = #{agentStatus}</if>
+			<if test="@Ognl@isNotEmpty(level) and level!=0" >and level = #{level}</if>
+			<if test="@Ognl@isNotEmpty(userId)" >and user_id = #{userId}</if>
+			<if test="@Ognl@isNotEmpty(condition)">and name like "%"#{condition}"%"</if>
+			<if test="@Ognl@isNotEmpty(condition)  and selectNum==2">and id like "%"#{condition}"%"</if>
+			<if test="@Ognl@isNotEmpty(areaCode)">and AREA_CODE=#{areaCode}</if>
+			<if test="@Ognl@isNotEmpty(agentIds)">
+				and id in (${agentIds})
+			</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus)"> AND authentication_status= #{authenticationStatus}</if>
+			<if test="@Ognl@isNotEmpty(areaCodes)">
+				and AREA_CODE in 
+				<foreach collection="areaCodes" item="areaCode" index="index" open="(" close=")" separator=",">
+					#{areaCode}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(areaIds)">and  id in (${areaIds})</if>
+		</where>
+		order by id desc
+    </select> 
+    
+    <select id="findByAgentName" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+    	select * from crm_agent
+    	<where>
+    		del_flag=1
+    		<if test="@Ognl@isNotEmpty(agentName)">and name  like "%"#{agentName}"%"</if>
+    	</where>
+    </select>
+    
+    <select id="findLikeByAgentName" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap" >
+    	select * from crm_agent
+    	<where>
+    		del_flag=1
+    		<if test="@Ognl@isNotEmpty(condition)">and name  like "%"#{condition}"%"</if>
+    	</where>
+    </select>
+    
+	<!-- 根据参数count(0) -->
+	<select id="commonCount" parameterType="com.hd.wolverine.util.ParamMap" resultType="java.lang.Integer">
+		select count(0) 
+		from crm_agent
+		<where>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(applyMonth)">
+				and date_format(register_time,'%Y-%m') = date_format(#{applyMonth},'%Y-%m')
+			</if>
+			<if test="@Ognl@isNotEmpty(businessIds)">
+				and business_id in
+				<foreach collection="businessIds" item="businessId" index="index" open="(" separator="," close=")">
+					#{businessId}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(agentIds)">
+				and id in
+				<foreach collection="agentIds" item="agentId" index="index" open="(" separator="," close=")">
+					#{agentId}
+				</foreach>
+			</if>
+		</where>
+		
+	</select>
+	
+    <!-- 根据条件查询代理商信息  -->
+   <select id="commonQuery" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+       select * from crm_agent
+       <where>
+       <if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+       <if test="@Ognl@isNotEmpty(ids)">
+			and id in
+			<foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+				#{id}
+			</foreach>
+		</if>
+       <if test="@Ognl@isNotEmpty(name)">and name = #{name}</if>
+       <if test="@Ognl@isNotEmpty(nameLike)">and name like "%"#{nameLike}"%"</if>
+       <if test="@Ognl@isNotEmpty(userId)">and user_id = #{userId}</if>
+       <if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+       <if test="@Ognl@isNotEmpty(createId)">and create_id = #{createId}</if>
+       <if test="@Ognl@isNotEmpty(level)">and level = #{level}</if>
+       <if test="@Ognl@isNotEmpty(registerTime)">and register_time = #{registerTime}</if>
+       <if test="@Ognl@isNotEmpty(businessId)">and business_id = #{businessId}</if>
+       <if test="@Ognl@isNotEmpty(parentId)">and parent_id = #{parentId}</if>
+       <if test="@Ognl@isNotEmpty(topParentId)">and top_parent_id = #{topParentId}</if>
+       <if test="@Ognl@isNotEmpty(updateId)">and update_id = #{updateId}</if>
+       <if test="@Ognl@isNotEmpty(teamId)">and team_id = #{teamId}</if>
+       </where>
+   </select>
+	
+	<!--查询该代理商的子孙代理商,私有 -->
+	<select id="getChildAgent" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		 select * from crm_agent
+		 <where>
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+	       <if test="@Ognl@isNotEmpty(name)">and name = #{name}</if>
+	       <if test="@Ognl@isNotEmpty(userId)">and user_id = #{userId}</if>
+	       <if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+	       <if test="@Ognl@isNotEmpty(level)">and level = #{level}</if>
+	       <if test="@Ognl@isNotEmpty(parentId)">and find_in_set(#{parentId},parent_ids)</if>
+	       <if test="@Ognl@isNotEmpty(topParentId)">and top_parent_id = #{topParentId}</if>
+	       <if test="@Ognl@isNotEmpty(updateId)">and update_id = #{updateId}</if>
+		 </where>
+	</select>
+	
+	<!-- 统计代理商数量 -->
+	<select id="countAgentNum" resultType="java.math.BigDecimal" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT COUNT(business_id) FROM crm_agent
+		<where>
+			<if test="@Ognl@isNotEmpty(businessId)"> and business_id = #{businessId}</if>
+			<if test="@Ognl@isNotEmpty(agentStatus)">and AGENT_STATUS = #{agentStatus}</if>
+			<if test="@Ognl@isNotEmpty(teamId)"> and team_id = #{teamId}</if>
+			<if test="@Ognl@isNotEmpty(authenticationStatus)"> and authentication_status = 1</if>
+		</where>
+	</select>
+	
+	<!-- 解约  或批量解约 -->
+	<update id="updateStatusAndDelflg" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_agent  set agent_status =0  ,sign_contract_status=2
+		<where>
+			agent_status = 1 
+			and id in
+			<foreach collection="agentIds" item="agentId" index="index"  open="(" close=")" separator=",">
+				#{agentId}
+			</foreach>
+		</where>
+	</update>
+
+	<!-- 直系下级代理商 -->
+	<select id="getLowerAgentList" resultMap="BaseResultMap">
+		select b.name name,b.id id,b.agent_nature agent_nature,b.agent_status agent_status,b.area_code area_code,b.business_id business_id,b.principal_name principal_name,b.mobilephoe mobilephoe
+		from crm_agent a left join crm_agent b  on a.id = b.PARENT_ID
+		<where>
+			b.del_flag =1
+			<if test="@Ognl@isNotEmpty(agentStatus)">and b.agent_status=#{agentStatus}</if>
+			<if test="@Ognl@isNotEmpty(agentId)">and a.id=#{agentId}</if>
+			<if test="@Ognl@isNotEmpty(areaCodes)">
+				and b.AREA_CODE in
+				<foreach collection="areaCodes" index="index" item="areaCode" open="(" close=")" separator=",">
+					#{areaCode}
+				</foreach>
+			</if>
+			<if test="@Ognl@isNotEmpty(condition) and selectNum==1">and b.NAME=#{condition}</if>
+			<if test="@Ognl@isNotEmpty(condition) and selectNum==2">and b.agent_no=#{condition}</if>
+		</where>
+		
+	</select>
+
+
+
+	
+	<!--根据parentId参数查询子孙代理商Id,私有 -->
+	<select id="getChildAgentIds" resultType="java.lang.Long" parameterType="com.hd.wolverine.util.ParamMap">
+		 select id 
+		 from crm_agent
+		 <where>
+	       <if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+	       <if test="@Ognl@isNotEmpty(parentId)">and find_in_set(#{parentId},parent_ids)</if>
+		 </where>
+	</select>
+	
+	<select id="findByAgentNo" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_agent
+		<where>
+			<if test="@Ognl@isNotEmpty(agentUserId)">and agent_no = #{agentUserId}</if>
+		</where>
+	</select>
+	
+	<!-- findById -->
+	<select id="findById" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		SELECT * FROM crm_agent
+		<where>
+		    del_flag =1
+			<if test="@Ognl@isNotEmpty(id)">and id = #{id}</if>
+		</where>
+	</select>
+	
+	<!-- 更新保护客户为散客 -->
+	<update id="changeProtectedClientToIndividualTraveler" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_agent
+		<set>
+			authentication_status = null,
+			business_id = null,
+			sign_contract_status = null,
+			<if test="@Ognl@isNotEmpty(agentStatus)">agent_status = #{agentStatus},</if>
+			<if test="@Ognl@isNotEmpty(juniorDivide)">junior_divide = #{juniorDivide}</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">id = #{id}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag = #{delFlag}</if>
+		</where>
+	</update>
+	<!-- findByBusiness -->
+	<select id="findByBusiness" resultMap="BaseResultMap" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from crm_agent
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(businessId)">and BUSINESS_ID = #{businessId} </if>
+		</where>
+	
+	</select>
+	<!-- updateTeamId -->
+	<update id="updateTeamId" parameterType="com.hd.wolverine.util.ParamMap">
+		update crm_agent
+		<set>
+			team_id = #{teamId},
+			UPDATE_ID = #{userId}
+			
+		</set>	
+		<where>
+			<if test="@Ognl@isNotEmpty(agentIds)">
+				id in
+				<foreach collection="agentIds" item="id" index="index" open="(" close=")" separator=",">
+					#{id}
+				</foreach>
+				 
+			</if>
+		
+		</where>
+	</update>
+	
+	</mapper>
+
+
+

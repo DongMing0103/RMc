@@ -1,0 +1,224 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+ul, li {
+    list-style: none;
+}
+
+.modal-body {
+    overflow-x: hidden;
+}
+
+/* area  */
+
+div.area-select {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 300px;
+    font-size: 14px;
+    /* 外边框模型，定义宽度更方便 */
+    box-sizing: border-box;
+    -moz-box-sizing: border-box; /*Firefox*/
+    -webkit-box-sizing: border-box; /* Safari */
+}
+
+.area-select .fn-hide {
+    display: none;
+}
+
+.area-select.hover .area-select-content {
+    display: block;
+    margin-top: -1px;
+}
+
+.area-select-view {
+    position: relative;
+    height: 14px;
+    margin: 0;
+    padding: 7px 20px 7px 9px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 14px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.area-select.hover .area-select-view {
+    border-bottom-color: #fff;
+    z-index: 1000;
+}
+
+.area-select-view.placeholder {
+    color: #666;
+}
+
+.area-select-view:after {
+    content: '';
+    position: absolute;
+    right: 9px;
+    top: 10px;
+    height: 0;
+    width: 0;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #808080 transparent transparent;
+}
+
+.area-select-content {
+    position: absolute;
+    width: 400px;
+    min-height: 106px;
+    top: 30px;
+    left: -30px;
+    padding: 7px 20px;
+    border: 1px solid #ccc;
+    background: #fff;
+    -moz-box-shadow: 0 0 5px #ddd;
+    -webkit-box-shadow: 0 0 5px #ddd;
+    box-shadow: 0 0 5px #ddd;
+    z-index: 999;
+}
+
+.area-select-content .tabs {
+    overflow: hidden;
+}
+
+.area-select-content .J_houseName {
+    display: none;
+    margin-top: 5px;
+}
+
+.area-select-content .tab-nav {
+    float: left;
+    width: 100%;
+    height: 34px;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #ccc;
+    overflow: visible;
+    zoom: 1;
+}
+
+.area-select-content .tab-content {
+    float: left;
+    width: 100%;
+}
+
+.tab-nav li {
+    float: left;
+    margin-right: 4px;
+}
+
+.tab-nav li a:before, .tab-nav li a:after {
+    position: absolute;
+    width: 0;
+    height: 0;
+    right: 4px;
+    top: 14px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #666 transparent transparent;
+    content: '';
+}
+
+.tab-nav li a:after {
+    top: 13px;
+    border-top-color: #fff;;
+}
+
+.tab-nav li a {
+    float: left;
+    position: relative;
+    padding: 0 18px 0 9px;
+    border: 1px solid #ccc;
+    border-bottom: 0;
+    background: #fff;
+    line-height: 33px;
+    max-width: 60px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    height: 33px;
+    color: #df5c05;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.tab-nav li.current a {
+    height: 35px;
+    margin: -1px;
+    border-width: 2px;
+    border-bottom-color: #fff;
+}
+
+.area-select-list {
+    min-height: 30px;
+    overflow: hidden;
+}
+
+.area-select-list li {
+    float: left;
+    width: 95px;
+    height: 30px;
+    line-height: 30px;
+    margin-right: 5px;
+    list-style-type: none;
+}
+
+.area-select-list li a {
+    display: inline-block;
+    max-width: 85px;
+    padding: 5px;
+    font-size: 12px;
+    line-height: 20px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    vertical-align: middle;
+}
+
+.area-select-list li a:hover {
+    color: #fff;
+    background: #df5c05;
+}
+
+/* 选择框悬浮样式 */
+/*.area-select:hover .area-select-view {*/
+/*background-color: #f8f8f8;*/
+/*}*/
+
+.area-select.hover .area-select-view:after {
+    border-top-color: #1a1a1a;
+}
+
+/* 成功选择后的样式 */
+/*.area-select-focus,
+.area-select.area-select-focus:hover {
+    border-color: #0ae;
+}*/
+
+/* 报错样式 */
+.ui-form-item-error .area-select,
+.area-select-error {
+    border: 1px solid #f4333c;
+}
+
+/* 禁用按钮 */
+.area-select-disabled .area-select-view {
+    background-color: #e6e7ec;
+    cursor: default;
+}
+
+.area-select-disabled:hover .area-select-view:after {
+    border-top-color: #808080;
+}
+
+.ui-form-item-error .area-select.area-select-disabled,
+.area-select-error.area-select-disabled {
+    border: 1px solid #ccc;
+}

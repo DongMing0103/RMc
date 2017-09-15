@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath:spring/ApplicationContext.xml,classpath:spring/shiro-db.xml,classpath:spring/ApplicationContext-aop-bean.xml</param-value>
+  </context-param>
+  <!--logback日志环境变量配置-->
+<!-- <listener>
+    <listener-class>com.hd.wolverine.listener.LogbackListener</listener-class>
+</listener> -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.hd.kzscrm.manage.listener.ThreadKillListener</listener-class>
+  </listener>
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <listener>
+        <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>
+    </listener>
+    <filter>
+        <filter-name>singleSignOutFilter</filter-name>
+        <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
+        <init-param>
+            <param-name>casServerUrlPrefix</param-name>
+            <param-value>https://localhost:8080/cas/</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>singleSignOutFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
+  <servlet>
+    <servlet-name>springMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring/ApplicationContext-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springMvc</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+    <init-param>
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  <!-- 字符串去前后空格 -->
+  <filter>
+  	<filter-name>paramTrimFilter</filter-name>
+  	<filter-class>com.hd.kzscrm.manage.interceptor.ParamsTtimFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>paramTrimFilter</filter-name>
+	<url-pattern>/*</url-pattern>  
+  </filter-mapping>
+  
+  <!-- json请求body体非法字符判断 
+	<filter>
+	<filter-name>illegalCharBodyFilter</filter-name>
+	<filter-class>com.hd.wolverine.web.filter.IllegalCharBodyFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	<filter-name>illegalCharBodyFilter</filter-name>
+	<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	-->
+  <!-- 文件上传servlet -->
+  <!-- 文件上传servlet -->
+ 
+  <session-config>
+    <session-timeout>30</session-timeout>
+  </session-config>
+</web-app>

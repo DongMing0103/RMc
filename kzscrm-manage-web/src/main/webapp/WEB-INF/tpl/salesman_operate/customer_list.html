@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>客户列表</title>
+    <link rel="stylesheet" href="/static/css/font-awesome/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap/bootstrap-table.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+
+    <!--[if lt IE 9]>
+        <script src="https://cdn.bootcss.com/html5shiv/r29/html5.js"></script>
+        <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="second-page-header">
+        <div class="container">
+            <h2><a href="../../index.html">筷子说CRM</a></h2>
+            <h3>客户列表</h3>
+        </div>
+    </div>
+    <div class="second-page-bg">
+        <div class="container second-page-body">
+   <!--           <ul class="nav nav-tabs nav-self">
+		        <li><span>合作状态</span></li>
+		        <li class="active"><a href="#" data-toggle="tab" onclick="clientNature('clientNature',0)">全部（$!map.all）</a></li>
+		        <li class="mt10">|</li>
+		        <li><a href="#" data-toggle="tab" onclick="clientNature('clientNature',2)">保护客户（$!map.protect）</a></li>
+		        <li class="mt10">|</li>
+		        <li><a href="#" data-toggle="tab" onclick="clientNature('clientNature',3)">正式客户（$!map.formal）</a></li>
+		    </ul>  -->
+		    <div class="form-box">
+		        <form class="form-inline" id="form">
+		        <!-- ?agentId=$!agentId&teamId=$!teamId&businessId=$!businessId -->
+		        <input type="hidden" name="applyMonth" value="$!applyMonth">
+		        <input type="hidden" name="agentId" value="$!agentId">
+		        <input type="hidden" name="teamId" value="$!teamId">
+		        <input type="hidden" name="businessId" value="$!businessId">
+		        <input type="hidden" name="address" value="">
+		        <input type="hidden" name="strat" value="$!startDay">
+		        <input type="hidden" name="end" value="$!endDay">
+		        <input type="hidden" name="clientNature" id="clientNature">
+		            <div class="form-group">
+		               <label class="control-label">时间查询</label>
+		               <input class="Wdate input-date" id="d4311" name="stratTimes" value="$!startDay" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'$!startDay',maxDate:'#F{$dp.$D(\'d4312\')||\'$!endDay\'}'})">&nbsp;至&nbsp;
+		               <input class="Wdate input-date" id="d4312" name="endTimes" value="$!endDay" type="text" placeholder="请选择日期" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'$!endDay'})">
+		            </div>
+		            <div class="form-group">
+		            	<label class="control-label">客户分类</label>
+		            	<div class="has-feedback" style="display: inline-block;">
+			            	<select class="form-control" name="clientType">
+			                    <option value="">请选择</option>
+			                    <option value="1">代理商</option>
+			                    <option value="2">厂内食堂</option>
+			                    <option value="3">校内食堂</option>
+			                    <option value="4">独立食堂</option>
+			                </select>
+			                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		            	</div>
+		            </div>
+		            <div class="form-group">
+		                <label class="control-label">地理信息</label>
+		                <div class="city-select" id="city">
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select class="form-control prov"><option value="">请选择</option><option value="86011">北京市</option><option value="86012">天津市</option><option value="86013">河北省</option><option value="86014">山西省</option><option value="86015">内蒙古自治区</option><option value="86021">辽宁省</option><option value="86022">吉林省</option><option value="86023">黑龙江省</option><option value="86031">上海市</option><option value="86032">江苏省</option><option value="86033">浙江省</option><option value="86034">安徽省</option><option value="86035">福建省</option><option value="86036">江西省</option><option value="86037">山东省</option><option value="86041">河南省</option><option value="86042">湖北省</option><option value="86043">湖南省</option><option value="86044">广东省</option><option value="86045">广西壮族自治区</option><option value="86046">海南省</option><option value="86050">重庆市</option><option value="86051">四川省</option><option value="86052">贵州省</option><option value="86053">云南省</option><option value="86054">西藏自治区</option><option value="86061">陕西省</option><option value="86062">甘肃省</option><option value="86063">青海省</option><option value="86064">宁夏回族自治区</option><option value="86065">新疆维吾尔自治区</option><option value="86071">台湾省</option><option value="86081">香港特别行政区</option><option value="86082">澳门特别行政区</option></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+			                </div>
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select class="form-control city" disabled="disabled" style="display: none;"></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+			                </div>
+			                <div class="has-feedback" style="display: inline-block;">
+			                    <select class="form-control dist" disabled="disabled" style="display: none;"></select>
+			                    <i class="fa fa-sort-down form-control-feedback triangle-fa" style="display: none;"></i>
+			                </div>
+			            </div>
+		            </div>
+		            <div class="form-group">
+		            	<div class="has-feedback" style="display: inline-block;">
+			            	<select class="form-control" name="searchCriteria">
+			                  <!--   <option value="">请选择搜索条件</option> -->
+			                    <option value="1">单位名称</option>
+			                    <!-- <option value="2">单位编号</option> -->
+			                </select>
+			                <i class="fa fa-sort-down form-control-feedback triangle-fa"></i>
+		            	</div>
+		                <input class="form-control" placeholder="请输入..." name="searchContent">
+		            </div>
+		            <div class="form-group">
+		                <a class="btn btn-default crmClientResourceSearch" href="javascript:void(0);"  onclick="query1()">
+		                    <i class="fa fa-search "></i>搜索
+		                </a>
+		                <a class="btn btn-default crmClientResourceReset" onclick="resetBtn();">重置</a>
+		            </div>
+		        </form>
+		    </div>
+		    <table
+		        data-toggle="table"
+		        id="table"
+		        data-classes="table table-public tabledown"
+		        data-url="$!rc.contextPath/crmclientresource/byBusinessGetClientList"
+		        data-pagination="true"
+		        data-pagination-v-align="both"
+		        data-query-params="queryParams"
+		        data-side-pagination="server"
+		        data-cache="false"
+		        data-page-size="20"
+		        data-page-list="[10,20,50]">
+		        <thead>
+		        <tr>
+		            <th data-checkbox="true"></th>
+		            <th data-field="id" data-align="ID">编号</th>
+		            <th data-field="name" data-align="center">名称</th>
+		            <th data-field="clientType" data-align="center" data-formatter="clientTypeFormatter">客户分类</th>
+		            <th data-field="clientNature" data-align="center" data-formatter="clientNatureFormatter">合作状态</th>
+		            <th data-field="address" data-align="center">地理信息</th>
+		            <th data-field="applyApproveTime" data-align="center" data-formatter="dateFormatter">时间</th>
+		            <th data-field="canteenSplitPercent"  data-align="center">分账比例（%）</th>
+		            <th data-field="contact"  data-align="center">联系人</th>
+		            <th data-field="businessName"  data-align="center">业务员</th>
+		            <th data-field="mobile"  data-align="center">联系电话</th>
+		            <th data-field="operate" data-align="center" data-formatter="operateFormatter" class="selecttd">操作</th>
+		        </tr>
+		        </thead>
+		    </table>
+		    <div class="mt10">
+		        <a class="btn btn-warning crmClientResourceReset" href="javascript:void(0);" onclick="tabledown('$!rc.contextPath/crmclientresource/clientListExcelOut?Ids=')">
+		            <i class="glyphicon glyphicon-save"></i>导出
+		        </a>
+		    </div>  
+		</div>
+	</div>
+    
+    <script type="text/javascript" src="$!rc.contextPath/static/js/systemOperate/customer_list.js"></script>
+    <script type="text/javascript" src="$!rc.contextPath/static/js/systemOperate/findByCondition.js"></script>
+    <script src="/static/js/jquery/jquery-1.11.1.min.js"></script>
+    <script src="/static/js/bootstrap/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap/bootstrap-table.js"></script>
+    <script src="/static/js/bootstrap/bootstrap-table-zh-CN.js"></script>
+    <script src="/static/js/layer/layer.js"></script>
+    <script src="/static/js/cityselect/jquery.cityselect.js"></script>
+    <script src="/static/js/DatePicker/WdatePicker.js"></script>
+    <script src="$!rc.contextPath/static/js/common.js"></script>
+    <script type="text/javascript">
+	    $(function(){
+	        $('#table').bootstrapTable();
+			$("#table").on('load-success.bs.table',function(e,data){
+				#foreach($!cSourcesVO in $!cSourcesVOs)
+					#if(!$!cSourcesVO.check)
+						$('$!cSourcesVO.frontContrlName').remove();
+					#end
+				#end
+			})
+	    });
+	
+	    /* 操作 */
+	    function operateFormatter(value, row, index) {
+    		var str = '<div class=tddiv>'+
+				        '<span class=settingtda>请选择</span>'+
+				        '<ul class=settingtdmenu>'+
+					        '<li><a class="crmClientResourceSee" href="/crmclientresource/customerResourceLook?clientId='+row.id+'" target="_blank">查看</a></li>';
+					        if(1 != row.clientType){
+					        	str += '<li><a class="crmClientResourceEdit" href="javascript:void(0);" onclick="editData(\'编辑\',\'/crmclientresource/editCrmClientResourceInit?crmClientResourceParam.id='+row.id+'\',\'768px\',\'500px\')">编辑</a></li>';
+					        }else{
+					        	str += "<li><a href=javascript:void(0); onclick=editData('编辑','/crmagent/editAgent?clientId="+row.id+"','768px','500px')>编辑</a></li>";
+					        }
+					        str += '<a class="crmClientResourceTailrecord" href=/crmbusinesstailrecord/initClint?customerId='+row.id+' target=_blank>跟踪记录</a>'+
+			        	'</ul>'+
+			        '</div>';
+	        return str;
+	    }
+	    
+	    /*地理联动*/
+	    $("#city").citySelect({
+	        url:"/static/js/cityselect/city.min.js",
+	        prov:"",//省份
+	        city:"",//城市
+	        dist:"",//区县
+	        nodata:"none",//当子集无数据时，隐藏select
+	        required:false
+	    });
+	</script>
+</body>
+</html>
+
+

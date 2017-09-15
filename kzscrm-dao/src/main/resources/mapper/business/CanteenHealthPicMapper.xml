@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="CanteenHealthPicMapper">
+	<resultMap id="serviceConfig" type="com.hd.kzscrm.dao.entity.business.CanteenHealthPicPO" >
+		<id column="id"  property="id"/>
+		<result column="canteen_id"  property="canteenId"/>
+		<result column="business_health_pic"  property="businessHealthPic"/>
+		<result column="creater_uid"  property="createrUid"/>
+		<result column="create_time"  property="createTime"/>
+		<result column="remark"  property="remark"/>
+		<result column="del_flag"  property="delFlag"/>
+		<result column="crm_canteen_id"  property="crmCanteenId"/>
+	</resultMap>
+	
+	<select id="findAll" resultMap="serviceConfig" parameterType="com.hd.wolverine.util.ParamMap">
+		select * from canteen_health_pic 
+		<where>
+			del_flag=1
+			<if test="@Ognl@isNotEmpty(canteenId)">
+				and canteen_id=#{canteenId}
+			</if>
+		</where>
+	</select>
+	<delete id="deleteByCanteenId" parameterType="com.hd.wolverine.util.ParamMap">
+		delete from canteen_health_pic where canteen_id=#{canteenId}
+	</delete>
+	<!-- 根据商家id 查询 -->
+	<select id="findByCanteenId" parameterType="com.hd.wolverine.util.ParamMap" resultMap="serviceConfig">
+		select * from canteen_health_pic 
+		<where>
+			del_flag = 1
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id =#{canteenId}</if>
+		</where>
+	
+	</select>
+	
+	<update id="deleteByCrmCanteenId" parameterType="com.hd.wolverine.util.ParamMap">
+		update canteen_health_pic
+		<set>
+			<if test="@Ognl@isNotEmpty(delFlag)">del_flag =#{delFlag}</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(crmCanteenId)">and crm_canteen_id =#{crmCanteenId}</if>
+		</where>
+	</update>
+	
+	<!-- 更新卫生许可证(嵌入CanteenId,即qzs食堂id) -->
+	<update id="updateByparam" parameterType="com.hd.wolverine.util.ParamMap">
+		update canteen_health_pic
+		<set>
+			<if test="@Ognl@isNotEmpty(canteenId)">canteen_id =#{canteenId}</if>
+		</set>
+		<where>
+			<if test="@Ognl@isNotEmpty(crmCanteenId)">and crm_canteen_id =#{crmCanteenId}</if>
+			<if test="@Ognl@isNotEmpty(cdelFlag)">and del_flag =#{delFlag}</if>
+		</where>
+	</update>
+	<!-- 通用查询  -->
+	<select id="commonQuery" resultMap="serviceConfig" parameterType="com.hd.wolverine.util.ParamMap">
+		select id, canteen_id, business_health_pic, creater_uid, create_time, remark, del_flag, crm_canteen_id 
+		from canteen_health_pic
+		<where>
+			<if test="@Ognl@isNotEmpty(id)">and id =#{id}</if>
+			<if test="@Ognl@isNotEmpty(canteenId)">and canteen_id =#{canteenId}</if>
+			<if test="@Ognl@isNotEmpty(businessHealthPic)">and business_health_pic =#{businessHealthPic}</if>
+			<if test="@Ognl@isNotEmpty(createrUid)">and creater_uid =#{createrUid}</if>
+			<if test="@Ognl@isNotEmpty(createTime)">and create_time =#{createTime}</if>
+			<if test="@Ognl@isNotEmpty(remark)">and remark =#{remark}</if>
+			<if test="@Ognl@isNotEmpty(delFlag)">and del_flag =#{delFlag}</if>
+			<if test="@Ognl@isNotEmpty(crmCanteenId)">and crm_canteen_id =#{crmCanteenId}</if>
+		</where>
+	</select>
+</mapper>
